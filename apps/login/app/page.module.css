@@ -1,0 +1,439 @@
+/* ============================================================
+   Login Page Styles
+   ============================================================ */
+
+.page {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: row;
+}
+
+/* ============================================================
+   LEFT PANEL — Branding
+   ============================================================ */
+.leftPanel {
+  display: none;
+  position: relative;
+  overflow: hidden;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 48px 56px;
+  background: var(--bg-panel);
+  border-right: 1px solid var(--border-subtle);
+}
+
+@media (min-width: 1024px) {
+  .leftPanel {
+    display: flex;
+    width: 52%;
+    flex-shrink: 0;
+  }
+}
+
+/* Animated glow orbs */
+.glowOrb1 {
+  position: absolute;
+  top: -12%;
+  left: -12%;
+  width: 440px;
+  height: 440px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  filter: blur(130px);
+  mix-blend-mode: normal;
+  opacity: 0;
+  animation: float-glow 9s ease-in-out infinite;
+  animation-delay: 0.5s;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+}
+
+.glowOrb2 {
+  position: absolute;
+  bottom: -15%;
+  right: -10%;
+  width: 480px;
+  height: 480px;
+  border-radius: 50%;
+  background: var(--accent-secondary);
+  filter: blur(150px);
+  mix-blend-mode: normal;
+  opacity: 0;
+  animation: float-glow-slow 12s ease-in-out infinite;
+  animation-delay: 1s;
+  animation-fill-mode: forwards;
+  pointer-events: none;
+}
+
+/* Logo lockup */
+.logoLockup {
+  position: relative;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  animation: fade-up 0.6s ease 0.1s both;
+}
+
+.logoMark {
+  width: 44px;
+  height: 44px;
+  border-radius: 14px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 24px var(--accent-glow);
+  flex-shrink: 0;
+  position: relative;
+}
+
+.logoMark::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(255,255,255,0.2) 0%, transparent 60%);
+}
+
+.logoText {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.375rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logoDivider {
+  color: var(--border-strong);
+  font-weight: 300;
+  font-size: 1.5rem;
+}
+
+/* Hero copy */
+.heroSection {
+  position: relative;
+  z-index: 10;
+  max-width: 440px;
+  animation: fade-up 0.7s ease 0.25s both;
+}
+
+.heroTag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 5px 12px;
+  border-radius: 100px;
+  background: var(--accent-primary-subtle);
+  border: 1px solid rgba(99,102,241,0.25);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  margin-bottom: 24px;
+}
+
+.heroTag .dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--accent-primary);
+  animation: pulse-ring 2s ease infinite;
+}
+
+.heroHeadline {
+  font-size: clamp(1.75rem, 2.5vw, 2.5rem);
+  font-weight: 800;
+  color: var(--text-primary);
+  line-height: 1.15;
+  letter-spacing: -0.03em;
+  margin-bottom: 18px;
+}
+
+.heroHeadline span {
+  background: linear-gradient(135deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.heroSubheadline {
+  color: var(--text-secondary);
+  font-size: 1.05rem;
+  line-height: 1.65;
+  margin-bottom: 44px;
+}
+
+/* Feature callouts */
+.featureList {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.featureItem {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.featureIcon {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+}
+
+.featureText h3 {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+  margin-bottom: 3px;
+}
+
+.featureText p {
+  font-size: 0.8rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+/* Left panel footer */
+.panelFooter {
+  position: relative;
+  z-index: 10;
+  color: var(--text-muted);
+  font-size: 0.8rem;
+  animation: fade-in 1s ease 0.6s both;
+}
+
+/* ============================================================
+   RIGHT PANEL — Login Form
+   ============================================================ */
+.rightPanel {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 40px 24px;
+  background: var(--bg-base);
+  min-height: 100vh;
+  position: relative;
+}
+
+/* Mobile logo (hidden on desktop) */
+.mobileLogo {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 40px;
+  animation: fade-up 0.5s ease both;
+}
+
+@media (min-width: 1024px) {
+  .mobileLogo {
+    display: none;
+  }
+}
+
+.mobileLogoMark {
+  width: 36px;
+  height: 36px;
+  border-radius: 10px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.mobileLogoText {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  letter-spacing: -0.02em;
+}
+
+/* Form card */
+.formCard {
+  width: 100%;
+  max-width: 420px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 20px;
+  padding: 40px 36px;
+  box-shadow: var(--shadow-lg);
+  animation: fade-up 0.6s ease 0.1s both;
+}
+
+@media (max-width: 480px) {
+  .formCard {
+    padding: 28px 20px;
+    border-radius: 16px;
+  }
+}
+
+.formHeader {
+  margin-bottom: 28px;
+}
+
+.formTitle {
+  font-size: 1.6rem;
+  font-weight: 800;
+  color: var(--text-primary);
+  margin-bottom: 6px;
+  letter-spacing: -0.03em;
+}
+
+.formSubtitle {
+  color: var(--text-secondary);
+  font-size: 0.875rem;
+}
+
+/* Form fields */
+.form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.fieldGroup {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 6px;
+}
+
+.forgotLink {
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--accent-primary);
+  transition: color 0.2s ease;
+}
+
+.forgotLink:hover {
+  color: var(--accent-primary-hover);
+}
+
+/* Submit button (full width override) */
+.submitBtn {
+  width: 100%;
+  padding: 13px 20px;
+  margin-top: 6px;
+  font-size: 0.9375rem;
+}
+
+/* Divider between form and OAuth */
+.oauthDivider {
+  margin: 24px 0 20px;
+}
+
+/* OAuth buttons */
+.oauthGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.oauthBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  border-radius: 10px;
+  color: var(--text-secondary);
+  font-family: 'Inter', sans-serif;
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.oauthBtn:hover {
+  background: var(--bg-base);
+  border-color: var(--border-strong);
+  color: var(--text-primary);
+}
+
+/* Error message */
+.errorMsg {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 14px;
+  background: rgba(239, 68, 68, 0.08);
+  border: 1px solid rgba(239, 68, 68, 0.2);
+  border-radius: 10px;
+  color: var(--status-danger);
+  font-size: 0.85rem;
+  animation: fade-up 0.3s ease both;
+}
+
+/* Loading spinner */
+.spinner {
+  width: 16px;
+  height: 16px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: #fff;
+  border-radius: 50%;
+  animation: spin-slow 0.7s linear infinite;
+  flex-shrink: 0;
+}
+
+/* Theme switcher (bottom right) */
+.themeSwitcher {
+  position: fixed;
+  bottom: 24px;
+  right: 24px;
+  display: flex;
+  gap: 8px;
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 100px;
+  padding: 6px 10px;
+  box-shadow: var(--shadow-md);
+  z-index: 100;
+}
+
+.themeBtn {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  border: 2px solid transparent;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease;
+  padding: 0;
+  outline: none;
+}
+
+.themeBtn:hover {
+  transform: scale(1.15);
+}
+
+.themeBtn.active {
+  border-color: var(--text-primary);
+  transform: scale(1.1);
+}
+
+.themeBtnDark     { background: #161b27; }
+.themeBtnLight    { background: #e2e8f0; }
+.themeBtnMidnight { background: #0c1836; }
+.themeBtnWarm     { background: #2d2316; }
+.themeBtnKoryoRed { background: #e11d48; }

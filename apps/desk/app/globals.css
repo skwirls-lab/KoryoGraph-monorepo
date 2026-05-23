@@ -1,0 +1,20 @@
+/* ============================================================
+   Desk App — Local Overrides
+   Global design tokens are inherited from @repo/ui/globals.css
+   ============================================================ */
+* { box-sizing: border-box; }
+
+/* App shell layout */
+.desk-shell {
+  display: flex;
+  min-height: 100vh;
+  background: var(--bg-base);
+}
+
+.desk-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  overflow: hidden;
+}

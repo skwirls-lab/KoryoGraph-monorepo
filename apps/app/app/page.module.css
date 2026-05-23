@@ -1,0 +1,359 @@
+/* ============================================================
+   Mat-Side Instructor App Styles
+   ============================================================ */
+
+.header {
+  height: 64px;
+  background: var(--bg-panel);
+  border-bottom: 1px solid var(--border-subtle);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+}
+
+.logoArea {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.logoMark {
+  width: 32px;
+  height: 32px;
+  border-radius: 8px;
+  background: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 12px var(--accent-glow);
+}
+
+.logoText {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.logoTag {
+  font-size: 0.65rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.userInfo {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.userMeta {
+  text-align: right;
+}
+
+.userName {
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.userRole {
+  font-size: 0.7rem;
+  color: var(--text-muted);
+}
+
+.logoutBtn {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-default);
+  color: var(--text-secondary);
+  padding: 6px 12px;
+  border-radius: 8px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.logoutBtn:hover {
+  background: var(--bg-surface);
+  color: var(--text-primary);
+}
+
+/* Dashboard Content Grid */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 20px;
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+  width: 100%;
+}
+
+@media (min-width: 768px) {
+  .grid {
+    grid-template-columns: 340px 1fr;
+  }
+}
+
+/* Touch-optimized Card */
+.card {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTitle {
+  font-size: 1rem;
+  font-weight: 700;
+  color: var(--text-primary);
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+/* Class List selectors */
+.classList {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.classItem {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  text-align: left;
+}
+
+.classItem:hover {
+  border-color: var(--border-strong);
+}
+
+.classItemActive {
+  border-color: var(--accent-primary);
+  background: var(--accent-primary-subtle);
+}
+
+.classTime {
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: var(--accent-primary);
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.className {
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.classCount {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  margin-top: 4px;
+}
+
+/* Student Roster check-in list */
+.rosterList {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.rosterItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  padding: 12px 16px;
+  border-radius: 12px;
+  transition: all 0.15s ease;
+}
+
+.rosterItemChecked {
+  border-color: var(--status-success);
+  background: rgba(16, 185, 129, 0.05);
+}
+
+.rosterLeft {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.beltIndicator {
+  width: 24px;
+  height: 8px;
+  border-radius: 4px;
+  flex-shrink: 0;
+}
+
+.studentName {
+  font-size: 0.875rem;
+  font-weight: 600;
+  color: var(--text-primary);
+}
+
+.studentRank {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+}
+
+.checkButton {
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 2px solid var(--border-strong);
+  background: none;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.15s ease;
+  color: transparent;
+}
+
+.checkButtonChecked {
+  background: var(--status-success);
+  border-color: var(--status-success);
+  color: #fff;
+}
+
+/* Biomechanical Skill Matrix */
+.skillContainer {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 10px;
+}
+
+.skillHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.skillSelector {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 10px;
+}
+
+.skillCard {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  padding: 12px;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  text-align: left;
+}
+
+.skillCard:hover {
+  border-color: var(--border-strong);
+}
+
+.skillCardActive {
+  border-color: var(--accent-secondary);
+  background: rgba(59, 130, 246, 0.08);
+}
+
+.skillName {
+  font-size: 0.8rem;
+  font-weight: 700;
+  color: var(--text-primary);
+}
+
+.skillMatch {
+  font-size: 0.7rem;
+  color: var(--accent-secondary);
+  font-weight: 600;
+}
+
+/* Skill scoring or biomechanical vision match graph mockup */
+.biomechPanel {
+  background: var(--bg-surface);
+  border: 1px solid var(--border-default);
+  border-radius: 16px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.visualGraph {
+  background: var(--bg-elevated);
+  border: 1px solid var(--border-subtle);
+  border-radius: 12px;
+  height: 180px;
+  position: relative;
+  overflow: hidden;
+  margin-top: 12px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-around;
+  padding: 16px;
+}
+
+.bar {
+  width: 40px;
+  background: linear-gradient(180deg, var(--accent-primary) 0%, var(--accent-secondary) 100%);
+  border-radius: 6px 6px 0 0;
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 8px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  color: #fff;
+  transition: height 0.4s ease;
+}
+
+.barLabel {
+  position: absolute;
+  bottom: -20px;
+  font-size: 0.65rem;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+/* Spinner */
+.spinner {
+  width: 20px;
+  height: 20px;
+  border: 2px solid rgba(255,255,255,0.3);
+  border-top-color: var(--accent-primary);
+  border-radius: 50%;
+  animation: spin-slow 0.8s linear infinite;
+}
+
+/* Auth guard helper styling */
+.authOverlay {
+  position: fixed;
+  inset: 0;
+  background: var(--bg-base);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 9999;
+  flex-direction: column;
+  gap: 16px;
+}
