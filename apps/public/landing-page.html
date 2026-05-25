@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>KoryoGraph Suite - Martial Arts Studio Management Software</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; background: #f8fafc; color: #1e293b; line-height: 1.6; }
+        
+        /* Header */
+        .header { background: linear-gradient(135deg, #e11d48 0%, #be123c 100%); padding: 1rem 2rem; display: flex; justify-content: space-between; align-items: center; }
+        .logo { color: white; font-size: 1.5rem; font-weight: bold; }
+        .header-btn { background: white; color: #e11d48; padding: 0.75rem 1.5rem; border-radius: 8px; text-decoration: none; font-weight: 600; transition: transform 0.2s; }
+        .header-btn:hover { transform: translateY(-2px); }
+        
+        /* Hero */
+        .hero { background: white; padding: 4rem 2rem; text-align: center; }
+        .hero h1 { font-size: 3rem; margin-bottom: 1rem; color: #1e293b; }
+        .hero p { font-size: 1.25rem; color: #64748b; max-width: 700px; margin: 0 auto; }
+        
+        /* Features */
+        .features { padding: 4rem 2rem; background: #f8fafc; }
+        .features h2 { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; }
+        .feature-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 2rem; max-width: 1200px; margin: 0 auto; }
+        .feature-card { background: white; padding: 2rem; border-radius: 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); }
+        .feature-icon { width: 48px; height: 48px; background: #e11d48; border-radius: 8px; display: flex; align-items: center; justify-content: center; color: white; margin-bottom: 1rem; font-size: 1.5rem; }
+        .feature-card h3 { margin-bottom: 0.5rem; }
+        
+        /* Pricing */
+        .pricing { padding: 4rem 2rem; background: white; }
+        .pricing h2 { text-align: center; font-size: 2.5rem; margin-bottom: 1rem; }
+        .pricing-subtitle { text-align: center; color: #64748b; margin-bottom: 3rem; }
+        .pricing-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 2rem; max-width: 1000px; margin: 0 auto; }
+        .pricing-card { background: white; border: 2px solid #e2e8f0; border-radius: 16px; padding: 2rem; text-align: center; transition: all 0.3s; }
+        .pricing-card:hover { border-color: #e11d48; transform: translateY(-4px); box-shadow: 0 20px 25px -5px rgba(0,0,0,0.1); }
+        .pricing-card.popular { border-color: #e11d48; background: #fdf2f4; }
+        .pricing-card h3 { font-size: 1.5rem; margin-bottom: 0.5rem; }
+        .price { font-size: 3rem; font-weight: bold; color: #e11d48; margin-bottom: 0.5rem; }
+        .price span { font-size: 1rem; color: #64748b; font-weight: normal; }
+        .pricing-features { list-style: none; margin: 2rem 0; text-align: left; }
+        .pricing-features li { padding: 0.5rem 0; border-bottom: 1px solid #f1f5f9; }
+        .pricing-features li:last-child { border-bottom: none; }
+        .pricing-features li::before { content: "✓"; color: #10b981; margin-right: 0.5rem; }
+        .cta-button { background: #e11d48; color: white; padding: 1rem 2rem; border-radius: 8px; text-decoration: none; display: inline-block; font-weight: 600; margin-top: 1rem; transition: background 0.2s; }
+        .cta-button:hover { background: #be123c; }
+        
+        /* How It Works */
+        .how-it-works { padding: 4rem 2rem; background: #f8fafc; }
+        .how-it-works h2 { text-align: center; font-size: 2.5rem; margin-bottom: 3rem; }
+        .steps { max-width: 800px; margin: 0 auto; }
+        .step { background: white; padding: 1.5rem; border-radius: 12px; margin-bottom: 1rem; display: flex; align-items: center; gap: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.05); }
+        .step-number { background: #e11d48; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; }
+        
+        /* Footer */
+        .footer { background: #1e293b; color: white; padding: 3rem 2rem; text-align: center; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1.5rem; }
+        .footer-links a { color: #94a3b8; text-decoration: none; }
+        .footer-links a:hover { color: white; }
+        
+        /* Responsive */
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2rem; }
+            .pricing-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="logo">KoryoGraph</div>
+        <a href="/login" class="header-btn">Sign In</a>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <h1>The Ultimate Martial Arts Studio Management Platform</h1>
+        <p>KoryoGraph Suite helps martial arts studios manage students, track progress, handle billing, and grow their business — all in one powerful platform.</p>
+        <br>
+        <a href="#pricing" class="cta-button">View Pricing Plans</a>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features">
+        <h2>Everything Your Studio Needs</h2>
+        <div class="feature-grid">
+            <div class="feature-card">
+                <div class="feature-icon">👥</div>
+                <h3>Student Management</h3>
+                <p>Track attendance, progress, and skill evaluations. Manage family accounts and billing seamlessly.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">💰</div>
+                <h3>Billing & POS</h3>
+                <p>Process payments, manage subscriptions, and handle retail sales with integrated Stripe.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📅</div>
+                <h3>Schedule Management</h3>
+                <p>Create classes, manage events, and track camp registrations with ease.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📊</div>
+                <h3>Analytics Dashboard</h3>
+                <p>Get insights into retention, revenue, and student engagement.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">🤖</div>
+                <h3>AI-Powered Tools</h3>
+                <p>Automate attendance logging, generate lesson plans, and analyze technique videos.</p>
+            </div>
+            <div class="feature-card">
+                <div class="feature-icon">📱</div>
+                <h3>Mobile-First Design</h3>
+                <p>Manage your studio from anywhere with our tablet-optimized interface.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Pricing Section -->
+    <section class="pricing" id="pricing">
+        <h2>Simple, Transparent Pricing</h2>
+        <p class="pricing-subtitle">Choose the plan that fits your studio's needs. No hidden fees.</p>
+        
+        <div class="pricing-grid">
+            <!-- Trial Plan -->
+            <div class="pricing-card">
+                <h3>7-Day Free Trial</h3>
+                <div class="price">$0<span>/month</span></div>
+                <p>All core features. No credit card required.</p>
+                <ul class="pricing-features">
+                    <li>Up to 50 students</li>
+                    <li>1 location</li>
+                    <li>Attendance tracking</li>
+                    <li>Student progression</li>
+                    <li>Skill evaluations</li>
+                    <li>Class scheduling</li>
+                </ul>
+                <a href="/signup" class="cta-button">Start Free Trial</a>
+            </div>
+
+            <!-- Starter Plan -->
+            <div class="pricing-card popular">
+                <h3>Starter</h3>
+                <div class="price">$99<span>/month</span></div>
+                <p>Perfect for small studios getting started.</p>
+                <ul class="pricing-features">
+                    <li>Up to 50 students</li>
+                    <li>1 location</li>
+                    <li>All core features</li>
+                    <li>Student progression tracking</li>
+                    <li>Skill evaluations</li>
+                    <li>Class scheduling</li>
+                </ul>
+                <a href="/signup?plan=starter" class="cta-button">Get Started</a>
+            </div>
+
+            <!-- Growth Plan -->
+            <div class="pricing-card">
+                <h3>Growth</h3>
+                <div class="price">$199<span>/month</span></div>
+                <p>For growing studios with multiple locations.</p>
+                <ul class="pricing-features">
+                    <li>Up to 200 students</li>
+                    <li>Up to 3 locations</li>
+                    <li>AI class transcription</li>
+                    <li>Advanced analytics</li>
+                    <li>Inventory management</li>
+                    <li>Prioritized support</li>
+                </ul>
+                <a href="/signup?plan=growth" class="cta-button">Get Started</a>
+            </div>
+
+            <!-- Elite Plan -->
+            <div class="pricing-card">
+                <h3>Elite</h3>
+                <div class="price">$499<span>/month</span></div>
+                <p>For large studios and chains.</p>
+                <ul class="pricing-features">
+                    <li>Up to 500 students</li>
+                    <li>Up to 10 locations</li>
+                    <li>All AI features</li>
+                    <li>Prioritized support</li>
+                    <li>Custom branding</li>
+                    <li>White-label reports</li>
+                </ul>
+                <a href="/signup?plan=elite" class="cta-button">Get Started</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- How It Works -->
+    <section class="how-it-works">
+        <h2>How KoryoGraph Works</h2>
+        <div class="steps">
+            <div class="step">
+                <div class="step-number">1</div>
+                <div>
+                    <strong>Sign Up</strong>
+                    <p>Create your studio account in 2 minutes. No credit card needed for the trial.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">2</div>
+                <div>
+                    <strong>Add Your Students</strong>
+                    <p>Import your existing student list or add students manually. Link parents to their children.</p>
+                </div>
+            </div>
+            <div class="step">
+                <div class="step-number">3</div>
+                <div>
+                    <strong>Start Managing</strong>
+                    <p>Track attendance, log skill progress, manage billing, and grow your studio.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-links">
+            <a href="/about">About</a>
+            <a href="/features">Features</a>
+            <a href="/pricing">Pricing</a>
+            <a href="/contact">Contact</a>
+            <a href="/privacy">Privacy</a>
+            <a href="/terms">Terms</a>
+        </div>
+        <p>&copy; 2026 KoryoGraph Suite. All rights reserved.</p>
+    </footer>
+</body>
+</html>

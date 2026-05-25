@@ -1,0 +1,19 @@
+{
+  "name": "@repo/ai-core",
+  "version": "0.1.0",
+  "type": "module",
+  "private": true,
+  "description": "AI feature abstraction layer for KoryoGraph - enables graceful degradation when AI is unavailable",
+  "scripts": {
+    "lint": "eslint --max-warnings 0",
+    "check-types": "tsc --noEmit"
+  },
+  "dependencies": {
+    "@repo/types": "*"
+  },
+  "devDependencies": {
+    "@repo/eslint-config": "*",
+    "@repo/typescript-config": "*",
+    "typescript": "5.9.2"
+  }
+}
