@@ -1,6 +1,7 @@
 "use server";
 
 import { createHash, randomBytes } from "node:crypto";
+import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -45,5 +46,6 @@ export async function revokeKiosk(input: { id: string }): Promise<ActionResult> 
   if (!z.uuid().safeParse(input.id).success) return fail("Unknown device");
   const { error } = await ctx.supabase.from("kiosk_devices").update({ revoked_at: new Date().toISOString() }).eq("id", input.id);
   if (error) return fail("Couldn't revoke the device.");
+  revalidatePath("/desk/settings/kiosks");
   return ok();
 }

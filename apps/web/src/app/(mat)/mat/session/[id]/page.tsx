@@ -7,6 +7,7 @@ import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { Button } from "@koryo/ui/components/ui/button";
 import { LessonPlanPanel } from "@/components/mat/lesson-plan-panel";
 import { MatRoster } from "@/components/mat/mat-roster";
+import { MessageClass } from "@/components/mat/message-class";
 import type { LessonSection } from "@/lib/curriculum";
 import { requireSurfacePage } from "@/server/context";
 import { matSession } from "@/server/queries/mat";
@@ -36,6 +37,7 @@ export default async function MatSessionPage({ params }: { params: Promise<{ id:
         {rows.length === 0 ? (
           <EmptyState title="No one on the roster yet" description="Students enrolled in this class's programs appear here. Add walk-ins as they arrive." />
         ) : null}
+        {ctx.permissions.has("comms.send") && !cancelled && rows.length > 0 ? <MessageClass sessionId={s.id} /> : null}
         <MatRoster sessionId={s.id} rows={rows} progress={progress} canPromote={ctx.permissions.has("ranks.promote")} disabled={cancelled} />
         <LessonPlanPanel sessionId={s.id} current={plan} plans={lessonPlans} skills={new Map((skills ?? []).map((k) => [k.id, k.name]))} />
         <section className="space-y-2 rounded-xl border border-dashed border-default p-4">

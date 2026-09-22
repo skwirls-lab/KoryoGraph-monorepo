@@ -5,7 +5,8 @@
   "type": "module",
   "exports": {
     ".": "./src/index.ts",
-    "./providers": "./src/providers.ts"
+    "./providers": "./src/providers.ts",
+    "./webhooks": "./src/webhooks.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

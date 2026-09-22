@@ -19,6 +19,7 @@ export interface ResolvedNavItem {
   icon: IconKey;
   locked: boolean;
   module?: string;
+  badge?: number;
 }
 
 export const DESK_NAV: NavItem[] = [
@@ -27,7 +28,9 @@ export const DESK_NAV: NavItem[] = [
   { href: "/desk/schedule", label: "Schedule", icon: "calendar", permission: "desk.access" },
   { href: "/desk/programs", label: "Programs", icon: "award", permission: "desk.access" },
   { href: "/desk/curriculum", label: "Curriculum", icon: "book", permission: "desk.access" },
+  { href: "/desk/inbox", label: "Inbox", icon: "inbox", permission: "comms.send" },
   { href: "/desk/onboarding", label: "Get started", icon: "rocket", permission: "settings.manage" },
+  { href: "/desk/settings", label: "Settings", icon: "settings", permission: "desk.access" },
 ];
 
 export const MAT_NAV: NavItem[] = [
@@ -44,8 +47,16 @@ export const HOME_NAV: NavItem[] = [
   { href: "/home/messages", label: "Messages", icon: "message", permission: "home.access" },
 ];
 
-export function resolveNav(items: readonly NavItem[], permissions: ReadonlySet<string>, modules: ReadonlySet<string>): ResolvedNavItem[] {
+export function resolveNav(
+  items: readonly NavItem[],
+  permissions: ReadonlySet<string>,
+  modules: ReadonlySet<string>,
+  badges: Record<string, number> = {},
+): ResolvedNavItem[] {
   return items
     .filter((i) => !i.permission || permissions.has(i.permission))
-    .map((i) => ({ href: i.href, label: i.label, icon: i.icon, module: i.module, locked: Boolean(i.module && !modules.has(i.module)) }));
+    .map((i) => ({
+      href: i.href, label: i.label, icon: i.icon, module: i.module, locked: Boolean(i.module && !modules.has(i.module)),
+      ...(badges[i.href] ? { badge: badges[i.href] } : {}),
+    }));
 }

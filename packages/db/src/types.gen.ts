@@ -3839,6 +3839,7 @@ export type Database = {
           ok: boolean
         }[]
       }
+      mark_thread_read: { Args: { p_thread_id: string }; Returns: undefined }
       message_recipients: {
         Args: { p_person_ids: string[] }
         Returns: {
@@ -3853,6 +3854,8 @@ export type Database = {
           sms_consent: boolean
         }[]
       }
+      my_household_ids: { Args: never; Returns: string[] }
+      my_person_id: { Args: never; Returns: string }
       promote: {
         Args: {
           p_enrollment_id: string

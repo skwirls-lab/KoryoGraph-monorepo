@@ -189,3 +189,13 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   also releases quiet-hours deferrals. Availability counts come from `session_taken()` (a count only).
   PL/pgSQL RETURNS TABLE names that equal column names need `#variable_conflict use_column`.
 - **Why:** Correctness under concurrency, least privilege across households.
+
+## ADR-0014 — Two-way messaging and inbound routing
+- **Date / task:** 2026-09-22 · M1.11
+- **Decision:** Households post to `message_threads`/`thread_messages` directly under RLS (own household,
+  `from_staff = false`, as themselves); staff with comms.send post with `from_staff = true`. Unread counters
+  and `last_message_at` are trigger-maintained; `mark_thread_read()` clears the caller's side. Staff replies
+  also email the guardians via the `thread_message` template (Outbox when no provider). Inbound SMS maps to
+  a tenant by `tenants.settings.sms_number` (the school's Twilio number) and to a family by phone; inbound
+  email maps by a `reply+<threadId>@…` address. Webhooks verify Twilio HMAC-SHA1 and Resend/Svix HMAC-SHA256
+  signatures and answer 503 when their provider is not configured (never a silent 200).

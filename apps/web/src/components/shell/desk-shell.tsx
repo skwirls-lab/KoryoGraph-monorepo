@@ -47,6 +47,7 @@ function NavList({ nav, pathname, onNavigate }: { nav: ResolvedNavItem[]; pathna
               >
                 <NavIcon icon={item.icon} className="size-4 shrink-0" />
                 <span className="flex-1 truncate">{item.label}</span>
+                {item.badge ? <span className="rounded-full bg-brand px-1.5 text-xs font-semibold text-brand-foreground tabular" aria-label={`${item.badge} unread`}>{item.badge}</span> : null}
                 {item.locked ? <Lock aria-label="Not in your plan" className="size-3.5 text-fg-muted" /> : null}
               </Link>
             </li>
