@@ -11,8 +11,6 @@
   --font-display: "Space Grotesk Variable", "Inter Variable", ui-sans-serif, sans-serif;
 
   /* KoryoGraph utilities: bg-base, bg-surface, bg-elevated, bg-panel, text-muted, border-default … */
-  --color-base: var(--bg-base);
-  --color-bg-base: var(--bg-base);
   --color-surface: var(--bg-surface);
   --color-elevated: var(--bg-elevated);
   --color-panel: var(--bg-panel);
@@ -70,6 +68,10 @@
 }
 
 /* Text tokens are `text-fg`, `text-fg-secondary`, `text-fg-muted` (shadcn owns `muted`/`secondary`). */
+/* `base` can't be a theme colour: it would collide with the `text-base` font size. */
+@utility bg-base {
+  background-color: var(--bg-base);
+}
 @utility border-default {
   border-color: var(--border-default);
 }
@@ -104,6 +106,8 @@
   }
   a {
     color: var(--accent-text);
+    text-decoration: underline;
+    text-underline-offset: 2px;
   }
   .tabular {
     font-variant-numeric: tabular-nums;

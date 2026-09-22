@@ -14,6 +14,7 @@ const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${PORT}`;
 
 export default defineConfig({
   testDir: "tests/e2e",
+  globalSetup: "./tests/e2e/global-setup.ts",
   outputDir: "test-results",
   fullyParallel: false,
   workers: process.env.CI ? 1 : 2,
