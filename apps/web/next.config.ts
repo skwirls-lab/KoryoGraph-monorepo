@@ -8,6 +8,10 @@ loadEnvConfig(path.resolve(process.cwd(), "../.."));
 const nextConfig: NextConfig = {
   transpilePackages: ["@koryo/ui"],
   poweredByHeader: false,
+  experimental: {
+    // forbidden() → real 403 pages for surface authorisation.
+    authInterrupts: true,
+  },
 };
 
 export default nextConfig;

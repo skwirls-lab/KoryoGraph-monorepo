@@ -1,4 +1,13 @@
+import path from "node:path";
 import { defineConfig, devices } from "@playwright/test";
+
+for (const file of [".env.local", ".env"]) {
+  try {
+    process.loadEnvFile(path.resolve(import.meta.dirname, file));
+  } catch {
+    // optional file
+  }
+}
 
 const PORT = Number(process.env.PORT ?? 3100);
 const baseURL = process.env.E2E_BASE_URL ?? `http://localhost:${PORT}`;

@@ -16,7 +16,7 @@ export interface ThemeProviderProps {
   /** Theme resolved on the server (cookie / profile) so the first paint is correct. */
   initialTheme: Theme;
   /** Optional persistence hook, e.g. a server action writing profiles.preferred_theme. */
-  onPersist?: (theme: Theme) => void | Promise<void>;
+  onPersist?: (theme: Theme) => unknown;
   children: ReactNode;
 }
 
@@ -28,7 +28,7 @@ export function ThemeProvider({ initialTheme, onPersist, children }: ThemeProvid
       setThemeState(next);
       document.documentElement.dataset.theme = next;
       document.cookie = `${THEME_COOKIE}=${next}; path=/; max-age=31536000; samesite=lax`;
-      if (onPersist) void onPersist(next);
+      if (onPersist) void Promise.resolve(onPersist(next));
     },
     [onPersist],
   );

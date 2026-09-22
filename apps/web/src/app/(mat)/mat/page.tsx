@@ -1,11 +1,13 @@
 import { EmptyState } from "@koryo/ui/components/app/empty-state";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
 
-export default function MatHome() {
+export const metadata = { title: "Today" };
+
+export default function Page() {
   return (
-    <main className="mx-auto max-w-5xl p-4 sm:p-8">
-      <PageHeader title="Mat" description="Instructor view for today's classes." />
-      <EmptyState title="Nothing here yet — built in M1" description="This surface is scaffolded; its features are built in later milestones." />
-    </main>
+    <>
+      <PageHeader title="Today" />
+      <EmptyState title="No classes scheduled yet" description="Today's classes and rosters appear here once the schedule is built (milestone M1)." />
+    </>
   );
 }

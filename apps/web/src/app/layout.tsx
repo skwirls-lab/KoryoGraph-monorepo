@@ -1,11 +1,13 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
-import { cookies } from "next/headers";
+import { cookies, headers } from "next/headers";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@koryo/ui/components/theme/theme";
 import { THEME_COOKIE, isTheme, type Theme } from "@koryo/ui/components/theme/themes";
 import { Toaster } from "@koryo/ui/components/ui/sonner";
 import { TooltipProvider } from "@koryo/ui/components/ui/tooltip";
+import { saveThemePreference } from "@/server/actions/session";
+import { getOptionalCtx } from "@/server/context";
 
 export const metadata: Metadata = {
   title: { default: "KoryoGraph", template: "%s · KoryoGraph" },
@@ -17,13 +19,28 @@ export const viewport: Viewport = {
   initialScale: 1,
 };
 
-export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+/** Theme: cookie → profile preference → surface default (Home is light for parents in daylight). */
+async function resolveTheme(signedIn: boolean, userId: string | null, supabase: Awaited<ReturnType<typeof getOptionalCtx>>): Promise<Theme> {
   const stored = (await cookies()).get(THEME_COOKIE)?.value;
-  const theme: Theme = isTheme(stored) ? stored : "koryo-red";
+  if (isTheme(stored)) return stored;
+  if (signedIn && userId && supabase) {
+    const { data } = await supabase.supabase.from("profiles").select("preferred_theme").eq("id", userId).maybeSingle();
+    if (isTheme(data?.preferred_theme)) return data.preferred_theme;
+  }
+  const path = (await headers()).get("x-kg-path") ?? "";
+  return path === "/home" || path.startsWith("/home/") ? "light" : "koryo-red";
+}
+
+export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
+  const ctx = await getOptionalCtx();
+  const theme = await resolveTheme(Boolean(ctx), ctx?.userId ?? null, ctx);
   return (
     <html lang="en" data-theme={theme} suppressHydrationWarning>
       <body>
-        <ThemeProvider initialTheme={theme}>
+        <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-surface focus:px-3 focus:py-2">
+          Skip to content
+        </a>
+        <ThemeProvider initialTheme={theme} onPersist={ctx ? saveThemePreference : undefined}>
           <TooltipProvider>
             {children}
             <Toaster richColors closeButton />

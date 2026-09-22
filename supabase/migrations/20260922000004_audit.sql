@@ -79,7 +79,7 @@ begin
     case tg_op when 'INSERT' then 'create' when 'UPDATE' then 'update' else 'delete' end,
     b,
     a,
-    coalesce(app.request_header('x-forwarded-for'), app.request_header('x-real-ip')),
+    coalesce(app.request_header('x-client-ip'), app.request_header('x-forwarded-for'), app.request_header('x-real-ip')),
     app.request_header('x-request-id')
   );
   return null;
@@ -110,7 +110,7 @@ begin
   end if;
   insert into public.audit_events (tenant_id, actor_user_id, actor_role, entity_type, entity_id, action, after, note, ip, request_id)
   values (app.tenant_id(), auth.uid(), app.role(), entity_type, entity_id, 'custom', payload, note,
-          coalesce(app.request_header('x-forwarded-for'), app.request_header('x-real-ip')),
+          coalesce(app.request_header('x-client-ip'), app.request_header('x-forwarded-for'), app.request_header('x-real-ip')),
           app.request_header('x-request-id'));
 end;
 $$;

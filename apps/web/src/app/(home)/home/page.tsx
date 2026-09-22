@@ -1,11 +1,13 @@
 import { EmptyState } from "@koryo/ui/components/app/empty-state";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
 
-export default function MemberHome() {
+export const metadata = { title: "Home" };
+
+export default function Page() {
   return (
-    <main className="mx-auto max-w-5xl p-4 sm:p-8">
-      <PageHeader title="Home" description="Progress, schedule and billing for families." />
-      <EmptyState title="Nothing here yet — built in M1" description="This surface is scaffolded; its features are built in later milestones." />
-    </main>
+    <>
+      <PageHeader title="Home" />
+      <EmptyState title="Nothing to show yet" description="Your family's classes, progress and messages appear here once your school adds you (milestone M1)." />
+    </>
   );
 }

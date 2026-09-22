@@ -1,11 +1,11 @@
 import { EmptyState } from "@koryo/ui/components/app/empty-state";
-import { PageHeader } from "@koryo/ui/components/app/page-header";
 
-export default function KioskHome() {
+export const metadata = { title: "Kiosk" };
+
+export default function KioskPage() {
   return (
-    <main className="mx-auto max-w-5xl p-4 sm:p-8">
-      <PageHeader title="Kiosk" description="Front-desk check-in tablet." />
-      <EmptyState title="Nothing here yet — built in M1" description="This surface is scaffolded; its features are built in later milestones." />
+    <main className="flex min-h-dvh items-center justify-center p-6">
+      <EmptyState title="Kiosk not paired" description="Self check-in with device pairing and family PINs arrives in milestone M1." className="max-w-lg" />
     </main>
   );
 }
