@@ -25,7 +25,16 @@ export interface EnrollmentProgress {
 
 /** Everything the Progress tab (Desk, Mat, Home) needs for one person. RLS decides visibility. */
 export async function getPersonProgress(ctx: Ctx, personId: string): Promise<EnrollmentProgress[]> {
-  const { data: rows, error } = await ctx.supabase.from("v_enrollment_progress").select("*").eq("person_id", personId);
+  return getProgress(ctx, { personIds: [personId] });
+}
+
+/** Batched progress (e.g. a whole class roster) in a fixed number of queries. */
+export async function getProgress(ctx: Ctx, f: { personIds?: string[]; enrollmentIds?: string[] }): Promise<(EnrollmentProgress & { personId: string })[]> {
+  let q = ctx.supabase.from("v_enrollment_progress").select("*");
+  if (f.personIds) q = q.in("person_id", f.personIds);
+  if (f.enrollmentIds) q = q.in("enrollment_id", f.enrollmentIds);
+  if (!f.personIds?.length && !f.enrollmentIds?.length) return [];
+  const { data: rows, error } = await q;
   if (error) throw new Error(`progress: ${error.message}`);
   if (!rows?.length) return [];
   const enrollmentIds = rows.map((r) => r.enrollment_id as string);
@@ -73,6 +82,7 @@ export async function getPersonProgress(ctx: Ctx, personId: string): Promise<Enr
     ].sort((a, b) => b.at.localeCompare(a.at));
 
     return {
+      personId: r.person_id as string,
       enrollmentId: eid,
       programId: r.program_id as string,
       programName: programName.get(r.program_id as string) ?? "Program",
