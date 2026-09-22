@@ -115,6 +115,47 @@ export type Database = {
           },
         ]
       }
+      certificate_templates: {
+        Row: {
+          background_path: string | null
+          created_at: string
+          id: string
+          layout: Json
+          name: string
+          signature_path: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          background_path?: string | null
+          created_at?: string
+          id?: string
+          layout?: Json
+          name: string
+          signature_path?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          background_path?: string | null
+          created_at?: string
+          id?: string
+          layout?: Json
+          name?: string
+          signature_path?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "certificate_templates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       consents: {
         Row: {
           created_at: string
@@ -195,6 +236,87 @@ export type Database = {
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
             referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      enrollments: {
+        Row: {
+          classes_since_promotion: number
+          created_at: string
+          current_rank_id: string | null
+          id: string
+          last_promoted_at: string | null
+          person_id: string
+          program_id: string
+          started_at: string
+          status: string
+          stripes: number
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          classes_since_promotion?: number
+          created_at?: string
+          current_rank_id?: string | null
+          id?: string
+          last_promoted_at?: string | null
+          person_id: string
+          program_id: string
+          started_at?: string
+          status?: string
+          stripes?: number
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          classes_since_promotion?: number
+          created_at?: string
+          current_rank_id?: string | null
+          id?: string
+          last_promoted_at?: string | null
+          person_id?: string
+          program_id?: string
+          started_at?: string
+          status?: string
+          stripes?: number
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_tenant_id_current_rank_id_fkey"
+            columns: ["tenant_id", "current_rank_id"]
+            isOneToOne: false
+            referencedRelation: "ranks"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "enrollments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "enrollments_tenant_id_program_id_fkey"
+            columns: ["tenant_id", "program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -533,6 +655,63 @@ export type Database = {
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
             referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      lesson_plans: {
+        Row: {
+          ai_run_id: string | null
+          created_at: string
+          created_by: string | null
+          id: string
+          is_template: boolean
+          name: string
+          program_id: string | null
+          sections: Json
+          source: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          ai_run_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_template?: boolean
+          name: string
+          program_id?: string | null
+          sections?: Json
+          source?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          ai_run_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          is_template?: boolean
+          name?: string
+          program_id?: string | null
+          sections?: Json
+          source?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lesson_plans_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lesson_plans_tenant_id_program_id_fkey"
+            columns: ["tenant_id", "program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -1019,6 +1198,381 @@ export type Database = {
           },
         ]
       }
+      programs: {
+        Row: {
+          active: boolean
+          age_max: number | null
+          age_min: number | null
+          color: string
+          created_at: string
+          description: string
+          id: string
+          invite_only: boolean
+          name: string
+          slug: string
+          sort: number
+          tenant_id: string
+          terminology: Json
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          age_max?: number | null
+          age_min?: number | null
+          color?: string
+          created_at?: string
+          description?: string
+          id?: string
+          invite_only?: boolean
+          name: string
+          slug: string
+          sort?: number
+          tenant_id: string
+          terminology?: Json
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          age_max?: number | null
+          age_min?: number | null
+          color?: string
+          created_at?: string
+          description?: string
+          id?: string
+          invite_only?: boolean
+          name?: string
+          slug?: string
+          sort?: number
+          tenant_id?: string
+          terminology?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "programs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      promotion_approvals: {
+        Row: {
+          approved_at: string
+          approved_by_user_id: string | null
+          created_at: string
+          enrollment_id: string
+          id: string
+          note: string | null
+          rank_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          approved_at?: string
+          approved_by_user_id?: string | null
+          created_at?: string
+          enrollment_id: string
+          id?: string
+          note?: string | null
+          rank_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          approved_at?: string
+          approved_by_user_id?: string | null
+          created_at?: string
+          enrollment_id?: string
+          id?: string
+          note?: string | null
+          rank_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promotion_approvals_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "promotion_approvals_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "v_enrollment_progress"
+            referencedColumns: ["tenant_id", "enrollment_id"]
+          },
+          {
+            foreignKeyName: "promotion_approvals_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promotion_approvals_tenant_id_rank_id_fkey"
+            columns: ["tenant_id", "rank_id"]
+            isOneToOne: false
+            referencedRelation: "ranks"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      promotions: {
+        Row: {
+          certificate_path: string | null
+          created_at: string
+          enrollment_id: string
+          from_rank_id: string | null
+          id: string
+          notes: string | null
+          promoted_at: string
+          promoted_by_user_id: string | null
+          reason: string | null
+          tenant_id: string
+          testing_event_id: string | null
+          to_rank_id: string
+          updated_at: string
+        }
+        Insert: {
+          certificate_path?: string | null
+          created_at?: string
+          enrollment_id: string
+          from_rank_id?: string | null
+          id?: string
+          notes?: string | null
+          promoted_at?: string
+          promoted_by_user_id?: string | null
+          reason?: string | null
+          tenant_id: string
+          testing_event_id?: string | null
+          to_rank_id: string
+          updated_at?: string
+        }
+        Update: {
+          certificate_path?: string | null
+          created_at?: string
+          enrollment_id?: string
+          from_rank_id?: string | null
+          id?: string
+          notes?: string | null
+          promoted_at?: string
+          promoted_by_user_id?: string | null
+          reason?: string | null
+          tenant_id?: string
+          testing_event_id?: string | null
+          to_rank_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "promotions_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "promotions_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "v_enrollment_progress"
+            referencedColumns: ["tenant_id", "enrollment_id"]
+          },
+          {
+            foreignKeyName: "promotions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "promotions_tenant_id_from_rank_id_fkey"
+            columns: ["tenant_id", "from_rank_id"]
+            isOneToOne: false
+            referencedRelation: "ranks"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "promotions_tenant_id_to_rank_id_fkey"
+            columns: ["tenant_id", "to_rank_id"]
+            isOneToOne: false
+            referencedRelation: "ranks"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      rank_requirements: {
+        Row: {
+          created_at: string
+          id: string
+          min_classes: number
+          min_days: number
+          notes: string
+          rank_id: string
+          requires_instructor_approval: boolean
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          min_classes?: number
+          min_days?: number
+          notes?: string
+          rank_id: string
+          requires_instructor_approval?: boolean
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          min_classes?: number
+          min_days?: number
+          notes?: string
+          rank_id?: string
+          requires_instructor_approval?: boolean
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rank_requirements_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rank_requirements_tenant_id_rank_id_fkey"
+            columns: ["tenant_id", "rank_id"]
+            isOneToOne: false
+            referencedRelation: "ranks"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      rank_skills: {
+        Row: {
+          created_at: string
+          id: string
+          rank_id: string
+          required: boolean
+          skill_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          rank_id: string
+          required?: boolean
+          skill_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          rank_id?: string
+          required?: boolean
+          skill_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "rank_skills_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "rank_skills_tenant_id_rank_id_fkey"
+            columns: ["tenant_id", "rank_id"]
+            isOneToOne: false
+            referencedRelation: "ranks"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "rank_skills_tenant_id_skill_id_fkey"
+            columns: ["tenant_id", "skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      ranks: {
+        Row: {
+          belt_color: string
+          certificate_template_id: string | null
+          created_at: string
+          id: string
+          name: string
+          position: number
+          program_id: string
+          stripes_max: number
+          tenant_id: string
+          testing_fee_cents: number
+          updated_at: string
+        }
+        Insert: {
+          belt_color?: string
+          certificate_template_id?: string | null
+          created_at?: string
+          id?: string
+          name: string
+          position: number
+          program_id: string
+          stripes_max?: number
+          tenant_id: string
+          testing_fee_cents?: number
+          updated_at?: string
+        }
+        Update: {
+          belt_color?: string
+          certificate_template_id?: string | null
+          created_at?: string
+          id?: string
+          name?: string
+          position?: number
+          program_id?: string
+          stripes_max?: number
+          tenant_id?: string
+          testing_fee_cents?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ranks_tenant_id_certificate_template_id_fkey"
+            columns: ["tenant_id", "certificate_template_id"]
+            isOneToOne: false
+            referencedRelation: "certificate_templates"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "ranks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ranks_tenant_id_program_id_fkey"
+            columns: ["tenant_id", "program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       role_permissions: {
         Row: {
           created_at: string
@@ -1106,6 +1660,137 @@ export type Database = {
           },
         ]
       }
+      skill_signoffs: {
+        Row: {
+          by_user_id: string | null
+          created_at: string
+          enrollment_id: string
+          id: string
+          notes: string | null
+          score: number | null
+          signed_off_at: string
+          skill_id: string
+          source: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          by_user_id?: string | null
+          created_at?: string
+          enrollment_id: string
+          id?: string
+          notes?: string | null
+          score?: number | null
+          signed_off_at?: string
+          skill_id: string
+          source?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          by_user_id?: string | null
+          created_at?: string
+          enrollment_id?: string
+          id?: string
+          notes?: string | null
+          score?: number | null
+          signed_off_at?: string
+          skill_id?: string
+          source?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skill_signoffs_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "skill_signoffs_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "v_enrollment_progress"
+            referencedColumns: ["tenant_id", "enrollment_id"]
+          },
+          {
+            foreignKeyName: "skill_signoffs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "skill_signoffs_tenant_id_skill_id_fkey"
+            columns: ["tenant_id", "skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      skills: {
+        Row: {
+          archived_at: string | null
+          category: string
+          created_at: string
+          description: string
+          id: string
+          name: string
+          program_id: string | null
+          rubric: Json
+          sort: number
+          tenant_id: string
+          updated_at: string
+          video_url: string | null
+        }
+        Insert: {
+          archived_at?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          name: string
+          program_id?: string | null
+          rubric?: Json
+          sort?: number
+          tenant_id: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Update: {
+          archived_at?: string | null
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          name?: string
+          program_id?: string | null
+          rubric?: Json
+          sort?: number
+          tenant_id?: string
+          updated_at?: string
+          video_url?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "skills_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "skills_tenant_id_program_id_fkey"
+            columns: ["tenant_id", "program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       staff_invitations: {
         Row: {
           accepted_at: string | null
@@ -1159,6 +1844,71 @@ export type Database = {
             columns: ["tenant_id", "role_id"]
             isOneToOne: false
             referencedRelation: "roles"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      stripe_awards: {
+        Row: {
+          awarded_at: string
+          awarded_by_user_id: string | null
+          created_at: string
+          enrollment_id: string
+          id: string
+          note: string | null
+          rank_id: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          awarded_at?: string
+          awarded_by_user_id?: string | null
+          created_at?: string
+          enrollment_id: string
+          id?: string
+          note?: string | null
+          rank_id?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          awarded_at?: string
+          awarded_by_user_id?: string | null
+          created_at?: string
+          enrollment_id?: string
+          id?: string
+          note?: string | null
+          rank_id?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "stripe_awards_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "stripe_awards_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "v_enrollment_progress"
+            referencedColumns: ["tenant_id", "enrollment_id"]
+          },
+          {
+            foreignKeyName: "stripe_awards_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "stripe_awards_tenant_id_rank_id_fkey"
+            columns: ["tenant_id", "rank_id"]
+            isOneToOne: false
+            referencedRelation: "ranks"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -1597,6 +2347,65 @@ export type Database = {
           },
         ]
       }
+      v_enrollment_progress: {
+        Row: {
+          classes_since_promotion: number | null
+          current_belt_color: string | null
+          current_position: number | null
+          current_rank_id: string | null
+          current_rank_name: string | null
+          days_since_promotion: number | null
+          enrollment_id: string | null
+          instructor_approved: boolean | null
+          last_promoted_at: string | null
+          min_classes: number | null
+          min_days: number | null
+          next_belt_color: string | null
+          next_rank_id: string | null
+          next_rank_name: string | null
+          next_testing_fee_cents: number | null
+          person_id: string | null
+          program_id: string | null
+          required_skills: number | null
+          requires_instructor_approval: boolean | null
+          signed_required_skills: number | null
+          started_at: string | null
+          status: string | null
+          stripes: number | null
+          stripes_max: number | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "enrollments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "enrollments_tenant_id_program_id_fkey"
+            columns: ["tenant_id", "program_id"]
+            isOneToOne: false
+            referencedRelation: "programs"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       v_people_search: {
         Row: {
           allergies: string[] | null
@@ -1678,14 +2487,37 @@ export type Database = {
         Args: { p_entity: string; p_rows: number }
         Returns: undefined
       }
+      award_stripe: {
+        Args: { p_enrollment_id: string; p_note?: string }
+        Returns: number
+      }
       create_household: { Args: { p: Json }; Returns: string }
       create_tenant: {
         Args: { p_name: string; p_slug: string; p_timezone: string }
         Returns: string
       }
+      promote: {
+        Args: {
+          p_enrollment_id: string
+          p_reason?: string
+          p_testing_event_id?: string
+          p_to_rank_id: string
+        }
+        Returns: string
+      }
       set_household_pin: {
         Args: { p_household_id: string; p_pin: string }
         Returns: undefined
+      }
+      sign_off_skill: {
+        Args: {
+          p_enrollment_id: string
+          p_notes?: string
+          p_score?: number
+          p_skill_id: string
+          p_source?: string
+        }
+        Returns: string
       }
       switch_tenant: { Args: { p_tenant_id: string }; Returns: undefined }
     }
