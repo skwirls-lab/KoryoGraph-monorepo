@@ -1,0 +1,124 @@
+# KoryoGraph build progress
+Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
+
+## Current task
+M1.01
+
+## Preflight
+Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
+
+```
+node -v            → v22.23.1   OK
+npm -v             → 10.9.8     OK
+docker info        → OK
+supabase --version → not on PATH; `npx supabase@2.117.0` works (added as a root devDependency) — OK
+stripe --version   → NOT INSTALLED → HANDOFF (webhook forwarding via `stripe listen`)
+.env.local         → absent → created from .env.example with local stack keys
+STRIPE_SECRET_KEY  → missing → HANDOFF
+OPENROUTER_API_KEY → missing → HANDOFF (AI runs on the fixture transport in tests; UI states "no key")
+Resend / Twilio    → missing → Outbox (by design)
+git status         → 0 dirty files
+port 3000          → in use by another container on the host → dev server uses :3100 (ADR-0002)
+```
+
+## Milestones
+| Milestone | Status | Gate result | Tag | Date |
+|---|---|---|---|---|
+| M0 | done | GREEN (typecheck, lint, unit 16, db 22, e2e 14) | m0-complete | 2026-09-22 |
+| M1 | in_progress |  |  |  |
+| M2 | todo |  |  |  |
+| M3 | todo |  |  |  |
+| M4 | todo |  |  |  |
+| M5 | todo |  |  |  |
+
+## Tasks
+| Task | Status (todo/doing/done/blocked) | Commit | Notes |
+|---|---|---|---|
+| M0.01 | done | 76587c2 |  |
+| M0.02 | done | cfbb381 | state files were silently ignored by a root `build` gitignore pattern until the M0 gate; fixed and committed then |
+| M0.03 | done | 2b47745 |  |
+| M0.04 | done | e0a18a5 |  |
+| M0.05 | done | 724039a |  |
+| M0.06 | done | 271e4df |  |
+| M0.07 | done | 26c64f3 |  |
+| M0.08 | done | eaa7459 |  |
+| M0.09 | done | 44d7b8e | reordered before M0.10 (gate needs seed) |
+| M0.10 | done | b69710f |  |
+| M0.11 | done | c4295af |  |
+| M0.12 | done | 30c914d |  |
+| M1.01 | doing |  |  |
+| M1.02 | todo |  |  |
+| M1.03 | todo |  |  |
+| M1.04 | todo |  |  |
+| M1.05 | todo |  |  |
+| M1.06 | todo |  |  |
+| M1.07 | todo |  |  |
+| M1.08 | todo |  |  |
+| M1.09 | todo |  |  |
+| M1.10 | todo |  |  |
+| M1.11 | todo |  |  |
+| M1.12 | todo |  |  |
+| M1.13 | todo |  |  |
+| M1.14 | todo |  |  |
+| M1.15 | todo |  |  |
+| M2.01 | todo |  |  |
+| M2.02 | todo |  |  |
+| M2.03 | todo |  |  |
+| M2.04 | todo |  |  |
+| M2.05 | todo |  |  |
+| M2.06 | todo |  |  |
+| M2.07 | todo |  |  |
+| M2.08 | todo |  |  |
+| M2.09 | todo |  |  |
+| M2.10 | todo |  |  |
+| M2.11 | todo |  |  |
+| M2.12 | todo |  |  |
+| M3.01 | todo |  |  |
+| M3.02 | todo |  |  |
+| M3.03 | todo |  |  |
+| M3.04 | todo |  |  |
+| M3.05 | todo |  |  |
+| M3.06 | todo |  |  |
+| M3.07 | todo |  |  |
+| M3.08 | todo |  |  |
+| M3.09 | todo |  |  |
+| M4.01 | todo |  |  |
+| M4.02 | todo |  |  |
+| M4.03 | todo |  |  |
+| M4.04 | todo |  |  |
+| M4.05 | todo |  |  |
+| M4.06 | todo |  |  |
+| M4.07 | todo |  |  |
+| M4.08 | todo |  |  |
+| M4.09 | todo |  |  |
+| M4.10 | todo |  |  |
+| M4.11 | todo |  |  |
+| M4.12 | todo |  |  |
+| M5.01 | todo |  |  |
+| M5.02 | todo |  |  |
+| M5.03 | todo |  |  |
+| M5.04 | todo |  |  |
+| M5.05 | todo |  |  |
+| M5.06 | todo |  |  |
+| M5.07 | todo |  |  |
+| M5.08 | todo |  |  |
+| M5.09 | todo |  |  |
+| M5.10 | todo |  |  |
+| M5.11 | todo |  |  |
+
+## Blocked
+| Task | Diagnosis | Needs |
+|---|---|---|
+
+## HANDOFF items
+| Item | Why | How to verify |
+|---|---|---|
+| Stripe CLI | Not installed on build host | `stripe --version`; `stripe listen --forward-to localhost:3100/api/stripe/webhook` |
+| STRIPE_SECRET_KEY / NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY | Not provided | Add test keys to `.env.local`; run `npx playwright test --grep @stripe` |
+| OPENROUTER_API_KEY | Not provided | Add key to `.env.local`; run `npm run ai:eval` |
+| RESEND_API_KEY / TWILIO_* | Not provided (optional) | Add keys; send a test from Desk → Outbox → Resend |
+
+## Deviations (see DECISIONS.md for detail)
+- ADR-0001 Consolidate to single app; Supabase platform; OpenRouter
+- ADR-0002 Dev server on port 3100; working branch `claude/koryograph-build`; Supabase CLI via npm
+- ADR-0003 `@supabase/ssr` 0.12.x instead of ^0.5 (0.5 line is superseded; same getAll/setAll API)
