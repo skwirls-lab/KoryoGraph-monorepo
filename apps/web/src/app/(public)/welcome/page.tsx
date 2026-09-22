@@ -1,28 +1,31 @@
-import Link from "next/link";
 import { redirect } from "next/navigation";
+import { z } from "zod";
 import { AuthCard } from "@/components/auth/auth-card";
+import { SchoolForm } from "@/components/auth/school-form";
 import { getOptionalCtx, landingPath } from "@/server/context";
 
 export const metadata = { title: "Welcome" };
 
-/** Signed in but not (yet) a member of any school. */
+const pendingSchool = z.object({ name: z.string(), timezone: z.string() });
+
+/** Signed in but not (yet) a member of any school: create one, or wait for an invitation. */
 export default async function WelcomePage() {
   const ctx = await getOptionalCtx();
   if (!ctx) redirect("/login");
   if (ctx.tenantId) redirect(landingPath(ctx));
+  const { data } = await ctx.supabase.auth.getUser();
+  const pending = pendingSchool.safeParse(data.user?.user_metadata?.pending_school);
   return (
-    <AuthCard title="You're signed in" description="Your account isn't connected to a school yet.">
-      <ul className="space-y-3 text-sm">
-        <li>
-          <strong>Running a school?</strong> <Link href="/signup">Create your school</Link> to start a 14-day trial.
-        </li>
-        <li>
-          <strong>Joining one?</strong> Ask your school to send you an invitation, then open the link in the email.
-        </li>
-      </ul>
-      <form action="/auth/signout" method="post">
-        <button type="submit" className="text-sm underline">Sign out</button>
-      </form>
+    <AuthCard
+      title={pending.success ? "Finish setting up your school" : "Create your school"}
+      description={pending.success ? "Your email is confirmed. One click and you're in." : "Your account isn't connected to a school yet. Joining one? Ask your school for an invitation instead."}
+      footer={
+        <form action="/auth/signout" method="post">
+          <button type="submit" className="underline">Sign out</button>
+        </form>
+      }
+    >
+      <SchoolForm defaultName={pending.success ? pending.data.name : ""} defaultTimezone={pending.success ? pending.data.timezone : ""} />
     </AuthCard>
   );
 }

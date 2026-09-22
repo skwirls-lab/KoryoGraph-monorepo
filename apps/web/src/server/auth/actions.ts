@@ -13,6 +13,7 @@ import {
   type MagicLinkInput,
   type ResetPasswordInput,
 } from "@/lib/validation/auth";
+import { signupSchema, type SignupInput } from "@/lib/validation/signup";
 import { logger } from "../log";
 import { supabaseServer } from "../supabase";
 
@@ -91,4 +92,40 @@ export async function signOut(): Promise<void> {
   const supabase = await supabaseServer();
   await supabase.auth.signOut();
   redirect("/login");
+}
+
+/**
+ * F1.3 self-serve signup: create the account, then the school. When email confirmation is required the
+ * school details wait in user metadata and /welcome offers to finish after the user confirms.
+ */
+export async function signUpWithSchool(input: SignupInput): Promise<ActionResult<{ confirmEmail: boolean }>> {
+  const parsed = signupSchema.safeParse(input);
+  if (!parsed.success) return fail("Check the highlighted fields", issuesToFieldErrors(parsed.error.issues));
+  const { email, password, fullName, schoolName, timezone } = parsed.data;
+  const supabase = await supabaseServer();
+  const { data, error } = await supabase.auth.signUp({
+    email,
+    password,
+    options: {
+      data: { full_name: fullName, pending_school: { name: schoolName, timezone } },
+      emailRedirectTo: callbackUrl("/welcome"),
+    },
+  });
+  if (error) {
+    if (error.code === "user_already_exists") return fail("An account with that email already exists. Sign in instead.", { email: "Already registered" });
+    if (error.code === "weak_password") return fail(error.message, { password: error.message });
+    logger().error({ reason: error.code }, "sign-up failed");
+    return fail("We couldn't create your account. Please try again.");
+  }
+  if (!data.session) return ok({ confirmEmail: true });
+
+  const { data: tenantId, error: tenantError } = await supabase.rpc("create_tenant", { p_name: schoolName, p_slug: "", p_timezone: timezone });
+  if (tenantError || !tenantId) {
+    logger({ userId: data.user?.id }).error({ err: tenantError?.message }, "create_tenant after sign-up failed");
+    redirect("/welcome");
+  }
+  await supabase.auth.updateUser({ data: { pending_school: null } });
+  const { error: refreshError } = await supabase.auth.refreshSession();
+  if (refreshError) redirect("/login?next=/desk/onboarding");
+  redirect("/desk/onboarding");
 }

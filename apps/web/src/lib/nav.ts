@@ -23,6 +23,7 @@ export interface ResolvedNavItem {
 
 export const DESK_NAV: NavItem[] = [
   { href: "/desk", label: "Dashboard", icon: "dashboard", permission: "desk.access" },
+  { href: "/desk/onboarding", label: "Get started", icon: "rocket", permission: "settings.manage" },
 ];
 
 export const MAT_NAV: NavItem[] = [
