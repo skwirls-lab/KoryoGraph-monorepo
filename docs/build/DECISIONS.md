@@ -111,3 +111,15 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   4. Every view is `security_invoker` (guard test) so RLS applies through views.
   5. Every tenant table has an `id` (household_members too) so audit entity ids are meaningful.
 - **Why:** Least privilege for minors' data; the database, not the UI, decides who sees a child's record.
+
+## ADR-0009 — TanStack Table v8; people UI conventions
+- **Date / task:** 2026-09-22 · M1.02
+- **Spec:** §3.1 lists `@tanstack/react-table` unpinned; §0.6 "Tables: shared DataTable"; "Forms: react-hook-form + zod".
+- **Decision:** Pin `@tanstack/react-table` 8.21.3 (v9.0 shipped 2026-08 with a new API; v8 is the mature,
+  well-understood line). `DataTable` (packages/ui) renders; filtering, search and pagination are
+  server-driven through URL state (`nuqs`, `shallow: false`) so lists are shareable and the server stays
+  the source of truth. Multi-row writes that must be atomic go through `security invoker` SQL functions
+  (`create_household`, `add_household_person`) — RLS still applies, and a family is created all-or-nothing.
+  List CSV export needs only `people.read` (it's the same rows the user can already see) and is recorded
+  in `audit_events`; the full-tenant export (M1.13) needs `exports.run`.
+- **Why:** Stability over novelty mid-build; one table component; no partial families.

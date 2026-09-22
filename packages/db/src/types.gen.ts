@@ -617,6 +617,67 @@ export type Database = {
         }
         Relationships: []
       }
+      notes: {
+        Row: {
+          body: string
+          by_user_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          person_id: string
+          pinned: boolean
+          source: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          by_user_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          person_id: string
+          pinned?: boolean
+          source?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          by_user_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          person_id?: string
+          pinned?: boolean
+          source?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "notes_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "notes_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "notes_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       people: {
         Row: {
           address: Json
@@ -1609,6 +1670,15 @@ export type Database = {
       }
     }
     Functions: {
+      add_household_person: {
+        Args: { m: Json; p_household_id: string }
+        Returns: string
+      }
+      audit_export: {
+        Args: { p_entity: string; p_rows: number }
+        Returns: undefined
+      }
+      create_household: { Args: { p: Json }; Returns: string }
       create_tenant: {
         Args: { p_name: string; p_slug: string; p_timezone: string }
         Returns: string

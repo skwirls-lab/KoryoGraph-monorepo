@@ -104,7 +104,8 @@
     outline: 2px solid var(--ring);
     outline-offset: 2px;
   }
-  a {
+  /* Text links are underlined (WCAG link-in-text-block); component links (buttons, tabs…) opt out via data-slot. */
+  a:where(:not([data-slot])) {
     color: var(--accent-text);
     text-decoration: underline;
     text-underline-offset: 2px;

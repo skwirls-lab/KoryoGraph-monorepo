@@ -1,6 +1,7 @@
 import "./globals.css";
 import type { Metadata, Viewport } from "next";
 import { cookies, headers } from "next/headers";
+import { NuqsAdapter } from "nuqs/adapters/next/app";
 import type { ReactNode } from "react";
 import { ThemeProvider } from "@koryo/ui/components/theme/theme";
 import { THEME_COOKIE, isTheme, type Theme } from "@koryo/ui/components/theme/themes";
@@ -40,12 +41,14 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
         <a href="#main" className="sr-only focus:not-sr-only focus:fixed focus:left-2 focus:top-2 focus:z-50 focus:rounded-md focus:bg-surface focus:px-3 focus:py-2">
           Skip to content
         </a>
-        <ThemeProvider initialTheme={theme} onPersist={ctx ? saveThemePreference : undefined}>
-          <TooltipProvider>
-            {children}
-            <Toaster richColors closeButton />
-          </TooltipProvider>
-        </ThemeProvider>
+        <NuqsAdapter>
+          <ThemeProvider initialTheme={theme} onPersist={ctx ? saveThemePreference : undefined}>
+            <TooltipProvider>
+              {children}
+              <Toaster richColors closeButton />
+            </TooltipProvider>
+          </ThemeProvider>
+        </NuqsAdapter>
       </body>
     </html>
   );
