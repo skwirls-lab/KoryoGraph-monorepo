@@ -174,3 +174,18 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   counted in `kiosk_unlock` (5 → 15-minute lock); `kiosk_check_in` re-verifies the PIN (stateless).
   Photo-confirm mode is an explicit per-device setting. Families without a PIN are sent to the desk.
 - **Why:** A shared tablet must never hold a staff session or a privileged key.
+
+## ADR-0013 — Bookings in definer RPCs; cross-household notices queued in the database
+- **Date / task:** 2026-09-22 · M1.10
+- **Spec:** F5.4/F5.5 — capacity, waitlist auto-promote with notification, makeup credits by tenant rule.
+- **Decision:** `book_session` / `cancel_booking` are security-definer RPCs that lock the session row
+  (race-free capacity) and authorise explicitly (staff with attendance.write, or a Home user for someone
+  in their own household); Home users must respect the class cancellation window. A timely cancellation
+  of a confirmed spot earns a makeup credit (`tenants.settings.makeups`, default on, 60 days). When a
+  cancellation promotes another family's student, the notice is queued *inside the same transaction*
+  (`app.enqueue_system_message` → `communications.status = 'queued'` + merge `data`), because the
+  cancelling parent must not read the other family's contact details. The `outbox_dispatch` job (service
+  role, every 5 min) renders, applies consent/quiet hours, and sends or marks `unsent_no_provider`; it
+  also releases quiet-hours deferrals. Availability counts come from `session_taken()` (a count only).
+  PL/pgSQL RETURNS TABLE names that equal column names need `#variable_conflict use_column`.
+- **Why:** Correctness under concurrency, least privilege across households.

@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M1.09
+M1.10
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -54,8 +54,8 @@ port 3000          → in use by another container on the host → dev server us
 | M1.06 | done | fb8abb2 |  |
 | M1.07 | done | 0cd8f2c | comms foundation pulled in (ADR-0011) |
 | M1.08 | done | 0c9e0cb |  |
-| M1.09 | doing |  |  |
-| M1.10 | todo |  |  |
+| M1.09 | done | 82ee66a |  |
+| M1.10 | doing |  |  |
 | M1.11 | todo |  |  |
 | M1.12 | todo |  |  |
 | M1.13 | todo |  |  |

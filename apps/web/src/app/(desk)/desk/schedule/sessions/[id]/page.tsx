@@ -6,7 +6,8 @@ import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { RankBadge } from "@koryo/ui/components/app/rank-badge";
 import { Badge } from "@koryo/ui/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@koryo/ui/components/ui/table";
-import { CancelSessionDialog, CheckInSwitch, InstructorPicker, SessionNote } from "@/components/schedule/session-controls";
+import { CancelBookingButton } from "@/components/bookings/booking-buttons";
+import { BookPersonDialog, CancelSessionDialog, CheckInSwitch, InstructorPicker, SessionNote } from "@/components/schedule/session-controls";
 import { requireSurfacePage } from "@/server/context";
 import { getClassSession, staffOptions } from "@/server/queries/schedule";
 
@@ -25,6 +26,8 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
   const booked = roster.filter((r) => r.booking_status === "booked" || r.booking_status === "attended");
   const waitlisted = roster.filter((r) => r.booking_status === "waitlisted").sort((a, b) => (a.waitlist_position ?? 0) - (b.waitlist_position ?? 0));
   const present = roster.filter((r) => r.attended).length;
+  const { data: bookingRows } = await ctx.supabase.from("bookings").select("id, person_id").eq("session_id", s.id).neq("status", "cancelled");
+  const bookingIds = new Map((bookingRows ?? []).map((b) => [b.person_id, b.id]));
   return (
     <>
       <PageHeader
@@ -38,6 +41,7 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
         <section className="space-y-3 lg:col-span-2" aria-labelledby="roster-h">
           <div className="flex items-baseline justify-between">
             <h2 id="roster-h" className="text-lg font-semibold">Roster</h2>
+            <div className="flex items-center gap-2">{canAttend && !cancelled ? <BookPersonDialog sessionId={s.id} /> : null}</div>
             <p className="text-sm text-fg-secondary tabular">{present} present · {booked.length}{s.capacity ? `/${s.capacity}` : ""} booked{waitlisted.length ? ` · ${waitlisted.length} waitlisted` : ""}</p>
           </div>
           {roster.length === 0 ? <EmptyState title="No one on this roster" description="Students enrolled in this class's programs appear here." /> : (
@@ -53,7 +57,12 @@ export default async function SessionPage({ params }: { params: Promise<{ id: st
                         {r.allergies?.length ? <span className="ml-2 text-xs text-warning">allergy: {r.allergies.join(", ")}</span> : null}
                       </TableCell>
                       <TableCell>{r.rank_name ? <RankBadge name={r.rank_name} beltColor={r.belt_color ?? "#f5f5f5"} stripes={r.stripes ?? 0} stripesMax={r.stripes_max ?? 0} /> : <span className="text-fg-muted">—</span>}</TableCell>
-                      <TableCell>{r.booking_status ? <Badge variant="outline" className="capitalize">{r.booking_status}{r.waitlist_position ? ` #${r.waitlist_position}` : ""}</Badge> : <span className="text-xs text-fg-muted">{r.is_extra ? "walk-in" : "enrolled"}</span>}</TableCell>
+                      <TableCell>
+                        {r.booking_status ? <Badge variant="outline" className="capitalize">{r.booking_status}{r.waitlist_position ? ` #${r.waitlist_position}` : ""}</Badge> : <span className="text-xs text-fg-muted">{r.is_extra ? "walk-in" : "enrolled"}</span>}
+                        {canAttend && !cancelled && (r.booking_status === "booked" || r.booking_status === "waitlisted") && bookingIds.get(r.person_id as string) ? (
+                          <CancelBookingButton bookingId={bookingIds.get(r.person_id as string) as string} sessionId={s.id} label={`booking for ${r.display_name}`} />
+                        ) : null}
+                      </TableCell>
                       <TableCell className="text-right">{canAttend ? <CheckInSwitch sessionId={s.id} personId={r.person_id as string} name={r.display_name ?? ""} present={Boolean(r.attended)} disabled={cancelled} /> : r.attended ? "✓" : ""}</TableCell>
                     </TableRow>
                   ))}

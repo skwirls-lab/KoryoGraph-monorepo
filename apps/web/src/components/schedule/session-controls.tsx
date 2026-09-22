@@ -10,6 +10,8 @@ import { Label } from "@koryo/ui/components/ui/label";
 import { Switch } from "@koryo/ui/components/ui/switch";
 import { Textarea } from "@koryo/ui/components/ui/textarea";
 import { setAttendance } from "@/server/actions/attendance";
+import { bookSession } from "@/server/actions/bookings";
+import { searchPeople } from "@/server/actions/people";
 import { cancelSession, changeSessionInstructors, setSessionNote } from "@/server/actions/schedule";
 
 export function CancelSessionDialog({ sessionId, name }: { sessionId: string; name: string }) {
@@ -94,5 +96,32 @@ export function CheckInSwitch({ sessionId, personId, name, present, disabled }: 
         });
       }}
     />
+  );
+}
+
+export function BookPersonDialog({ sessionId }: { sessionId: string }) {
+  const [open, setOpen] = useState(false);
+  const [q, setQ] = useState("");
+  const [results, setResults] = useState<{ id: string; name: string; households: string[] }[]>([]);
+  const [pending, start] = useTransition();
+  return (
+    <Dialog open={open} onOpenChange={setOpen}>
+      <DialogTrigger asChild><Button size="sm" variant="outline">Book a student</Button></DialogTrigger>
+      <DialogContent>
+        <DialogHeader><DialogTitle>Book a student</DialogTitle><DialogDescription>Full classes put them on the waitlist.</DialogDescription></DialogHeader>
+        <Input aria-label="Search students" value={q} placeholder="Search by name" onChange={(e) => { const v = e.target.value; setQ(v); start(async () => { const r = await searchPeople(v); setResults(r.ok ? r.data : []); }); }} />
+        <ul className="max-h-72 space-y-1 overflow-y-auto">
+          {results.map((p) => (
+            <li key={p.id} className="flex items-center justify-between gap-2 rounded-md px-2 py-1.5 hover:bg-elevated">
+              <span className="text-sm">{p.name} <span className="text-fg-muted">{p.households.join(", ")}</span></span>
+              <Button size="sm" disabled={pending} onClick={() => start(async () => {
+                const r = await bookSession({ sessionId, personId: p.id });
+                if (r.ok) { toast.success(r.data.status === "waitlisted" ? `${p.name} waitlisted (#${r.data.waitlistPosition})` : `${p.name} booked`); setOpen(false); } else toast.error(r.error);
+              })}>Book</Button>
+            </li>
+          ))}
+        </ul>
+      </DialogContent>
+    </Dialog>
   );
 }

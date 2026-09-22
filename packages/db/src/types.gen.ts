@@ -139,6 +139,13 @@ export type Database = {
             referencedRelation: "v_session_stats"
             referencedColumns: ["tenant_id", "session_id"]
           },
+          {
+            foreignKeyName: "attendance_tenant_id_session_id_fkey"
+            columns: ["tenant_id", "session_id"]
+            isOneToOne: false
+            referencedRelation: "v_upcoming_for_person"
+            referencedColumns: ["tenant_id", "session_id"]
+          },
         ]
       }
       audit_events: {
@@ -288,6 +295,13 @@ export type Database = {
             columns: ["tenant_id", "session_id"]
             isOneToOne: false
             referencedRelation: "v_session_stats"
+            referencedColumns: ["tenant_id", "session_id"]
+          },
+          {
+            foreignKeyName: "bookings_tenant_id_session_id_fkey"
+            columns: ["tenant_id", "session_id"]
+            isOneToOne: false
+            referencedRelation: "v_upcoming_for_person"
             referencedColumns: ["tenant_id", "session_id"]
           },
         ]
@@ -611,6 +625,7 @@ export type Database = {
           channel: string
           created_at: string
           created_by: string | null
+          data: Json
           direction: string
           error: string | null
           household_id: string | null
@@ -639,6 +654,7 @@ export type Database = {
           channel: string
           created_at?: string
           created_by?: string | null
+          data?: Json
           direction?: string
           error?: string | null
           household_id?: string | null
@@ -667,6 +683,7 @@ export type Database = {
           channel?: string
           created_at?: string
           created_by?: string | null
+          data?: Json
           direction?: string
           error?: string | null
           household_id?: string | null
@@ -1475,6 +1492,13 @@ export type Database = {
             columns: ["tenant_id", "earned_from_session_id"]
             isOneToOne: false
             referencedRelation: "v_session_stats"
+            referencedColumns: ["tenant_id", "session_id"]
+          },
+          {
+            foreignKeyName: "makeup_credits_tenant_id_earned_from_session_id_fkey"
+            columns: ["tenant_id", "earned_from_session_id"]
+            isOneToOne: false
+            referencedRelation: "v_upcoming_for_person"
             referencedColumns: ["tenant_id", "session_id"]
           },
           {
@@ -3678,6 +3702,41 @@ export type Database = {
           },
         ]
       }
+      v_upcoming_for_person: {
+        Row: {
+          bookable: boolean | null
+          booking_id: string | null
+          booking_status: string | null
+          cancellation_window_min: number | null
+          capacity: number | null
+          ends_at: string | null
+          location_id: string | null
+          name: string | null
+          person_id: string | null
+          session_id: string | null
+          starts_at: string | null
+          status: string | null
+          taken: number | null
+          tenant_id: string | null
+          waitlist_position: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_sessions_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
     }
     Functions: {
       add_household_person: {
@@ -3691,6 +3750,27 @@ export type Database = {
       award_stripe: {
         Args: { p_enrollment_id: string; p_note?: string }
         Returns: number
+      }
+      book_session: {
+        Args: {
+          p_person_id: string
+          p_session_id: string
+          p_source?: string
+          p_use_credit?: boolean
+        }
+        Returns: {
+          booking_id: string
+          status: string
+          waitlist_position: number
+        }[]
+      }
+      cancel_booking: {
+        Args: { p_booking_id: string }
+        Returns: {
+          credit_id: string
+          promoted_booking_id: string
+          promoted_person_id: string
+        }[]
       }
       create_household: { Args: { p: Json }; Returns: string }
       create_tenant: {
@@ -3787,6 +3867,7 @@ export type Database = {
         Args: { p_program_id: string; p_rank_ids: string[] }
         Returns: undefined
       }
+      session_taken: { Args: { p_session_id: string }; Returns: number }
       set_household_pin: {
         Args: { p_household_id: string; p_pin: string }
         Returns: undefined
