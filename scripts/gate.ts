@@ -58,7 +58,10 @@ const steps: Step[] = [
     cmd: "npx supabase db reset && npx tsx scripts/seed/index.ts --profile minimal && npx vitest run --project db",
   },
 ];
-if (level >= 1 && demoSeedReady) steps.push({ name: "seed demo", cmd: "npx tsx scripts/seed/index.ts --profile demo" });
+if (level >= 1 && demoSeedReady) {
+  steps.push({ name: "seed demo", cmd: "npx tsx scripts/seed/index.ts --profile demo" });
+  steps.push({ name: "seed invariants", cmd: "npx vitest run --project seed" });
+}
 steps.push({
   name: `e2e (${e2eDirs.map((d) => path.basename(d)).join(", ")})`,
   cmd: `npx playwright test ${e2eDirs.join(" ")}${grepInvert}`,

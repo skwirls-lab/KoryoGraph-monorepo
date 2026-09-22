@@ -4746,6 +4746,7 @@ export type Database = {
         Row: {
           active_students: number | null
           attendance_last_week: number | null
+          attendance_last_week_to_date: number | null
           attendance_this_week: number | null
           classes_today: number | null
           leads: number | null

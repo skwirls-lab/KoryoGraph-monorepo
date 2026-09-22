@@ -1,6 +1,7 @@
 import { parseArgs } from "node:util";
 import { loadEnv } from "../lib/env";
 import { createSeedContext } from "./context";
+import { seedDemo } from "./demo";
 import { seedMinimal } from "./minimal";
 
 loadEnv();
@@ -19,9 +20,7 @@ const ctx = createSeedContext();
 const started = Date.now();
 try {
   await seedMinimal(ctx);
-  if (profile === "demo") {
-    throw new Error("The demo profile (Ridgeline v1) is built in M1.14.");
-  }
+  if (profile === "demo") await seedDemo(ctx);
   ctx.log(`profile ${profile} done in ${((Date.now() - started) / 1000).toFixed(1)}s`);
 } finally {
   await ctx.sql.end();

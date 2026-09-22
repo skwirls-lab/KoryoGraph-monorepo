@@ -15,6 +15,21 @@ All passwords: **`KoryoDemo!2026`**. Fictional people and schools.
 | Parent | parent@ridgelinetkd.demo | Morgan Cooper | /home |
 | Student | student@ridgelinetkd.demo | Riley Adams | /home |
 
+### Demo profile extras (`npm run db:reset -- --profile demo`)
+
+| Role | Email | Name |
+|---|---|---|
+| Front desk | frontdesk2@ridgelinetkd.demo | Nia Robinson |
+| Instructor | instructor2@ridgelinetkd.demo | Kyoshi Daniel Cho (CPR expires in 20 days) |
+| Instructor | instructor3@ridgelinetkd.demo | Ms. Hannah Brooks (Little Tigers, Demo Team) |
+| Instructor | instructor4@ridgelinetkd.demo | Master Omar Haddad (Adult program) |
+
+- Cooper family (Morgan + Maya 8 + Leo 11) kiosk PIN: **4321**. Other families have random PINs (set new ones on the household page).
+- ~220 students in ~130 households, 5 programs, 28 weekly classes, 24 months of attendance with steady / improving /
+  decaying / sporadic / new patterns, promotions, stripes and sign-offs derived from attendance, waiver v1 (18 months
+  old) and v2 (published last week, so families are prompted to re-sign), 15 conversations and Outbox samples.
+- The next Youth Taekwondo — Beginners session has 20 booked and 2 waitlisted.
+
 ## Harbor BJJ (`harbor`, Core plan only, America/Los_Angeles) — second tenant for isolation tests
 
 | Role | Email |

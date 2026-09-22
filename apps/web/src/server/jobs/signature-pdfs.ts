@@ -3,7 +3,8 @@ import type { Job } from "./types";
 
 /** Renders and stores PDFs for signatures that don't have one yet (link/desk signatures, retries). */
 export const signaturePdfs: Job = async ({ db, tenantId, log }) => {
-  let q = db.from("signatures").select("id").is("pdf_path", null).order("signed_at").limit(100);
+  // Newest first: a family waiting for their PDF is served before the (seeded or backlog) history.
+  let q = db.from("signatures").select("id").is("pdf_path", null).order("created_at", { ascending: false }).limit(100);
   if (tenantId) q = q.eq("tenant_id", tenantId);
   const { data, error } = await q;
   if (error) throw new Error(`signatures: ${error.message}`);

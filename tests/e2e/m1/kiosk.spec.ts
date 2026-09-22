@@ -64,7 +64,10 @@ test.describe("@m1 kiosk", () => {
     const res = await page.request.get("/desk", { maxRedirects: 0 });
     expect(res.status()).toBe(307);
 
-    await page.getByRole("textbox", { name: "Name", exact: true }).fill("ma");
+    const name = page.getByRole("textbox", { name: "Name", exact: true });
+    await name.fill("ma");
+    await expect(page.getByRole("list", { name: "Matching students" }).getByRole("button").first()).toBeVisible();
+    await name.fill("maya");
     await page.getByRole("list", { name: "Matching students" }).getByRole("button", { name: /Maya Cooper/ }).click();
     await expect(page.getByRole("button", { name: "Maya Cooper" })).toHaveAttribute("aria-pressed", "true");
     await expect(page.getByRole("button", { name: "Leo Cooper" })).toHaveAttribute("aria-pressed", "false");

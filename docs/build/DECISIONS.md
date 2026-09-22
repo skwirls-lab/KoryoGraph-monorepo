@@ -224,3 +224,15 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   job; the minute-cron job picks up anything the trigger missed. The ZIP has one JSON array per
   tenant-scoped table (paginated past PostgREST's 1,000-row cap) plus the tenant record; hash/secret columns
   are redacted. Files live privately under `<tenant>/exports/` and download via 5-minute signed URLs.
+
+## ADR-0017 — Demo seed loading strategy
+- **Date / task:** 2026-09-22 · M1.14
+- **Decision:** The demo profile bulk-inserts with deterministic ids (keys → `sid()`), a seeded PRNG and a
+  seeded faker, with **user triggers disabled** for the load (seed data is not user activity: no audit rows,
+  no per-row recounts); derived columns (`classes_since_promotion`, thread counters) are computed explicitly
+  afterwards and checked by `tests/seed/demo.test.ts`. Sessions are generated with the same
+  `packages/scheduling` code the nightly job uses, keyed by (template, occurrence date), so the job treats
+  them as unchanged. Promotions/stripes/sign-offs are derived from the simulated attendance so progression
+  is consistent. Signature PDFs are left to the `signature_pdfs` job (newest first). Counts are close to
+  Appendix C (≈220 students, 130 households, 5 programs) rather than exact. Timeline is relative to "now",
+  so ids are identical across resets on the same day.

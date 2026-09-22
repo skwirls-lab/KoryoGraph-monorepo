@@ -45,6 +45,17 @@ export default defineConfig({
           hookTimeout: 120_000,
         },
       },
+      {
+        extends: true,
+        test: {
+          name: "seed",
+          environment: "node",
+          include: ["tests/seed/**/*.test.ts"],
+          fileParallelism: false,
+          testTimeout: 120_000,
+          hookTimeout: 120_000,
+        },
+      },
     ],
   },
 });

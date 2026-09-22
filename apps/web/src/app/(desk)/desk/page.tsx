@@ -5,16 +5,17 @@ import { requireSurfacePage } from "@/server/context";
 
 export const metadata = { title: "Dashboard" };
 
-function delta(now: number, before: number): { text: string; tone: "positive" | "negative" | "neutral" } {
-  if (before === 0) return { text: now === 0 ? "No classes attended last week either" : "None last week", tone: "neutral" };
+/** This week so far vs the same point last week (never a partial week against a full one). */
+function delta(now: number, before: number, fullLastWeek: number): { text: string; tone: "positive" | "negative" | "neutral" } {
+  if (before === 0) return { text: `Last week: ${fullLastWeek} in total`, tone: "neutral" };
   const pct = Math.round(((now - before) / before) * 100);
-  return { text: `${pct >= 0 ? "+" : ""}${pct}% vs last week (${before})`, tone: pct > 0 ? "positive" : pct < 0 ? "negative" : "neutral" };
+  return { text: `${pct >= 0 ? "+" : ""}${pct}% vs this point last week (${before}); ${fullLastWeek} all last week`, tone: pct > 0 ? "positive" : pct < 0 ? "negative" : "neutral" };
 }
 
 export default async function DeskDashboard() {
   const ctx = await requireSurfacePage("desk");
   const { data: d } = await ctx.supabase.from("v_owner_dashboard").select("*").eq("tenant_id", ctx.tenantId).maybeSingle();
-  const att = delta(d?.attendance_this_week ?? 0, d?.attendance_last_week ?? 0);
+  const att = delta(d?.attendance_this_week ?? 0, d?.attendance_last_week_to_date ?? 0, d?.attendance_last_week ?? 0);
   return (
     <>
       <PageHeader title="Dashboard" description={ctx.tenantName ?? undefined} actions={<Link href="/desk/reports" className="text-sm">All reports</Link>} />

@@ -16,6 +16,7 @@ test.describe("@m1 dashboard, reports, export", () => {
     await page.goto("/desk/reports/attendance?weeks=8");
     await expect(page.getByRole("figure", { name: "Check-ins per week, last 8 weeks" })).toBeVisible();
     await expect(page.getByRole("table", { name: "Check-ins by week" }).getByRole("row")).toHaveCount(1 + 9);
+    await expect(page.getByRole("table", { name: "Check-ins by week" })).toContainText("(so far)");
 
     await page.goto("/desk/reports/roster");
     await expect(page.getByRole("table", { name: "Membership roster" })).toContainText("Maya Cooper");
