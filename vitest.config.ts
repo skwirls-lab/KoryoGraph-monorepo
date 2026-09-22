@@ -1,8 +1,14 @@
 import path from "node:path";
-import nextEnv from "@next/env";
 import { defineConfig } from "vitest/config";
 
-nextEnv.loadEnvConfig(process.cwd());
+// Next's loader skips .env.local when NODE_ENV=test, so load it directly (existing vars win).
+for (const file of [".env.local", ".env"]) {
+  try {
+    process.loadEnvFile(path.resolve(import.meta.dirname, file));
+  } catch {
+    // optional file
+  }
+}
 
 export default defineConfig({
   resolve: {
