@@ -1,22 +1,42 @@
 {
-  "name": "KoryoGraph",
+  "name": "koryograph",
   "private": true,
+  "type": "module",
   "scripts": {
+    "dev": "npm run dev -w @koryo/web",
     "build": "turbo run build",
-    "dev": "turbo run dev",
+    "check": "npm run typecheck && npm run lint && npm run test",
+    "typecheck": "turbo run typecheck",
     "lint": "turbo run lint",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
-    "check-types": "turbo run check-types"
+    "test": "vitest run --project unit",
+    "test:db": "vitest run --project db",
+    "test:e2e": "playwright test",
+    "db:start": "supabase start",
+    "db:stop": "supabase stop",
+    "db:reset": "tsx scripts/db-reset.ts",
+    "db:migrate": "supabase migration up",
+    "db:types": "supabase gen types typescript --local --schema public > packages/db/src/types.gen.ts",
+    "db:seed": "tsx scripts/seed/index.ts",
+    "jobs:tick": "tsx scripts/jobs-tick.ts",
+    "gate": "tsx scripts/gate.ts",
+    "ai:record": "tsx scripts/ai-record.ts",
+    "ai:eval": "tsx scripts/ai-eval.ts",
+    "smoke:live": "tsx scripts/smoke-live.ts",
+    "format": "prettier --write \"**/*.{ts,tsx,md}\""
   },
   "devDependencies": {
-    "prettier": "^3.7.4",
-    "turbo": "^2.9.14",
-    "typescript": "5.9.2"
+    "@types/node": "22.20.4",
+    "eslint": "9.39.5",
+    "prettier": "3.7.4",
+    "supabase": "2.117.0",
+    "tsx": "4.23.15",
+    "turbo": "2.9.18",
+    "typescript": "5.9.3"
   },
   "engines": {
-    "node": ">=18"
+    "node": ">=22"
   },
-  "packageManager": "npm@10.9.7",
+  "packageManager": "npm@10.9.8",
   "workspaces": [
     "apps/*",
     "packages/*"
