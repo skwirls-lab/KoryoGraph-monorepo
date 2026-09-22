@@ -216,3 +216,11 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   4. Signing links: staff create `signature_requests` (SHA-256 token) and email the link; completion runs in
      a definer RPC for anon callers; the `signature_pdfs` job (service role) renders PDFs for link/desk
      signatures and retries any that failed.
+
+## ADR-0016 — Full export as a job, triggered on request
+- **Date / task:** 2026-09-22 · M1.13
+- **Decision:** "Export all data" (exports.run) inserts an `exports` row and immediately calls the
+  `data_export` job route (Bearer CRON_SECRET, server-to-server), so the service role runs only inside the
+  job; the minute-cron job picks up anything the trigger missed. The ZIP has one JSON array per
+  tenant-scoped table (paginated past PostgREST's 1,000-row cap) plus the tenant record; hash/secret columns
+  are redacted. Files live privately under `<tenant>/exports/` and download via 5-minute signed URLs.

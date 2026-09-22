@@ -1,18 +1,35 @@
-import { EmptyState } from "@koryo/ui/components/app/empty-state";
+import Link from "next/link";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
+import { StatCard } from "@koryo/ui/components/app/stat-card";
 import { requireSurfacePage } from "@/server/context";
 
 export const metadata = { title: "Dashboard" };
 
+function delta(now: number, before: number): { text: string; tone: "positive" | "negative" | "neutral" } {
+  if (before === 0) return { text: now === 0 ? "No classes attended last week either" : "None last week", tone: "neutral" };
+  const pct = Math.round(((now - before) / before) * 100);
+  return { text: `${pct >= 0 ? "+" : ""}${pct}% vs last week (${before})`, tone: pct > 0 ? "positive" : pct < 0 ? "negative" : "neutral" };
+}
+
 export default async function DeskDashboard() {
   const ctx = await requireSurfacePage("desk");
+  const { data: d } = await ctx.supabase.from("v_owner_dashboard").select("*").eq("tenant_id", ctx.tenantId).maybeSingle();
+  const att = delta(d?.attendance_this_week ?? 0, d?.attendance_last_week ?? 0);
   return (
     <>
-      <PageHeader title="Dashboard" description={ctx.tenantName ?? undefined} />
-      <EmptyState
-        title="Your dashboard fills in as you add students"
-        description="Live counts (active students, attendance, trials, revenue) are built in milestone M1. Nothing here is a sample — it will show your school's real numbers."
-      />
+      <PageHeader title="Dashboard" description={ctx.tenantName ?? undefined} actions={<Link href="/desk/reports" className="text-sm">All reports</Link>} />
+      <section aria-label="Key numbers" className="grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
+        <StatCard label="Active students" value={d?.active_students ?? 0} href="/desk/people?status=active&type=student" />
+        <StatCard label="Trials" value={d?.trials ?? 0} hint={`${d?.leads ?? 0} leads`} href="/desk/people?status=trial" />
+        <StatCard label="Attendance this week" value={d?.attendance_this_week ?? 0} delta={att.text} tone={att.tone} href="/desk/reports/attendance" />
+        <StatCard label="Classes today" value={d?.classes_today ?? 0} href="/desk/schedule" />
+        <StatCard label="Unsigned documents" value={d?.unsigned_documents ?? 0} tone={(d?.unsigned_documents ?? 0) > 0 ? "warning" : "neutral"} delta={(d?.unsigned_documents ?? 0) > 0 ? "Needs attention" : undefined} href="/desk/compliance" />
+        <StatCard label="Unread conversations" value={d?.unread_threads ?? 0} href="/desk/inbox" />
+      </section>
+      <section className="mt-6 grid gap-4 md:grid-cols-2" aria-label="Coming in later milestones">
+        <div className="rounded-xl border border-dashed border-default p-4 text-sm text-fg-secondary">Revenue, MRR and past-due balances appear here when the Billing module is built (M2).</div>
+        <div className="rounded-xl border border-dashed border-default p-4 text-sm text-fg-secondary">Upcoming belt tests appear here once testing events are built (M3). At-risk students arrive with Intelligence (M4).</div>
+      </section>
     </>
   );
 }

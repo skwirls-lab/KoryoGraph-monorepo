@@ -29,6 +29,7 @@ export const DESK_NAV: NavItem[] = [
   { href: "/desk/programs", label: "Programs", icon: "award", permission: "desk.access" },
   { href: "/desk/curriculum", label: "Curriculum", icon: "book", permission: "desk.access" },
   { href: "/desk/inbox", label: "Inbox", icon: "inbox", permission: "comms.send" },
+  { href: "/desk/reports", label: "Reports", icon: "chart", permission: "reports.read" },
   { href: "/desk/documents", label: "Documents", icon: "clipboard", permission: "people.read" },
   { href: "/desk/onboarding", label: "Get started", icon: "rocket", permission: "settings.manage" },
   { href: "/desk/settings", label: "Settings", icon: "settings", permission: "desk.access" },

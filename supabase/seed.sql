@@ -65,5 +65,6 @@ on conflict (key) do update set domain = excluded.domain, description = excluded
 insert into public.jobs (name, schedule, description) values
   ('materialize_sessions', '0 3 * * *', 'Expand class templates into sessions for the next 90 days'),
   ('outbox_dispatch', '*/5 * * * *', 'Deliver queued system messages and quiet-hours deferrals'),
-  ('signature_pdfs', '*/5 * * * *', 'Render PDFs for signatures made via links or at the desk')
+  ('signature_pdfs', '*/5 * * * *', 'Render PDFs for signatures made via links or at the desk'),
+  ('data_export', '* * * * *', 'Build requested full-tenant data exports')
 on conflict (name) do update set schedule = excluded.schedule, description = excluded.description;
