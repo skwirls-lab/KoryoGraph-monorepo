@@ -1,0 +1,227 @@
+/* =============================================================================
+   KoryoGraph design tokens — ported from the legacy globals.css (five themes).
+   Themes are `[data-theme]` blocks on <html>. Default: koryo-red.
+   Contrast: text tokens are tuned for ≥ 4.5:1 on base/surface/elevated
+   (the legacy muted greys were ~2.5:1 and were lifted; see DECISIONS.md ADR-0005).
+   `--accent-text` is the accent colour when used as text/links on the surface.
+   ============================================================================= */
+
+:root,
+[data-theme="koryo-red"] {
+  color-scheme: dark;
+  --bg-base: #09090b;
+  --bg-surface: #121215;
+  --bg-elevated: #1c1c21;
+  --bg-panel: #060608;
+  --bg-overlay: rgba(9, 9, 11, 0.85);
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  --text-primary: #ffffff;
+  --text-secondary: #a1a1aa;
+  --text-muted: #8a8a94;
+  --text-inverted: #09090b;
+
+  --accent-primary: #e11d48;
+  --accent-primary-hover: #be123c;
+  --accent-primary-subtle: rgba(225, 29, 72, 0.14);
+  --accent-foreground: #ffffff;
+  --accent-text: #fb7185;
+  --accent-glow: rgba(225, 29, 72, 0.35);
+  --accent-secondary: #ffffff;
+
+  --status-success: #10b981;
+  --status-warning: #f59e0b;
+  --status-danger: #ef4444;
+  --status-info: #60a5fa;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.7);
+
+  --panel-bg: #060608;
+  --panel-border: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+  --bg-base: #0f1117;
+  --bg-surface: #161b27;
+  --bg-elevated: #1e2538;
+  --bg-panel: #0a0d15;
+  --bg-overlay: rgba(15, 17, 23, 0.85);
+
+  --border-subtle: rgba(255, 255, 255, 0.06);
+  --border-default: rgba(255, 255, 255, 0.1);
+  --border-strong: rgba(255, 255, 255, 0.18);
+
+  --text-primary: #f0f4ff;
+  --text-secondary: #94a3b8;
+  --text-muted: #8190a5;
+  --text-inverted: #0f1117;
+
+  --accent-primary: #4f46e5;
+  --accent-primary-hover: #4338ca;
+  --accent-primary-subtle: rgba(99, 102, 241, 0.14);
+  --accent-foreground: #ffffff;
+  --accent-text: #a5b4fc;
+  --accent-glow: rgba(99, 102, 241, 0.35);
+  --accent-secondary: #3b82f6;
+
+  --status-success: #10b981;
+  --status-warning: #f59e0b;
+  --status-danger: #f87171;
+  --status-info: #60a5fa;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4), 0 1px 2px rgba(0, 0, 0, 0.3);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5), 0 2px 8px rgba(0, 0, 0, 0.3);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.6), 0 4px 16px rgba(0, 0, 0, 0.4);
+
+  --panel-bg: #0a0d15;
+  --panel-border: rgba(255, 255, 255, 0.06);
+}
+
+[data-theme="light"] {
+  color-scheme: light;
+  --bg-base: #f8fafc;
+  --bg-surface: #ffffff;
+  --bg-elevated: #f1f5f9;
+  --bg-panel: #1e293b;
+  --bg-overlay: rgba(248, 250, 252, 0.9);
+
+  --border-subtle: rgba(0, 0, 0, 0.06);
+  --border-default: #e2e8f0;
+  --border-strong: #94a3b8;
+
+  --text-primary: #0f172a;
+  --text-secondary: #475569;
+  --text-muted: #5b6b82;
+  --text-inverted: #f0f4ff;
+
+  --accent-primary: #be123c;
+  --accent-primary-hover: #9f1239;
+  --accent-primary-subtle: rgba(190, 18, 60, 0.08);
+  --accent-foreground: #ffffff;
+  --accent-text: #be123c;
+  --accent-glow: rgba(190, 18, 60, 0.2);
+  --accent-secondary: #2563eb;
+
+  --status-success: #047857;
+  --status-warning: #b45309;
+  --status-danger: #dc2626;
+  --status-info: #1d4ed8;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.05);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.1), 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.12), 0 4px 16px rgba(0, 0, 0, 0.08);
+
+  --panel-bg: #1e293b;
+  --panel-border: rgba(255, 255, 255, 0.08);
+}
+
+[data-theme="midnight"] {
+  color-scheme: dark;
+  --bg-base: #060d1f;
+  --bg-surface: #0c1836;
+  --bg-elevated: #132044;
+  --bg-panel: #040a17;
+  --bg-overlay: rgba(6, 13, 31, 0.9);
+
+  --border-subtle: rgba(148, 163, 255, 0.08);
+  --border-default: rgba(148, 163, 255, 0.14);
+  --border-strong: rgba(148, 163, 255, 0.26);
+
+  --text-primary: #e0e8ff;
+  --text-secondary: #8ea3cf;
+  --text-muted: #7489b8;
+  --text-inverted: #060d1f;
+
+  --accent-primary: #818cf8;
+  --accent-primary-hover: #a5b4fc;
+  --accent-primary-subtle: rgba(129, 140, 248, 0.14);
+  --accent-foreground: #060d1f;
+  --accent-text: #a5b4fc;
+  --accent-glow: rgba(129, 140, 248, 0.4);
+  --accent-secondary: #60a5fa;
+
+  --status-success: #34d399;
+  --status-warning: #fbbf24;
+  --status-danger: #f87171;
+  --status-info: #60a5fa;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.5);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.6);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.7);
+
+  --panel-bg: #040a17;
+  --panel-border: rgba(148, 163, 255, 0.08);
+}
+
+[data-theme="warm"] {
+  color-scheme: dark;
+  --bg-base: #18120a;
+  --bg-surface: #211a0f;
+  --bg-elevated: #2d2316;
+  --bg-panel: #120d06;
+  --bg-overlay: rgba(24, 18, 10, 0.9);
+
+  --border-subtle: rgba(255, 200, 100, 0.08);
+  --border-default: rgba(255, 200, 100, 0.14);
+  --border-strong: rgba(255, 200, 100, 0.26);
+
+  --text-primary: #fef3e2;
+  --text-secondary: #c2a57e;
+  --text-muted: #a8896a;
+  --text-inverted: #18120a;
+
+  --accent-primary: #f59e0b;
+  --accent-primary-hover: #fbbf24;
+  --accent-primary-subtle: rgba(245, 158, 11, 0.14);
+  --accent-foreground: #18120a;
+  --accent-text: #fbbf24;
+  --accent-glow: rgba(245, 158, 11, 0.35);
+  --accent-secondary: #ef4444;
+
+  --status-success: #10b981;
+  --status-warning: #f59e0b;
+  --status-danger: #f87171;
+  --status-info: #60a5fa;
+
+  --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.4);
+  --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.5);
+  --shadow-lg: 0 10px 40px rgba(0, 0, 0, 0.6);
+
+  --panel-bg: #120d06;
+  --panel-border: rgba(255, 200, 100, 0.08);
+}
+
+/* shadcn/ui variable contract, mapped onto KoryoGraph tokens (all themes). */
+:root,
+[data-theme] {
+  --radius: 0.75rem;
+  --background: var(--bg-base);
+  --foreground: var(--text-primary);
+  --card: var(--bg-surface);
+  --card-foreground: var(--text-primary);
+  --popover: var(--bg-elevated);
+  --popover-foreground: var(--text-primary);
+  --primary: var(--accent-primary);
+  --primary-foreground: var(--accent-foreground);
+  --secondary: var(--bg-elevated);
+  --secondary-foreground: var(--text-primary);
+  --muted: var(--bg-elevated);
+  --muted-foreground: var(--text-muted);
+  --accent: var(--accent-primary-subtle);
+  --accent-foreground-ui: var(--text-primary);
+  --destructive: var(--status-danger);
+  --border: var(--border-default);
+  --input: var(--border-strong);
+  --ring: var(--accent-primary);
+  --chart-1: var(--accent-primary);
+  --chart-2: #3b82f6;
+  --chart-3: #10b981;
+  --chart-4: #f59e0b;
+  --chart-5: #a855f7;
+}

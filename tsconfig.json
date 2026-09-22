@@ -1,0 +1,8 @@
+{
+  "extends": "@koryo/config/tsconfig/base.json",
+  "compilerOptions": {
+    "types": ["node"]
+  },
+  "include": ["tests/**/*.ts", "scripts/**/*.ts", "*.ts"],
+  "exclude": ["node_modules", "apps", "packages"]
+}

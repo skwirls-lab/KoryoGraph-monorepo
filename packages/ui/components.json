@@ -1,0 +1,20 @@
+{
+  "$schema": "https://ui.shadcn.com/schema.json",
+  "style": "new-york",
+  "rsc": true,
+  "tsx": true,
+  "tailwind": {
+    "config": "",
+    "css": "src/styles/globals.css",
+    "baseColor": "zinc",
+    "cssVariables": true
+  },
+  "iconLibrary": "lucide",
+  "aliases": {
+    "components": "@koryo/ui/components",
+    "utils": "@koryo/ui/lib/utils",
+    "hooks": "@koryo/ui/hooks",
+    "lib": "@koryo/ui/lib",
+    "ui": "@koryo/ui/components/ui"
+  }
+}

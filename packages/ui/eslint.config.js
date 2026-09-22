@@ -1,4 +1,3 @@
-import reactHooks from "eslint-plugin-react-hooks";
-import { config } from "@koryo/config/eslint/base";
+import { nextConfig } from "@koryo/config/eslint/next";
 
-export default [...config, reactHooks.configs.flat.recommended];
+export default nextConfig;
