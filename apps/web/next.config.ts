@@ -8,6 +8,8 @@ const nextConfig: NextConfig = {
   experimental: {
     // forbidden() → real 403 pages for surface authorisation.
     authInterrupts: true,
+    // Document vault uploads go through server actions.
+    serverActions: { bodySizeLimit: "12mb" },
   },
 };
 

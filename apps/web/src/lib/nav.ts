@@ -29,6 +29,7 @@ export const DESK_NAV: NavItem[] = [
   { href: "/desk/programs", label: "Programs", icon: "award", permission: "desk.access" },
   { href: "/desk/curriculum", label: "Curriculum", icon: "book", permission: "desk.access" },
   { href: "/desk/inbox", label: "Inbox", icon: "inbox", permission: "comms.send" },
+  { href: "/desk/documents", label: "Documents", icon: "clipboard", permission: "people.read" },
   { href: "/desk/onboarding", label: "Get started", icon: "rocket", permission: "settings.manage" },
   { href: "/desk/settings", label: "Settings", icon: "settings", permission: "desk.access" },
 ];
@@ -45,6 +46,7 @@ export const HOME_NAV: NavItem[] = [
   { href: "/home/progress", label: "Progress", icon: "trending-up", permission: "home.access" },
   { href: "/home/billing", label: "Billing", icon: "wallet", permission: "home.access", module: "billing" },
   { href: "/home/messages", label: "Messages", icon: "message", permission: "home.access" },
+  { href: "/home/documents", label: "Forms", icon: "clipboard", permission: "home.access" },
 ];
 
 export function resolveNav(

@@ -6,13 +6,13 @@ import { KioskKeypad } from "@koryo/ui/components/app/kiosk-keypad";
 import { initials } from "@koryo/ui/components/app/person-chip";
 import { Button } from "@koryo/ui/components/ui/button";
 import { cn } from "@koryo/ui/lib/utils";
-import { kioskCheckIn, kioskFamily, kioskSearch, kioskSessions, kioskUnlock, type KioskFamily, type KioskSession } from "@/server/kiosk/actions";
+import { kioskCheckIn, kioskFamily, kioskSearch, kioskSessions, kioskUnlock, kioskUnsigned, type KioskFamily, type KioskSession } from "@/server/kiosk/actions";
 
 type Step =
   | { kind: "search" }
   | { kind: "family"; family: KioskFamily; selected: string[] }
   | { kind: "pin"; family: KioskFamily; selected: string[]; message?: string }
-  | { kind: "sessions"; family: KioskFamily; pin: string | null; sessions: KioskSession[]; chosen: Record<string, string> }
+  | { kind: "sessions"; family: KioskFamily; pin: string | null; sessions: KioskSession[]; chosen: Record<string, string>; unsigned: { personId: string; templateName: string }[] }
   | { kind: "done"; names: string[] }
   | { kind: "error"; message: string };
 
@@ -38,14 +38,14 @@ export function KioskApp({ info }: { info: { tenantName: string; locationName: s
 
   const loadSessions = (family: KioskFamily, selected: string[], pin: string | null) =>
     start(async () => {
-      const r = await kioskSessions(selected);
+      const [r, u] = await Promise.all([kioskSessions(selected), kioskUnsigned(selected)]);
       if (!r.ok) return setStep({ kind: "error", message: r.error });
       const chosen: Record<string, string> = {};
       for (const pid of selected) {
         const s = r.data.find((x) => x.personId === pid && x.suggested && !x.alreadyIn) ?? r.data.find((x) => x.personId === pid && !x.alreadyIn);
         if (s) chosen[pid] = s.sessionId;
       }
-      setStep({ kind: "sessions", family, pin, sessions: r.data, chosen });
+      setStep({ kind: "sessions", family, pin, sessions: r.data, chosen, unsigned: u.ok ? u.data : [] });
     });
 
   return (
@@ -143,6 +143,15 @@ export function KioskApp({ info }: { info: { tenantName: string; locationName: s
       {step.kind === "sessions" ? (
         <section className="space-y-4" aria-label="Pick classes">
           <h1 className="text-3xl font-bold">Today&apos;s classes</h1>
+          {step.unsigned.length ? (
+            <div role="alert" className="rounded-2xl border border-warning/60 bg-warning/10 p-4 text-base">
+              <p className="font-semibold">Please sign before your next class:</p>
+              <ul className="list-disc pl-5">
+                {step.unsigned.map((u) => <li key={`${u.personId}-${u.templateName}`}>{u.templateName} for {step.family.members.find((m) => m.personId === u.personId)?.name ?? "your student"}</li>)}
+              </ul>
+              <p className="text-sm text-fg-secondary">Sign now in the Home app under Forms, or ask the front desk to email you a signing link.</p>
+            </div>
+          ) : null}
           {step.family.members.filter((m) => step.sessions.some((s) => s.personId === m.personId)).length === 0 ? (
             <p className="text-fg-secondary">There are no classes to check into right now. Please see the front desk.</p>
           ) : null}

@@ -5,6 +5,7 @@ import { DateText } from "@koryo/ui/components/app/date-text";
 import { EmptyState } from "@koryo/ui/components/app/empty-state";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { UrlTabs } from "@/components/common/url-tabs";
+import { PersonDocuments } from "@/components/documents/person-documents";
 import { PersonEditSheet } from "@/components/people/person-edit-sheet";
 import { ConsentToggles, MedicalNotes, NoteForm, StatusControl, TagList } from "@/components/people/person-controls";
 import { StatusBadge } from "@/components/people/status-badge";
@@ -163,7 +164,7 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
               canPromote={ctx.permissions.has("ranks.promote")} canEnroll={canWrite} />
           ) },
           { value: "billing", label: "Billing", content: <EmptyState title="No memberships" description="The Billing module lands in M2." /> },
-          { value: "documents", label: "Documents", content: <EmptyState title="No documents" description="Waivers and the document vault arrive in M1.12." /> },
+          { value: "documents", label: "Documents", content: <PersonDocuments ctx={ctx} personId={p.id} /> },
           { value: "messages", label: "Messages", content: <EmptyState title="No messages" description="Messaging arrives in M1.11." /> },
           { value: "notes", label: "Notes", content: notesTab },
         ]}

@@ -93,3 +93,13 @@ export async function kioskCheckIn(input: { householdId: string; pin: string | n
   }
   return ok({ checkedIn: data ?? 0 });
 }
+
+export async function kioskUnsigned(personIds: string[]): Promise<ActionResult<{ personId: string; templateName: string }[]>> {
+  const d = await device();
+  if ("error" in d) return d.error;
+  const ids = z.array(z.uuid()).max(10).safeParse(personIds);
+  if (!ids.success) return fail("Invalid selection");
+  const { data, error } = await createAnonClient().rpc("kiosk_unsigned", { p_token: d.token, p_person_ids: ids.data });
+  if (error) return ok([]);
+  return ok((data ?? []).map((r) => ({ personId: r.person_id, templateName: r.template_name })));
+}

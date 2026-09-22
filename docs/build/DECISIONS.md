@@ -199,3 +199,20 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   a tenant by `tenants.settings.sms_number` (the school's Twilio number) and to a family by phone; inbound
   email maps by a `reply+<threadId>@…` address. Webhooks verify Twilio HMAC-SHA1 and Resend/Svix HMAC-SHA256
   signatures and answer 503 when their provider is not configured (never a silent 200).
+
+## ADR-0015 — Documents: safe text format, immutable signatures, storage layout, link signing
+- **Date / task:** 2026-09-22 · M1.12
+- **Spec:** F12.1 "rich text via a light editor — @tiptap/* acceptable"; PDF snapshot in `tenant-media`.
+- **Decision:**
+  1. Document bodies use a small safe text format (`# heading`, `- bullet`, paragraphs, `{{merge}}`) parsed
+     into blocks rendered by React and by pdf-lib — no HTML storage or injection (the honesty lint bans
+     `dangerouslySetInnerHTML`), and the PDF is guaranteed to match what was shown. A rich-text editor can
+     be layered on later by serialising to the same format.
+  2. Publishing an existing name creates version N+1 and deactivates earlier versions; signatures point at
+     the exact version and are immutable (trigger), except for attaching the PDF path once.
+  3. Storage bucket `tenant-media` is private; paths start with the tenant id. Staff with people.read/write
+     use the tenant folder; Home users read/write only `<tenant>/households/<their household>/…`
+     (signature PDFs). Downloads are 5-minute signed URLs issued under the caller's RLS.
+  4. Signing links: staff create `signature_requests` (SHA-256 token) and email the link; completion runs in
+     a definer RPC for anon callers; the `signature_pdfs` job (service role) renders PDFs for link/desk
+     signatures and retries any that failed.

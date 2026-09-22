@@ -62,6 +62,15 @@ export const SYSTEM_TEMPLATES: Record<string, SystemTemplate> = {
       email: { subject: "Welcome to {{school_name}}", body: "Hi {{first_name}},\n\nWelcome to {{school_name}}! We're glad you're here.\n\n— {{school_name}}" },
     },
   },
+  signature_request: {
+    key: "signature_request",
+    description: "Ask a guardian to sign a document",
+    variables: ["first_name", "student_name", "document_name", "link", "school_name"],
+    channels: {
+      email: { subject: "Please sign: {{document_name}}", body: "Hi {{first_name}},\n\n{{school_name}} needs your signature on {{document_name}} for {{student_name}}. It takes a minute:\n\n{{link}}\n\nThe link works for 14 days.\n\n— {{school_name}}" },
+      sms: { body: "{{school_name}}: please sign {{document_name}} for {{student_name}}: {{link}}" },
+    },
+  },
   thread_message: {
     key: "thread_message",
     description: "New message in a conversation",

@@ -846,6 +846,143 @@ export type Database = {
           },
         ]
       }
+      document_templates: {
+        Row: {
+          active: boolean
+          body: string
+          created_at: string
+          id: string
+          kind: string
+          name: string
+          published_at: string
+          published_by: string | null
+          required_for: Json
+          tenant_id: string
+          updated_at: string
+          version: number
+        }
+        Insert: {
+          active?: boolean
+          body: string
+          created_at?: string
+          id?: string
+          kind?: string
+          name: string
+          published_at?: string
+          published_by?: string | null
+          required_for?: Json
+          tenant_id: string
+          updated_at?: string
+          version?: number
+        }
+        Update: {
+          active?: boolean
+          body?: string
+          created_at?: string
+          id?: string
+          kind?: string
+          name?: string
+          published_at?: string
+          published_by?: string | null
+          required_for?: Json
+          tenant_id?: string
+          updated_at?: string
+          version?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_templates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      documents: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          household_id: string | null
+          id: string
+          kind: string
+          mime: string | null
+          name: string
+          person_id: string | null
+          size: number | null
+          storage_path: string
+          tenant_id: string
+          updated_at: string
+          uploaded_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          household_id?: string | null
+          id?: string
+          kind?: string
+          mime?: string | null
+          name: string
+          person_id?: string | null
+          size?: number | null
+          storage_path: string
+          tenant_id: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          household_id?: string | null
+          id?: string
+          kind?: string
+          mime?: string | null
+          name?: string
+          person_id?: string | null
+          size?: number | null
+          storage_path?: string
+          tenant_id?: string
+          updated_at?: string
+          uploaded_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "documents_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "documents_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "documents_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "documents_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       enrollments: {
         Row: {
           classes_since_promotion: number
@@ -2683,6 +2820,237 @@ export type Database = {
           },
         ]
       }
+      signature_requests: {
+        Row: {
+          created_at: string
+          created_by: string | null
+          expires_at: string
+          id: string
+          person_id: string
+          signature_id: string | null
+          signer_person_id: string | null
+          template_id: string
+          tenant_id: string
+          token_hash: string
+          updated_at: string
+          used_at: string | null
+        }
+        Insert: {
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string
+          id?: string
+          person_id: string
+          signature_id?: string | null
+          signer_person_id?: string | null
+          template_id: string
+          tenant_id: string
+          token_hash: string
+          updated_at?: string
+          used_at?: string | null
+        }
+        Update: {
+          created_at?: string
+          created_by?: string | null
+          expires_at?: string
+          id?: string
+          person_id?: string
+          signature_id?: string | null
+          signer_person_id?: string | null
+          template_id?: string
+          tenant_id?: string
+          token_hash?: string
+          updated_at?: string
+          used_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "signature_requests_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "signature_requests_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signature_requests_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "signature_requests_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signature_requests_tenant_id_signature_id_fkey"
+            columns: ["tenant_id", "signature_id"]
+            isOneToOne: false
+            referencedRelation: "signatures"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signature_requests_tenant_id_signer_person_id_fkey"
+            columns: ["tenant_id", "signer_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signature_requests_tenant_id_signer_person_id_fkey"
+            columns: ["tenant_id", "signer_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "signature_requests_tenant_id_signer_person_id_fkey"
+            columns: ["tenant_id", "signer_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signature_requests_tenant_id_template_id_fkey"
+            columns: ["tenant_id", "template_id"]
+            isOneToOne: false
+            referencedRelation: "document_templates"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signature_requests_tenant_id_template_id_fkey"
+            columns: ["tenant_id", "template_id"]
+            isOneToOne: false
+            referencedRelation: "v_required_documents"
+            referencedColumns: ["tenant_id", "template_id"]
+          },
+        ]
+      }
+      signatures: {
+        Row: {
+          created_at: string
+          id: string
+          ip: string | null
+          method: string
+          pdf_path: string | null
+          person_id: string
+          signed_at: string
+          signer_person_id: string | null
+          signer_user_id: string | null
+          template_id: string
+          tenant_id: string
+          typed_name: string
+          updated_at: string
+          user_agent: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          ip?: string | null
+          method: string
+          pdf_path?: string | null
+          person_id: string
+          signed_at?: string
+          signer_person_id?: string | null
+          signer_user_id?: string | null
+          template_id: string
+          tenant_id: string
+          typed_name: string
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          ip?: string | null
+          method?: string
+          pdf_path?: string | null
+          person_id?: string
+          signed_at?: string
+          signer_person_id?: string | null
+          signer_user_id?: string | null
+          template_id?: string
+          tenant_id?: string
+          typed_name?: string
+          updated_at?: string
+          user_agent?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "signatures_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "signatures_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signatures_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "signatures_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signatures_tenant_id_signer_person_id_fkey"
+            columns: ["tenant_id", "signer_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signatures_tenant_id_signer_person_id_fkey"
+            columns: ["tenant_id", "signer_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "signatures_tenant_id_signer_person_id_fkey"
+            columns: ["tenant_id", "signer_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signatures_tenant_id_template_id_fkey"
+            columns: ["tenant_id", "template_id"]
+            isOneToOne: false
+            referencedRelation: "document_templates"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "signatures_tenant_id_template_id_fkey"
+            columns: ["tenant_id", "template_id"]
+            isOneToOne: false
+            referencedRelation: "v_required_documents"
+            referencedColumns: ["tenant_id", "template_id"]
+          },
+        ]
+      }
       skill_signoffs: {
         Row: {
           by_user_id: string | null
@@ -2811,6 +3179,63 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "programs"
             referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      staff_certifications: {
+        Row: {
+          created_at: string
+          document_id: string | null
+          expires_at: string | null
+          id: string
+          issued_at: string | null
+          issuer: string | null
+          kind: string
+          number: string | null
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          document_id?: string | null
+          expires_at?: string | null
+          id?: string
+          issued_at?: string | null
+          issuer?: string | null
+          kind: string
+          number?: string | null
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          document_id?: string | null
+          expires_at?: string | null
+          id?: string
+          issued_at?: string | null
+          issuer?: string | null
+          kind?: string
+          number?: string | null
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_certifications_tenant_id_document_id_fkey"
+            columns: ["tenant_id", "document_id"]
+            isOneToOne: false
+            referencedRelation: "documents"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "staff_certifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -3670,6 +4095,31 @@ export type Database = {
           },
         ]
       }
+      v_required_documents: {
+        Row: {
+          dob: string | null
+          kind: string | null
+          pdf_path: string | null
+          person_id: string | null
+          person_name: string | null
+          signature_id: string | null
+          signed_at: string | null
+          signed_older_version: boolean | null
+          template_id: string | null
+          template_name: string | null
+          tenant_id: string | null
+          version: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "document_templates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_session_stats: {
         Row: {
           attended: number | null
@@ -3772,6 +4222,15 @@ export type Database = {
           promoted_person_id: string
         }[]
       }
+      complete_signature_request: {
+        Args: {
+          p_ip: string
+          p_token: string
+          p_typed_name: string
+          p_user_agent: string
+        }
+        Returns: string
+      }
       create_household: { Args: { p: Json }; Returns: string }
       create_tenant: {
         Args: { p_name: string; p_slug: string; p_timezone: string }
@@ -3839,6 +4298,13 @@ export type Database = {
           ok: boolean
         }[]
       }
+      kiosk_unsigned: {
+        Args: { p_person_ids: string[]; p_token: string }
+        Returns: {
+          person_id: string
+          template_name: string
+        }[]
+      }
       mark_thread_read: { Args: { p_thread_id: string }; Returns: undefined }
       message_recipients: {
         Args: { p_person_ids: string[] }
@@ -3865,6 +4331,15 @@ export type Database = {
         }
         Returns: string
       }
+      publish_document: {
+        Args: {
+          p_body: string
+          p_kind: string
+          p_name: string
+          p_required_for: Json
+        }
+        Returns: string
+      }
       record_communication: { Args: { p: Json }; Returns: string }
       reorder_ranks: {
         Args: { p_program_id: string; p_rank_ids: string[] }
@@ -3884,6 +4359,20 @@ export type Database = {
           p_source?: string
         }
         Returns: string
+      }
+      signature_request_info: {
+        Args: { p_token: string }
+        Returns: {
+          body: string
+          expired: boolean
+          person_name: string
+          request_id: string
+          signer_name: string
+          template_name: string
+          tenant_name: string
+          used: boolean
+          version: number
+        }[]
       }
       switch_tenant: { Args: { p_tenant_id: string }; Returns: undefined }
     }
