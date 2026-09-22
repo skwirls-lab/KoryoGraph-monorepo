@@ -3697,6 +3697,68 @@ export type Database = {
         Args: { p_name: string; p_slug: string; p_timezone: string }
         Returns: string
       }
+      kiosk_check_in: {
+        Args: {
+          p_household_id: string
+          p_items: Json
+          p_pin: string
+          p_token: string
+        }
+        Returns: number
+      }
+      kiosk_check_in_confirmed: {
+        Args: { p_household_id: string; p_items: Json; p_token: string }
+        Returns: number
+      }
+      kiosk_family: {
+        Args: { p_person_id: string; p_token: string }
+        Returns: {
+          display_name: string
+          has_pin: boolean
+          household_id: string
+          household_name: string
+          locked_until: string
+          person_id: string
+        }[]
+      }
+      kiosk_info: {
+        Args: { p_token: string }
+        Returns: {
+          confirm_mode: string
+          device_name: string
+          location_name: string
+          tenant_name: string
+          time_zone: string
+        }[]
+      }
+      kiosk_search: {
+        Args: { p_q: string; p_token: string }
+        Returns: {
+          display_name: string
+          household_name: string
+          person_id: string
+        }[]
+      }
+      kiosk_sessions: {
+        Args: { p_person_ids: string[]; p_token: string }
+        Returns: {
+          already_in: boolean
+          ends_at: string
+          name: string
+          person_id: string
+          session_id: string
+          starts_at: string
+          suggested: boolean
+        }[]
+      }
+      kiosk_unlock: {
+        Args: { p_household_id: string; p_pin: string; p_token: string }
+        Returns: {
+          attempts_left: number
+          locked_until: string
+          ok: boolean
+        }[]
+      }
       message_recipients: {
         Args: { p_person_ids: string[] }
         Returns: {

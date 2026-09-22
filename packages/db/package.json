@@ -10,7 +10,8 @@
     "./service": "./src/service.ts",
     "./env": "./src/env.ts",
     "./types": "./src/types.ts",
-    "./queries/*": "./src/queries/*.ts"
+    "./queries/*": "./src/queries/*.ts",
+    "./anon": "./src/anon.ts"
   },
   "scripts": {
     "lint": "eslint . --max-warnings 0",

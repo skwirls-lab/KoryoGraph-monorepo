@@ -162,3 +162,15 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   5. Schedule edits re-materialise sessions with the staff member's own RLS client (the job function takes
      any Supabase client); the service role stays confined to the scheduled job route.
 - **Why:** Honest Outbox behaviour without keys, consent enforced in one place, and no privilege escalation.
+
+## ADR-0012 — Kiosk authentication by device token + definer RPCs
+- **Date / task:** 2026-09-22 · M1.09
+- **Spec:** F5.3 / M1.09 — "Pair this device" → `kiosk_devices` token cookie; PIN with lockout; §0.6 no
+  service role on request paths.
+- **Decision:** Pairing (staff with kiosk.manage) stores SHA-256(token) and sets the raw token in a 1-year
+  httpOnly cookie, then signs the staff member out. The kiosk uses a sessionless anon client and seven
+  narrow security-definer RPCs (`kiosk_info/search/family/unlock/sessions/check_in/check_in_confirmed`)
+  that re-validate the token and act only inside the device's tenant and location. PIN failures are
+  counted in `kiosk_unlock` (5 → 15-minute lock); `kiosk_check_in` re-verifies the PIN (stateless).
+  Photo-confirm mode is an explicit per-device setting. Families without a PIN are sent to the desk.
+- **Why:** A shared tablet must never hold a staff session or a privileged key.
