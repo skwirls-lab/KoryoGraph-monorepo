@@ -17,6 +17,7 @@
     "@hookform/resolvers": "5.9.1",
     "@koryo/db": "*",
     "@koryo/eligibility": "*",
+    "@koryo/scheduling": "*",
     "@koryo/ui": "*",
     "@supabase/supabase-js": "2.117.0",
     "@tanstack/react-table": "8.21.3",

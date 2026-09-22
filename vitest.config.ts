@@ -12,9 +12,14 @@ for (const file of [".env.local", ".env"]) {
 
 export default defineConfig({
   resolve: {
-    alias: { "@": path.resolve(import.meta.dirname, "apps/web/src") },
+    alias: {
+      "@": path.resolve(import.meta.dirname, "apps/web/src"),
+      // `server-only` throws outside the react-server condition; tests import server modules directly.
+      "server-only": path.resolve(import.meta.dirname, "tests/support/server-only.ts"),
+    },
   },
   test: {
+    env: { LOG_LEVEL: "warn" },
     projects: [
       {
         extends: true,

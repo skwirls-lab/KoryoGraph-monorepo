@@ -59,6 +59,81 @@ export type Database = {
           },
         ]
       }
+      attendance: {
+        Row: {
+          checked_in_at: string
+          checked_in_by_user_id: string | null
+          created_at: string
+          id: string
+          note: string | null
+          person_id: string
+          session_id: string
+          source: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          checked_in_at?: string
+          checked_in_by_user_id?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          person_id: string
+          session_id: string
+          source?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          checked_in_at?: string
+          checked_in_by_user_id?: string | null
+          created_at?: string
+          id?: string
+          note?: string | null
+          person_id?: string
+          session_id?: string
+          source?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "attendance_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "attendance_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "attendance_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "attendance_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "attendance_tenant_id_session_id_fkey"
+            columns: ["tenant_id", "session_id"]
+            isOneToOne: false
+            referencedRelation: "class_sessions"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       audit_events: {
         Row: {
           action: string
@@ -115,6 +190,94 @@ export type Database = {
           },
         ]
       }
+      bookings: {
+        Row: {
+          booked_by_user_id: string | null
+          cancelled_at: string | null
+          created_at: string
+          credit_id: string | null
+          id: string
+          person_id: string
+          session_id: string
+          source: string
+          status: string
+          tenant_id: string
+          updated_at: string
+          waitlist_position: number | null
+        }
+        Insert: {
+          booked_by_user_id?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          credit_id?: string | null
+          id?: string
+          person_id: string
+          session_id: string
+          source?: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+          waitlist_position?: number | null
+        }
+        Update: {
+          booked_by_user_id?: string | null
+          cancelled_at?: string | null
+          created_at?: string
+          credit_id?: string | null
+          id?: string
+          person_id?: string
+          session_id?: string
+          source?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+          waitlist_position?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "bookings_tenant_id_credit_id_fkey"
+            columns: ["tenant_id", "credit_id"]
+            isOneToOne: false
+            referencedRelation: "makeup_credits"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "bookings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "bookings_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "bookings_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "bookings_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "bookings_tenant_id_session_id_fkey"
+            columns: ["tenant_id", "session_id"]
+            isOneToOne: false
+            referencedRelation: "class_sessions"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       certificate_templates: {
         Row: {
           background_path: string | null
@@ -153,6 +316,274 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      class_packs: {
+        Row: {
+          created_at: string
+          expires_at: string | null
+          id: string
+          membership_id: string | null
+          person_id: string
+          tenant_id: string
+          total: number
+          updated_at: string
+          used: number
+        }
+        Insert: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          membership_id?: string | null
+          person_id: string
+          tenant_id: string
+          total: number
+          updated_at?: string
+          used?: number
+        }
+        Update: {
+          created_at?: string
+          expires_at?: string | null
+          id?: string
+          membership_id?: string | null
+          person_id?: string
+          tenant_id?: string
+          total?: number
+          updated_at?: string
+          used?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_packs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_packs_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "class_packs_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "class_packs_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      class_sessions: {
+        Row: {
+          action_board_status: string | null
+          audio_path: string | null
+          bookable: boolean
+          cancel_reason: string | null
+          cancellation_window_min: number
+          capacity: number | null
+          created_at: string
+          detached: boolean
+          ends_at: string
+          id: string
+          instructor_ids: string[]
+          lesson_plan_id: string | null
+          location_id: string
+          name: string
+          notes: string | null
+          occurrence_date: string
+          program_ids: string[]
+          room: string | null
+          starts_at: string
+          status: string
+          substitute_ids: string[]
+          template_id: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          action_board_status?: string | null
+          audio_path?: string | null
+          bookable?: boolean
+          cancel_reason?: string | null
+          cancellation_window_min?: number
+          capacity?: number | null
+          created_at?: string
+          detached?: boolean
+          ends_at: string
+          id?: string
+          instructor_ids?: string[]
+          lesson_plan_id?: string | null
+          location_id: string
+          name: string
+          notes?: string | null
+          occurrence_date: string
+          program_ids?: string[]
+          room?: string | null
+          starts_at: string
+          status?: string
+          substitute_ids?: string[]
+          template_id?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          action_board_status?: string | null
+          audio_path?: string | null
+          bookable?: boolean
+          cancel_reason?: string | null
+          cancellation_window_min?: number
+          capacity?: number | null
+          created_at?: string
+          detached?: boolean
+          ends_at?: string
+          id?: string
+          instructor_ids?: string[]
+          lesson_plan_id?: string | null
+          location_id?: string
+          name?: string
+          notes?: string | null
+          occurrence_date?: string
+          program_ids?: string[]
+          room?: string | null
+          starts_at?: string
+          status?: string
+          substitute_ids?: string[]
+          template_id?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_sessions_tenant_id_lesson_plan_id_fkey"
+            columns: ["tenant_id", "lesson_plan_id"]
+            isOneToOne: false
+            referencedRelation: "lesson_plans"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "class_sessions_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "class_sessions_tenant_id_template_id_fkey"
+            columns: ["tenant_id", "template_id"]
+            isOneToOne: false
+            referencedRelation: "class_templates"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      class_templates: {
+        Row: {
+          active: boolean
+          age_max: number | null
+          age_min: number | null
+          bookable: boolean
+          cancellation_window_min: number
+          capacity: number | null
+          color: string | null
+          created_at: string
+          duration_min: number
+          id: string
+          instructor_ids: string[]
+          location_id: string
+          name: string
+          program_ids: string[]
+          rank_max_position: number | null
+          rank_min_position: number | null
+          room: string | null
+          rrule: string
+          start_date: string
+          start_time: string
+          tenant_id: string
+          until_date: string | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          age_max?: number | null
+          age_min?: number | null
+          bookable?: boolean
+          cancellation_window_min?: number
+          capacity?: number | null
+          color?: string | null
+          created_at?: string
+          duration_min?: number
+          id?: string
+          instructor_ids?: string[]
+          location_id: string
+          name: string
+          program_ids?: string[]
+          rank_max_position?: number | null
+          rank_min_position?: number | null
+          room?: string | null
+          rrule: string
+          start_date: string
+          start_time: string
+          tenant_id: string
+          until_date?: string | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          age_max?: number | null
+          age_min?: number | null
+          bookable?: boolean
+          cancellation_window_min?: number
+          capacity?: number | null
+          color?: string | null
+          created_at?: string
+          duration_min?: number
+          id?: string
+          instructor_ids?: string[]
+          location_id?: string
+          name?: string
+          program_ids?: string[]
+          rank_max_position?: number | null
+          rank_min_position?: number | null
+          room?: string | null
+          rrule?: string
+          start_date?: string
+          start_time?: string
+          tenant_id?: string
+          until_date?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_templates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_templates_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
           },
         ]
       }
@@ -221,6 +652,13 @@ export type Database = {
             foreignKeyName: "consents_tenant_id_guardian_person_id_fkey"
             columns: ["tenant_id", "guardian_person_id"]
             isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_guardian_person_id_fkey"
+            columns: ["tenant_id", "guardian_person_id"]
+            isOneToOne: false
             referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
           },
@@ -230,6 +668,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "people"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
           },
           {
             foreignKeyName: "consents_tenant_id_person_id_fkey"
@@ -309,6 +754,13 @@ export type Database = {
             foreignKeyName: "enrollments_tenant_id_person_id_fkey"
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
             referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
           },
@@ -317,6 +769,51 @@ export type Database = {
             columns: ["tenant_id", "program_id"]
             isOneToOne: false
             referencedRelation: "programs"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      holidays: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          location_id: string | null
+          name: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          location_id?: string | null
+          name: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          location_id?: string | null
+          name?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "holidays_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "holidays_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -384,6 +881,13 @@ export type Database = {
             foreignKeyName: "household_members_tenant_id_person_id_fkey"
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "household_members_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
             referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
           },
@@ -446,6 +950,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "people"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "households_tenant_id_primary_payer_person_id_fkey"
+            columns: ["tenant_id", "primary_payer_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
           },
           {
             foreignKeyName: "households_tenant_id_primary_payer_person_id_fkey"
@@ -654,6 +1165,13 @@ export type Database = {
             foreignKeyName: "kiosk_pins_tenant_id_person_id_fkey"
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "kiosk_pins_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
             referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
           },
@@ -766,6 +1284,85 @@ export type Database = {
           },
         ]
       }
+      makeup_credits: {
+        Row: {
+          created_at: string
+          earned_from_session_id: string | null
+          expires_at: string
+          id: string
+          person_id: string
+          reason: string
+          tenant_id: string
+          updated_at: string
+          used_booking_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          earned_from_session_id?: string | null
+          expires_at?: string
+          id?: string
+          person_id: string
+          reason?: string
+          tenant_id: string
+          updated_at?: string
+          used_booking_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          earned_from_session_id?: string | null
+          expires_at?: string
+          id?: string
+          person_id?: string
+          reason?: string
+          tenant_id?: string
+          updated_at?: string
+          used_booking_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "makeup_credits_tenant_id_earned_from_session_id_fkey"
+            columns: ["tenant_id", "earned_from_session_id"]
+            isOneToOne: false
+            referencedRelation: "class_sessions"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "makeup_credits_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "makeup_credits_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "makeup_credits_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "makeup_credits_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "makeup_credits_used_booking_fk"
+            columns: ["tenant_id", "used_booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       modules: {
         Row: {
           created_at: string
@@ -847,6 +1444,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "people"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "notes_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
           },
           {
             foreignKeyName: "notes_tenant_id_person_id_fkey"
@@ -978,6 +1582,13 @@ export type Database = {
             foreignKeyName: "people_referred_by_fk"
             columns: ["tenant_id", "referred_by_person_id"]
             isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "people_referred_by_fk"
+            columns: ["tenant_id", "referred_by_person_id"]
+            isOneToOne: false
             referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
           },
@@ -1039,6 +1650,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "people"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "people_medical_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
           },
           {
             foreignKeyName: "people_medical_tenant_id_person_id_fkey"
@@ -1150,6 +1768,84 @@ export type Database = {
           user_id?: string
         }
         Relationships: []
+      }
+      private_lesson_slots: {
+        Row: {
+          booked_person_id: string | null
+          created_at: string
+          ends_at: string
+          id: string
+          instructor_user_id: string | null
+          location_id: string
+          price_cents: number
+          starts_at: string
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          booked_person_id?: string | null
+          created_at?: string
+          ends_at: string
+          id?: string
+          instructor_user_id?: string | null
+          location_id: string
+          price_cents?: number
+          starts_at: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          booked_person_id?: string | null
+          created_at?: string
+          ends_at?: string
+          id?: string
+          instructor_user_id?: string | null
+          location_id?: string
+          price_cents?: number
+          starts_at?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "private_lesson_slots_tenant_id_booked_person_id_fkey"
+            columns: ["tenant_id", "booked_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "private_lesson_slots_tenant_id_booked_person_id_fkey"
+            columns: ["tenant_id", "booked_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "private_lesson_slots_tenant_id_booked_person_id_fkey"
+            columns: ["tenant_id", "booked_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "private_lesson_slots_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "private_lesson_slots_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
       }
       profiles: {
         Row: {
@@ -1657,6 +2353,57 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "tenants"
             referencedColumns: ["id"]
+          },
+        ]
+      }
+      schedule_exceptions: {
+        Row: {
+          created_at: string
+          date: string
+          id: string
+          kind: string
+          overrides: Json
+          reason: string | null
+          template_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          id?: string
+          kind: string
+          overrides?: Json
+          reason?: string | null
+          template_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          id?: string
+          kind?: string
+          overrides?: Json
+          reason?: string | null
+          template_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_exceptions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_exceptions_tenant_id_template_id_fkey"
+            columns: ["tenant_id", "template_id"]
+            isOneToOne: false
+            referencedRelation: "class_templates"
+            referencedColumns: ["tenant_id", "id"]
           },
         ]
       }
@@ -2299,6 +3046,60 @@ export type Database = {
       }
     }
     Views: {
+      v_attendance_velocity: {
+        Row: {
+          classes_30d: number | null
+          classes_prev_30d: number | null
+          last_attended_at: string | null
+          person_id: string | null
+          streak_weeks: number | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "people_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      v_class_roster: {
+        Row: {
+          allergies: string[] | null
+          attendance_source: string | null
+          attended: boolean | null
+          belt_color: string | null
+          booking_status: string | null
+          checked_in_at: string | null
+          display_name: string | null
+          dob: string | null
+          enrollment_id: string | null
+          first_name: string | null
+          injury_flags: string[] | null
+          is_extra: boolean | null
+          last_name: string | null
+          person_id: string | null
+          person_status: string | null
+          photo_path: string | null
+          rank_name: string | null
+          session_id: string | null
+          stripes: number | null
+          stripes_max: number | null
+          tenant_id: string | null
+          waitlist_position: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       v_current_consents: {
         Row: {
           granted: boolean | null
@@ -2328,6 +3129,13 @@ export type Database = {
             foreignKeyName: "consents_tenant_id_guardian_person_id_fkey"
             columns: ["tenant_id", "guardian_person_id"]
             isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_guardian_person_id_fkey"
+            columns: ["tenant_id", "guardian_person_id"]
+            isOneToOne: false
             referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
           },
@@ -2337,6 +3145,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "people"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
           },
           {
             foreignKeyName: "consents_tenant_id_person_id_fkey"
@@ -2389,6 +3204,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "people"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
           },
           {
             foreignKeyName: "enrollments_tenant_id_person_id_fkey"

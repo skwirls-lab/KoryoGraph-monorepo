@@ -57,5 +57,11 @@ insert into public.permissions (key, domain, description) values
   ('ai.use', 'ai', 'Use AI assistants'),
   ('exports.run', 'data', 'Export data'),
   ('audit.read', 'data', 'View the audit log'),
-  ('kiosk.manage', 'attendance', 'Pair and manage kiosk devices')
+  ('kiosk.manage', 'attendance', 'Pair and manage kiosk devices'),
+  ('schedule.manage', 'attendance', 'Edit class templates, sessions, exceptions and holidays')
 on conflict (key) do update set domain = excluded.domain, description = excluded.description;
+
+-- Scheduled jobs (F17.1). Triggered by Vercel Cron in production and `npm run jobs:tick` locally.
+insert into public.jobs (name, schedule, description) values
+  ('materialize_sessions', '0 3 * * *', 'Expand class templates into sessions for the next 90 days')
+on conflict (name) do update set schedule = excluded.schedule, description = excluded.description;

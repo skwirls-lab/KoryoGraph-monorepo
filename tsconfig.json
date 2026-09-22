@@ -1,7 +1,11 @@
 {
   "extends": "@koryo/config/tsconfig/base.json",
   "compilerOptions": {
-    "types": ["node"]
+    "types": ["node"],
+    "jsx": "react-jsx",
+    "paths": {
+      "@/*": ["./apps/web/src/*"]
+    }
   },
   "include": ["tests/**/*.ts", "scripts/**/*.ts", "*.ts"],
   "exclude": ["node_modules", "apps", "packages"]

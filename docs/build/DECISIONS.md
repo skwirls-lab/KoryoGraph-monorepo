@@ -123,3 +123,23 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   List CSV export needs only `people.read` (it's the same rows the user can already see) and is recorded
   in `audit_events`; the full-tenant export (M1.13) needs `exports.run`.
 - **Why:** Stability over novelty mid-build; one table component; no partial families.
+
+## ADR-0010 — Schedule templates in local wall-clock time; session key; jobs; schedule.manage
+- **Date / task:** 2026-09-22 · M1.06
+- **Spec:** §4.4 `class_templates.rrule text, dtstart timestamptz, until timestamptz`; `class_sessions`
+  unique(template_id, starts_at); permission catalogue has no schedule-specific permission.
+- **Decision:**
+  1. Templates store `rrule` (body without DTSTART), `start_date`, `start_time` (local) and `until_date`;
+     the timezone is the location's (else the tenant's). `packages/scheduling` expands rules in floating
+     time and converts each occurrence to UTC with Intl — a 5 pm class stays 5 pm across DST.
+  2. Sessions carry `occurrence_date` with unique(template_id, occurrence_date) as the materialiser's key,
+     so a "modify" exception moves `starts_at` in place (spec's unique(template_id, starts_at) is kept too).
+  3. `materialize_sessions` is diff-based and idempotent; it never deletes a session with attendance or
+     bookings (cancels it instead) and leaves `detached`/completed sessions alone. Per-occurrence edits in
+     the UI are written as schedule_exceptions so the job and the UI never disagree.
+  4. Jobs: registry in `apps/web/src/server/jobs`, `job_runs` log, `/api/jobs/[name]` (GET for Vercel
+     Cron, POST for tick/tests) with Bearer CRON_SECRET and `?now=` clock injection outside production;
+     `npm run jobs:tick` calls due jobs through the same route (minimal 5-field cron in packages/scheduling).
+  5. New permission `schedule.manage` (owner, admin, front desk); migration back-fills existing roles.
+  6. rrule is imported through a namespace shim: its UMD main exposes only `default` under Node ESM (tsx).
+- **Why:** Martial arts classes are wall-clock events; idempotent jobs are a stated NFR.

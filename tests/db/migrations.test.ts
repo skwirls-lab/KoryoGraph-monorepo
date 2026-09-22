@@ -28,7 +28,7 @@ describe("migrations", () => {
       select (select count(*)::int from public.modules) as modules,
              (select count(*)::int from public.plans) as plans,
              (select count(*)::int from public.permissions) as permissions`;
-    expect(counts).toEqual({ modules: 9, plans: 4, permissions: 28 });
+    expect(counts).toEqual({ modules: 9, plans: 4, permissions: 29 });
   });
 
   it("install the helper functions and the auth hook", async () => {
