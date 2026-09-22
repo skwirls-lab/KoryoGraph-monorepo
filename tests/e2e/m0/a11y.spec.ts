@@ -1,4 +1,4 @@
-import { test } from "@playwright/test";
+import { test } from "../support/fixtures";
 import { authState } from "../support/auth";
 import { expectNoSeriousA11yViolations } from "../support/axe";
 

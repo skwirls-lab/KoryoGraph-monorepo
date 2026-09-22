@@ -2505,6 +2505,10 @@ export type Database = {
         }
         Returns: string
       }
+      reorder_ranks: {
+        Args: { p_program_id: string; p_rank_ids: string[] }
+        Returns: undefined
+      }
       set_household_pin: {
         Args: { p_household_id: string; p_pin: string }
         Returns: undefined

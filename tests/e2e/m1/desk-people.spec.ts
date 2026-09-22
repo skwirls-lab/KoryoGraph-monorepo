@@ -1,6 +1,6 @@
 import { randomUUID } from "node:crypto";
 import { readFileSync } from "node:fs";
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../support/fixtures";
 import { authState } from "../support/auth";
 
 const surname = `Zephyr${randomUUID().slice(0, 6)}`;

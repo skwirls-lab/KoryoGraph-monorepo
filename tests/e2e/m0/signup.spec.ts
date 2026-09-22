@@ -1,4 +1,5 @@
-import { expect, test, type Page } from "@playwright/test";
+import type { Page } from "@playwright/test";
+import { expect, test } from "../support/fixtures";
 import { sql, uniqueEmail } from "../../db/harness";
 
 async function signUp(page: Page, school: string, email: string): Promise<void> {

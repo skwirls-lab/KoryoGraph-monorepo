@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../support/fixtures";
 import { addMember, createTenantWithOwner } from "../../db/harness";
 import { loginWithPassword } from "../support/login";
 import { waitForLink } from "../support/mailpit";

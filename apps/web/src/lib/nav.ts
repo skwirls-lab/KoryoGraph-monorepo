@@ -24,6 +24,8 @@ export interface ResolvedNavItem {
 export const DESK_NAV: NavItem[] = [
   { href: "/desk", label: "Dashboard", icon: "dashboard", permission: "desk.access" },
   { href: "/desk/people", label: "People", icon: "users", permission: "people.read" },
+  { href: "/desk/programs", label: "Programs", icon: "award", permission: "desk.access" },
+  { href: "/desk/curriculum", label: "Curriculum", icon: "book", permission: "desk.access" },
   { href: "/desk/onboarding", label: "Get started", icon: "rocket", permission: "settings.manage" },
 ];
 

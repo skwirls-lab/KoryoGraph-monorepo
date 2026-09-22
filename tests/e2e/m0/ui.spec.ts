@@ -1,4 +1,4 @@
-import { expect, test } from "@playwright/test";
+import { expect, test } from "../support/fixtures";
 
 for (const theme of ["koryo-red", "light"] as const) {
   test(`@m0 /dev/ui renders every component in ${theme} without console errors`, async ({ page, context, baseURL }, testInfo) => {
