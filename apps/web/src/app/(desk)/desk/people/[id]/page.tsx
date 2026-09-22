@@ -8,9 +8,11 @@ import { UrlTabs } from "@/components/common/url-tabs";
 import { PersonEditSheet } from "@/components/people/person-edit-sheet";
 import { ConsentToggles, MedicalNotes, NoteForm, StatusControl, TagList } from "@/components/people/person-controls";
 import { StatusBadge } from "@/components/people/status-badge";
+import { ProgressPanel } from "@/components/progress/progress-panel";
 import { ageOn, displayName, isMinor, todayIn, type ConsentKind } from "@/lib/people";
 import { requireSurfacePage } from "@/server/context";
 import { getPerson } from "@/server/queries/people";
+import { getPersonProgress, programsForEnrollment } from "@/server/queries/progress";
 
 export const metadata = { title: "Person" };
 
@@ -28,7 +30,7 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
   if (!ctx.permissions.has("people.read")) forbidden();
   const { id } = await params;
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
-  const data = await getPerson(ctx, id);
+  const [data, progress, programs] = await Promise.all([getPerson(ctx, id), getPersonProgress(ctx, id), programsForEnrollment(ctx)]);
   if (!data) notFound();
   const { person: p, households, consents, notes, medical, audit } = data;
   const today = todayIn(ctx.tz);
@@ -156,7 +158,10 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
           { value: "overview", label: "Overview", content: overview },
           { value: "household", label: "Household", content: householdTab },
           { value: "attendance", label: "Attendance", content: <EmptyState title="No attendance yet" description="Class attendance is recorded once the schedule exists (M1.06–M1.09)." /> },
-          { value: "progress", label: "Progress", content: <EmptyState title="Not enrolled in a program" description="Programs, ranks and requirements arrive in M1.03–M1.05." /> },
+          { value: "progress", label: "Progress", content: (
+            <ProgressPanel personId={p.id} progress={progress} timeZone={ctx.tz} programs={programs}
+              canPromote={ctx.permissions.has("ranks.promote")} canEnroll={canWrite} />
+          ) },
           { value: "billing", label: "Billing", content: <EmptyState title="No memberships" description="The Billing module lands in M2." /> },
           { value: "documents", label: "Documents", content: <EmptyState title="No documents" description="Waivers and the document vault arrive in M1.12." /> },
           { value: "messages", label: "Messages", content: <EmptyState title="No messages" description="Messaging arrives in M1.11." /> },
