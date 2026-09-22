@@ -143,3 +143,22 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   5. New permission `schedule.manage` (owner, admin, front desk); migration back-fills existing roles.
   6. rrule is imported through a namespace shim: its UMD main exposes only `default` under Node ESM (tsx).
 - **Why:** Martial arts classes are wall-clock events; idempotent jobs are a stated NFR.
+
+## ADR-0011 — Communications foundation pulled into M1.07; how messages are recorded
+- **Date / task:** 2026-09-22 · M1.07
+- **Spec:** M1.07 acceptance needs "a queued communication for a booked/enrolled person" on cancel; the
+  communications tables/package are M1.11. §0.6: no service role on user request paths.
+- **Decision:**
+  1. Migration 0014 + `packages/comms` (system templates, merge-field rendering, consent + TCPA quiet-hours
+     policy, lazy Resend/Twilio providers) land in M1.07; M1.11 adds inbox/outbox UI, overrides UI, webhooks.
+  2. System templates live in code; tenants override per key+channel in `message_templates`.
+  3. The Next server renders, applies the policy, sends via a provider when one is configured, then records
+     the attempt with `record_communication()` — a security-definer RPC that checks the caller's tenant, the
+     recipient's tenant, and (for Home users) that the template is one their own actions trigger. No direct
+     insert policy exists. Statuses: sent / failed / unsent_no_provider (Outbox) / deferred (quiet hours,
+     `scheduled_for`) / opted_out / no_address.
+  4. Recipients are resolved by `message_recipients()` (guardians of minors, else the person), readable by
+     roles with attendance.write or comms.send — so instructors can message a roster without people.write.
+  5. Schedule edits re-materialise sessions with the staff member's own RLS client (the job function takes
+     any Supabase client); the service role stays confined to the scheduled job route.
+- **Why:** Honest Outbox behaviour without keys, consent enforced in one place, and no privilege escalation.

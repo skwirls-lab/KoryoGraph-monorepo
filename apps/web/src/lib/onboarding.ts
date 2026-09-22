@@ -4,7 +4,7 @@ import { z } from "zod";
 export const ONBOARDING_STEPS = [
   { key: "location", title: "Add your location", description: "Address, phone and rooms for your school.", href: null, milestone: "M5" },
   { key: "programs", title: "Set up programs and ranks", description: "Programs, belt ladders and requirements.", href: "/desk/programs", milestone: "M1" },
-  { key: "schedule", title: "Build your class schedule", description: "Recurring classes with capacity and instructors.", href: null, milestone: "M1" },
+  { key: "schedule", title: "Build your class schedule", description: "Recurring classes with capacity and instructors.", href: "/desk/schedule/templates", milestone: "M1" },
   { key: "students", title: "Add or import students", description: "Families, students and guardians.", href: "/desk/people/new", milestone: "M1" },
   { key: "payments", title: "Connect Stripe", description: "Take card and ACH payments into your own account.", href: null, milestone: "M2" },
   { key: "staff", title: "Invite your staff", description: "Front desk and instructors with the right roles.", href: null, milestone: "M1" },

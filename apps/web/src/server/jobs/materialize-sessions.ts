@@ -29,12 +29,15 @@ const sameInstant = (a: string, b: Date) => new Date(a).getTime() === b.getTime(
  * applying exceptions (cancel/modify) and holidays (drop). Diff-based and idempotent: a re-run with
  * no template changes writes nothing. Sessions that carry attendance or bookings are never deleted —
  * if they fall out of the schedule they are cancelled instead. `detached` sessions are left alone.
- * params.back = days of history to (re)materialise (seed/backfill).
+ * params.back = days of history to (re)materialise (seed/backfill); params.template = one template.
+ * The db client may be the service role (scheduled job) or a user-scoped client (a staff member saving
+ * a template) — RLS limits the latter to its own tenant.
  */
 export const materializeSessions: Job = async ({ db, now, tenantId, log, params }) => {
   const back = Math.max(0, Number(params.back ?? 0) || 0);
   let q = db.from("class_templates").select("*, locations(timezone), tenants(timezone)").eq("active", true);
   if (tenantId) q = q.eq("tenant_id", tenantId);
+  if (params.template) q = q.eq("id", params.template);
   const { data: templates, error } = await q;
   if (error) throw new Error(`templates: ${error.message}`);
 

@@ -132,6 +132,13 @@ export type Database = {
             referencedRelation: "class_sessions"
             referencedColumns: ["tenant_id", "id"]
           },
+          {
+            foreignKeyName: "attendance_tenant_id_session_id_fkey"
+            columns: ["tenant_id", "session_id"]
+            isOneToOne: false
+            referencedRelation: "v_session_stats"
+            referencedColumns: ["tenant_id", "session_id"]
+          },
         ]
       }
       audit_events: {
@@ -275,6 +282,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "class_sessions"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "bookings_tenant_id_session_id_fkey"
+            columns: ["tenant_id", "session_id"]
+            isOneToOne: false
+            referencedRelation: "v_session_stats"
+            referencedColumns: ["tenant_id", "session_id"]
           },
         ]
       }
@@ -583,6 +597,136 @@ export type Database = {
             columns: ["tenant_id", "location_id"]
             isOneToOne: false
             referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      communications: {
+        Row: {
+          approval_item_id: string | null
+          automation_run_id: string | null
+          body_html: string | null
+          body_text: string
+          campaign_id: string | null
+          channel: string
+          created_at: string
+          created_by: string | null
+          direction: string
+          error: string | null
+          household_id: string | null
+          id: string
+          person_id: string | null
+          provider: string | null
+          provider_message_id: string | null
+          related_id: string | null
+          related_type: string | null
+          scheduled_for: string | null
+          sent_at: string | null
+          status: string
+          subject: string | null
+          template_key: string | null
+          tenant_id: string
+          thread_id: string | null
+          to_address: string | null
+          updated_at: string
+        }
+        Insert: {
+          approval_item_id?: string | null
+          automation_run_id?: string | null
+          body_html?: string | null
+          body_text?: string
+          campaign_id?: string | null
+          channel: string
+          created_at?: string
+          created_by?: string | null
+          direction?: string
+          error?: string | null
+          household_id?: string | null
+          id?: string
+          person_id?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
+          related_id?: string | null
+          related_type?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          template_key?: string | null
+          tenant_id: string
+          thread_id?: string | null
+          to_address?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approval_item_id?: string | null
+          automation_run_id?: string | null
+          body_html?: string | null
+          body_text?: string
+          campaign_id?: string | null
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          direction?: string
+          error?: string | null
+          household_id?: string | null
+          id?: string
+          person_id?: string | null
+          provider?: string | null
+          provider_message_id?: string | null
+          related_id?: string | null
+          related_type?: string | null
+          scheduled_for?: string | null
+          sent_at?: string | null
+          status?: string
+          subject?: string | null
+          template_key?: string | null
+          tenant_id?: string
+          thread_id?: string | null
+          to_address?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "communications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "communications_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "communications_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "communications_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "communications_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "communications_tenant_id_thread_id_fkey"
+            columns: ["tenant_id", "thread_id"]
+            isOneToOne: false
+            referencedRelation: "message_threads"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -1327,6 +1471,13 @@ export type Database = {
             referencedColumns: ["tenant_id", "id"]
           },
           {
+            foreignKeyName: "makeup_credits_tenant_id_earned_from_session_id_fkey"
+            columns: ["tenant_id", "earned_from_session_id"]
+            isOneToOne: false
+            referencedRelation: "v_session_stats"
+            referencedColumns: ["tenant_id", "session_id"]
+          },
+          {
             foreignKeyName: "makeup_credits_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
@@ -1359,6 +1510,107 @@ export type Database = {
             columns: ["tenant_id", "used_booking_id"]
             isOneToOne: false
             referencedRelation: "bookings"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      message_templates: {
+        Row: {
+          active: boolean
+          body: string
+          channel: string
+          created_at: string
+          id: string
+          key: string
+          subject: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          body: string
+          channel: string
+          created_at?: string
+          id?: string
+          key: string
+          subject?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          body?: string
+          channel?: string
+          created_at?: string
+          id?: string
+          key?: string
+          subject?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_templates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      message_threads: {
+        Row: {
+          assigned_user_id: string | null
+          created_at: string
+          household_id: string
+          id: string
+          last_message_at: string
+          status: string
+          subject: string
+          tenant_id: string
+          unread_household: number
+          unread_staff: number
+          updated_at: string
+        }
+        Insert: {
+          assigned_user_id?: string | null
+          created_at?: string
+          household_id: string
+          id?: string
+          last_message_at?: string
+          status?: string
+          subject?: string
+          tenant_id: string
+          unread_household?: number
+          unread_staff?: number
+          updated_at?: string
+        }
+        Update: {
+          assigned_user_id?: string | null
+          created_at?: string
+          household_id?: string
+          id?: string
+          last_message_at?: string
+          status?: string
+          subject?: string
+          tenant_id?: string
+          unread_household?: number
+          unread_staff?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "message_threads_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "message_threads_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -2887,6 +3139,13 @@ export type Database = {
             referencedRelation: "roles"
             referencedColumns: ["tenant_id", "id"]
           },
+          {
+            foreignKeyName: "tenant_users_user_profile_fk"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
         ]
       }
       tenants: {
@@ -2945,6 +3204,94 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      thread_messages: {
+        Row: {
+          attachments: Json
+          body: string
+          communication_id: string | null
+          created_at: string
+          from_staff: boolean
+          id: string
+          read_by: Json
+          sender_person_id: string | null
+          sender_user_id: string | null
+          tenant_id: string
+          thread_id: string
+          updated_at: string
+        }
+        Insert: {
+          attachments?: Json
+          body: string
+          communication_id?: string | null
+          created_at?: string
+          from_staff: boolean
+          id?: string
+          read_by?: Json
+          sender_person_id?: string | null
+          sender_user_id?: string | null
+          tenant_id: string
+          thread_id: string
+          updated_at?: string
+        }
+        Update: {
+          attachments?: Json
+          body?: string
+          communication_id?: string | null
+          created_at?: string
+          from_staff?: boolean
+          id?: string
+          read_by?: Json
+          sender_person_id?: string | null
+          sender_user_id?: string | null
+          tenant_id?: string
+          thread_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "thread_messages_tenant_id_communication_id_fkey"
+            columns: ["tenant_id", "communication_id"]
+            isOneToOne: false
+            referencedRelation: "communications"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "thread_messages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "thread_messages_tenant_id_sender_person_id_fkey"
+            columns: ["tenant_id", "sender_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "thread_messages_tenant_id_sender_person_id_fkey"
+            columns: ["tenant_id", "sender_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "thread_messages_tenant_id_sender_person_id_fkey"
+            columns: ["tenant_id", "sender_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "thread_messages_tenant_id_thread_id_fkey"
+            columns: ["tenant_id", "thread_id"]
+            isOneToOne: false
+            referencedRelation: "message_threads"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
       }
       webhook_deliveries: {
         Row: {
@@ -3299,6 +3646,38 @@ export type Database = {
           },
         ]
       }
+      v_session_stats: {
+        Row: {
+          attended: number | null
+          booked: number | null
+          session_id: string | null
+          tenant_id: string | null
+          waitlisted: number | null
+        }
+        Insert: {
+          attended?: never
+          booked?: never
+          session_id?: string | null
+          tenant_id?: string | null
+          waitlisted?: never
+        }
+        Update: {
+          attended?: never
+          booked?: never
+          session_id?: string | null
+          tenant_id?: string | null
+          waitlisted?: never
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       add_household_person: {
@@ -3318,6 +3697,20 @@ export type Database = {
         Args: { p_name: string; p_slug: string; p_timezone: string }
         Returns: string
       }
+      message_recipients: {
+        Args: { p_person_ids: string[] }
+        Returns: {
+          email: string
+          email_consent: boolean
+          first_name: string
+          household_id: string
+          last_name: string
+          person_id: string
+          phone: string
+          recipient_person_id: string
+          sms_consent: boolean
+        }[]
+      }
       promote: {
         Args: {
           p_enrollment_id: string
@@ -3327,6 +3720,7 @@ export type Database = {
         }
         Returns: string
       }
+      record_communication: { Args: { p: Json }; Returns: string }
       reorder_ranks: {
         Args: { p_program_id: string; p_rank_ids: string[] }
         Returns: undefined
