@@ -93,3 +93,21 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
      which calls `forbidden()` (Next `experimental.authInterrupts`) to return a real 403 page.
   4. `/auth/landing` is a page (not a route handler) so server-action redirects can target it.
 - **Why:** Follow the framework's current conventions; keep authorisation next to the data it protects.
+
+## ADR-0008 — People data split and Home visibility
+- **Date / task:** 2026-09-22 · M1.01
+- **Spec:** §4.2 `people.medical_notes` "(perm people.medical.read)"; `person_pins` with a household PIN
+  used by the kiosk (M1.09); "every tenant table has the standard tenant policy".
+- **Decision:**
+  1. Medical notes live in `people_medical` (1:1 with people) readable only with `people.medical.read`;
+     writes also need `people.write`. RLS is row-level — a column on `people` could not be hidden.
+     Allergies and injury flags stay on `people` (instructors and the kiosk need them).
+  2. Tenant-wide reads of people/households/members/consents require `people.read`. Parents and students
+     are tenant users too, so the plain "same tenant" read would expose every family; Home users get an
+     additive policy limited to `app.household_ids()` (households their linked person belongs to).
+  3. PINs live in `kiosk_pins` keyed by household *or* person (staff clock-in in M3.06), bcrypt-hashed,
+     never selectable by anyone; set through `set_household_pin()` (Desk with people.write, or a guardian
+     of that household).
+  4. Every view is `security_invoker` (guard test) so RLS applies through views.
+  5. Every tenant table has an `id` (household_members too) so audit entity ids are meaningful.
+- **Why:** Least privilege for minors' data; the database, not the UI, decides who sees a child's record.

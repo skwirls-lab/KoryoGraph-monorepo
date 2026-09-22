@@ -115,6 +115,225 @@ export type Database = {
           },
         ]
       }
+      consents: {
+        Row: {
+          created_at: string
+          document_path: string | null
+          granted: boolean
+          granted_at: string
+          guardian_person_id: string | null
+          id: string
+          ip: string | null
+          kind: string
+          method: string
+          person_id: string
+          recorded_by: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          document_path?: string | null
+          granted: boolean
+          granted_at?: string
+          guardian_person_id?: string | null
+          id?: string
+          ip?: string | null
+          kind: string
+          method?: string
+          person_id: string
+          recorded_by?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          document_path?: string | null
+          granted?: boolean
+          granted_at?: string
+          guardian_person_id?: string | null
+          id?: string
+          ip?: string | null
+          kind?: string
+          method?: string
+          person_id?: string
+          recorded_by?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_guardian_person_id_fkey"
+            columns: ["tenant_id", "guardian_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_guardian_person_id_fkey"
+            columns: ["tenant_id", "guardian_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      household_members: {
+        Row: {
+          can_pickup: boolean
+          created_at: string
+          household_id: string
+          id: string
+          is_primary_guardian: boolean
+          person_id: string
+          receives_billing: boolean
+          relationship: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          can_pickup?: boolean
+          created_at?: string
+          household_id: string
+          id?: string
+          is_primary_guardian?: boolean
+          person_id: string
+          receives_billing?: boolean
+          relationship: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          can_pickup?: boolean
+          created_at?: string
+          household_id?: string
+          id?: string
+          is_primary_guardian?: boolean
+          person_id?: string
+          receives_billing?: boolean
+          relationship?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "household_members_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "household_members_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "household_members_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "household_members_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      households: {
+        Row: {
+          archived_at: string | null
+          balance_cents: number
+          billing_email: string | null
+          created_at: string
+          external_id: string | null
+          id: string
+          name: string
+          notes: string | null
+          primary_payer_person_id: string | null
+          stripe_customer_id: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          archived_at?: string | null
+          balance_cents?: number
+          billing_email?: string | null
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          name: string
+          notes?: string | null
+          primary_payer_person_id?: string | null
+          stripe_customer_id?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          archived_at?: string | null
+          balance_cents?: number
+          billing_email?: string | null
+          created_at?: string
+          external_id?: string | null
+          id?: string
+          name?: string
+          notes?: string | null
+          primary_payer_person_id?: string | null
+          stripe_customer_id?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "households_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "households_tenant_id_primary_payer_person_id_fkey"
+            columns: ["tenant_id", "primary_payer_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "households_tenant_id_primary_payer_person_id_fkey"
+            columns: ["tenant_id", "primary_payer_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       job_runs: {
         Row: {
           created_at: string
@@ -192,6 +411,131 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      kiosk_devices: {
+        Row: {
+          created_at: string
+          device_user_id: string | null
+          id: string
+          last_seen_at: string | null
+          location_id: string
+          name: string
+          paired_by: string | null
+          revoked_at: string | null
+          settings: Json
+          tenant_id: string
+          token_hash: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          device_user_id?: string | null
+          id?: string
+          last_seen_at?: string | null
+          location_id: string
+          name: string
+          paired_by?: string | null
+          revoked_at?: string | null
+          settings?: Json
+          tenant_id: string
+          token_hash: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          device_user_id?: string | null
+          id?: string
+          last_seen_at?: string | null
+          location_id?: string
+          name?: string
+          paired_by?: string | null
+          revoked_at?: string | null
+          settings?: Json
+          tenant_id?: string
+          token_hash?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kiosk_devices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kiosk_devices_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      kiosk_pins: {
+        Row: {
+          created_at: string
+          failed_attempts: number
+          household_id: string | null
+          id: string
+          locked_until: string | null
+          person_id: string | null
+          pin_hash: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          failed_attempts?: number
+          household_id?: string | null
+          id?: string
+          locked_until?: string | null
+          person_id?: string | null
+          pin_hash: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          failed_attempts?: number
+          household_id?: string | null
+          id?: string
+          locked_until?: string | null
+          person_id?: string | null
+          pin_hash?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kiosk_pins_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kiosk_pins_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "kiosk_pins_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "kiosk_pins_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
       }
       locations: {
         Row: {
@@ -272,6 +616,198 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      people: {
+        Row: {
+          address: Json
+          allergies: string[]
+          archived_at: string | null
+          belt_size: string | null
+          created_at: string
+          custom: Json
+          dob: string | null
+          email: string | null
+          email_consent: boolean
+          emergency_contacts: Json
+          external_id: string | null
+          first_name: string
+          gender: string | null
+          id: string
+          injury_flags: string[]
+          kukkiwon_id: string | null
+          last_name: string
+          phone: string | null
+          phone_sms_consent: boolean
+          photo_path: string | null
+          preferred_name: string | null
+          primary_location_id: string | null
+          referred_by_person_id: string | null
+          source: string | null
+          status: string
+          status_changed_at: string
+          status_reason: string | null
+          tags: string[]
+          tenant_id: string
+          type_flags: string[]
+          uniform_size: string | null
+          updated_at: string
+          user_id: string | null
+          utm: Json
+        }
+        Insert: {
+          address?: Json
+          allergies?: string[]
+          archived_at?: string | null
+          belt_size?: string | null
+          created_at?: string
+          custom?: Json
+          dob?: string | null
+          email?: string | null
+          email_consent?: boolean
+          emergency_contacts?: Json
+          external_id?: string | null
+          first_name: string
+          gender?: string | null
+          id?: string
+          injury_flags?: string[]
+          kukkiwon_id?: string | null
+          last_name?: string
+          phone?: string | null
+          phone_sms_consent?: boolean
+          photo_path?: string | null
+          preferred_name?: string | null
+          primary_location_id?: string | null
+          referred_by_person_id?: string | null
+          source?: string | null
+          status?: string
+          status_changed_at?: string
+          status_reason?: string | null
+          tags?: string[]
+          tenant_id: string
+          type_flags?: string[]
+          uniform_size?: string | null
+          updated_at?: string
+          user_id?: string | null
+          utm?: Json
+        }
+        Update: {
+          address?: Json
+          allergies?: string[]
+          archived_at?: string | null
+          belt_size?: string | null
+          created_at?: string
+          custom?: Json
+          dob?: string | null
+          email?: string | null
+          email_consent?: boolean
+          emergency_contacts?: Json
+          external_id?: string | null
+          first_name?: string
+          gender?: string | null
+          id?: string
+          injury_flags?: string[]
+          kukkiwon_id?: string | null
+          last_name?: string
+          phone?: string | null
+          phone_sms_consent?: boolean
+          photo_path?: string | null
+          preferred_name?: string | null
+          primary_location_id?: string | null
+          referred_by_person_id?: string | null
+          source?: string | null
+          status?: string
+          status_changed_at?: string
+          status_reason?: string | null
+          tags?: string[]
+          tenant_id?: string
+          type_flags?: string[]
+          uniform_size?: string | null
+          updated_at?: string
+          user_id?: string | null
+          utm?: Json
+        }
+        Relationships: [
+          {
+            foreignKeyName: "people_referred_by_fk"
+            columns: ["tenant_id", "referred_by_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "people_referred_by_fk"
+            columns: ["tenant_id", "referred_by_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "people_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "people_tenant_id_primary_location_id_fkey"
+            columns: ["tenant_id", "primary_location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      people_medical: {
+        Row: {
+          created_at: string
+          id: string
+          medical_notes: string
+          person_id: string
+          tenant_id: string
+          updated_at: string
+          updated_by: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          medical_notes?: string
+          person_id: string
+          tenant_id: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          medical_notes?: string
+          person_id?: string
+          tenant_id?: string
+          updated_at?: string
+          updated_by?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "people_medical_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "people_medical_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "people_medical_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
       }
       permissions: {
         Row: {
@@ -563,6 +1099,41 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "roles"
             referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      tenant_counters: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          tenant_id: string
+          updated_at: string
+          value: number
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          tenant_id: string
+          updated_at?: string
+          value?: number
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          tenant_id?: string
+          updated_at?: string
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_counters_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
           },
         ]
       }
@@ -917,12 +1488,134 @@ export type Database = {
       }
     }
     Views: {
-      [_ in never]: never
+      v_current_consents: {
+        Row: {
+          granted: boolean | null
+          granted_at: string | null
+          guardian_person_id: string | null
+          kind: string | null
+          method: string | null
+          person_id: string | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "consents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_guardian_person_id_fkey"
+            columns: ["tenant_id", "guardian_person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_guardian_person_id_fkey"
+            columns: ["tenant_id", "guardian_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "consents_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      v_people_search: {
+        Row: {
+          allergies: string[] | null
+          display_name: string | null
+          dob: string | null
+          email: string | null
+          first_name: string | null
+          household_id: string | null
+          household_names: string[] | null
+          id: string | null
+          injury_flags: string[] | null
+          last_name: string | null
+          phone: string | null
+          photo_path: string | null
+          preferred_name: string | null
+          search_text: string | null
+          status: string | null
+          tags: string[] | null
+          tenant_id: string | null
+          type_flags: string[] | null
+        }
+        Insert: {
+          allergies?: string[] | null
+          display_name?: never
+          dob?: string | null
+          email?: string | null
+          first_name?: string | null
+          household_id?: never
+          household_names?: never
+          id?: string | null
+          injury_flags?: string[] | null
+          last_name?: string | null
+          phone?: string | null
+          photo_path?: string | null
+          preferred_name?: string | null
+          search_text?: never
+          status?: string | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          type_flags?: string[] | null
+        }
+        Update: {
+          allergies?: string[] | null
+          display_name?: never
+          dob?: string | null
+          email?: string | null
+          first_name?: string | null
+          household_id?: never
+          household_names?: never
+          id?: string | null
+          injury_flags?: string[] | null
+          last_name?: string | null
+          phone?: string | null
+          photo_path?: string | null
+          preferred_name?: string | null
+          search_text?: never
+          status?: string | null
+          tags?: string[] | null
+          tenant_id?: string | null
+          type_flags?: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "people_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
     }
     Functions: {
       create_tenant: {
         Args: { p_name: string; p_slug: string; p_timezone: string }
         Returns: string
+      }
+      set_household_pin: {
+        Args: { p_household_id: string; p_pin: string }
+        Returns: undefined
       }
       switch_tenant: { Args: { p_tenant_id: string }; Returns: undefined }
     }

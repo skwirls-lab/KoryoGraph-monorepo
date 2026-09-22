@@ -56,6 +56,14 @@ describe("schema guards", () => {
     expect(rows.map((r) => r.fk)).toEqual([]);
   });
 
+  it("every view in public is security_invoker (RLS applies through views)", async () => {
+    const rows = await sql<{ relname: string }[]>`
+      select c.relname from pg_class c join pg_namespace n on n.oid = c.relnamespace
+      where n.nspname = 'public' and c.relkind = 'v'
+        and not coalesce(c.reloptions @> array['security_invoker=true'], false)`;
+    expect(rows.map((r) => r.relname)).toEqual([]);
+  });
+
   it("every tenant-scoped table (with an id) carries the audit trigger", async () => {
     const rows = await sql<{ relname: string }[]>`
       select c.relname from pg_class c join pg_namespace n on n.oid = c.relnamespace

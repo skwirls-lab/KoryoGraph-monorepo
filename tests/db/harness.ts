@@ -96,3 +96,23 @@ export async function addMember(tenantId: string, roleKey: string, email = uniqu
   await sql`update public.profiles set active_tenant_id = ${tenantId} where id = ${userId}`;
   return email;
 }
+
+/** Run SQL as an authenticated user with the given JWT claims (exactly what PostgREST does). */
+export async function asClaims<T>(claims: Record<string, unknown>, fn: (tx: postgres.Sql) => Promise<T>): Promise<T> {
+  return sql.begin(async (tx) => {
+    await tx`select set_config('request.jwt.claims', ${JSON.stringify(claims)}, true)`;
+    await tx`set local role authenticated`;
+    return fn(tx as unknown as postgres.Sql);
+  }) as Promise<T>;
+}
+
+const claimCache = new Map<string, Record<string, unknown>>();
+
+/** Real hook-minted claims for a seeded demo account (password KoryoDemo!2026), cached per run. */
+export async function seededClaims(email: string): Promise<Record<string, unknown>> {
+  const hit = claimCache.get(email);
+  if (hit) return hit;
+  const s = await signIn(email, "KoryoDemo!2026");
+  claimCache.set(email, s.claims);
+  return s.claims;
+}

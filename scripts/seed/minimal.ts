@@ -1,6 +1,7 @@
 import { sid } from "../lib/ids";
 import { ROLE_ACCOUNTS, TENANTS, PLATFORM_ADMIN_EMAIL, accountEmail } from "./accounts";
 import { ensureUser, type SeedContext } from "./context";
+import { seedHousehold } from "./households";
 import { seedMember, seedTenant } from "./tenant";
 
 /**
@@ -40,6 +41,26 @@ export async function seedMinimal(ctx: SeedContext): Promise<void> {
     }
   }
   ctx.log(`members: ${ROLE_ACCOUNTS.length} per tenant`);
+
+  // Households linked to the parent/student logins (people tests, Home, kiosk).
+  await seedHousehold(ctx, "ridgeline", "cooper", "Cooper family", [
+    { key: "morgan-cooper", first: "Morgan", last: "Cooper", flags: ["guardian"], status: "guardian_only", relationship: "guardian", primaryGuardian: true,
+      email: accountEmail("ridgeline", "parent"), phone: "(555) 010-3301", userEmail: accountEmail("ridgeline", "parent") },
+    { key: "maya-cooper", first: "Maya", last: "Cooper", dob: "2018-04-12", flags: ["student"], status: "active", relationship: "student", allergies: ["peanuts"] },
+    { key: "leo-cooper", first: "Leo", last: "Cooper", dob: "2015-09-30", flags: ["student"], status: "active", relationship: "student" },
+  ]);
+  await seedHousehold(ctx, "ridgeline", "adams", "Adams family", [
+    { key: "jamie-adams", first: "Jamie", last: "Adams", flags: ["guardian"], status: "guardian_only", relationship: "guardian", primaryGuardian: true,
+      email: "jamie.adams@example.test", phone: "(555) 010-4410" },
+    { key: "riley-adams", first: "Riley", last: "Adams", dob: "2011-02-03", flags: ["student"], status: "active", relationship: "student",
+      email: accountEmail("ridgeline", "student"), userEmail: accountEmail("ridgeline", "student") },
+  ]);
+  await seedHousehold(ctx, "harbor", "quinn", "Quinn family", [
+    { key: "taylor-quinn", first: "Taylor", last: "Quinn", flags: ["guardian"], status: "guardian_only", relationship: "guardian", primaryGuardian: true,
+      email: accountEmail("harbor", "parent"), userEmail: accountEmail("harbor", "parent") },
+    { key: "avery-quinn", first: "Avery", last: "Quinn", dob: "2016-07-19", flags: ["student"], status: "active", relationship: "student" },
+  ]);
+  ctx.log("households: cooper, adams (ridgeline); quinn (harbor)");
 
   const adminId = await ensureUser(ctx, PLATFORM_ADMIN_EMAIL, "Platform Admin");
   await ctx.sql`insert into public.platform_admins (user_id) values (${adminId}) on conflict do nothing`;
