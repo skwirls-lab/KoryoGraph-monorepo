@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   DEFAULT_DUNNING, addDaysStr, addMonthsStr, advancePeriod, allocatePayment, applyCoupons, computeInvoice, daysBetween, deferredRevenue,
-  dueDunningSteps, familyDiscountPct, familyDiscounts, firstBillingDate, firstInvoiceLines, freezeProration, prorate, recognitionSchedule, upgradeProration,
+  dueDunningSteps, familyDiscountPct, familyDiscounts, monthlyEquivalent, firstBillingDate, firstInvoiceLines, freezeProration, prorate, recognitionSchedule, upgradeProration,
 } from "./index";
 
 describe("dates", () => {
@@ -219,4 +219,16 @@ describe("first invoice for a new membership", () => {
     expect(firstInvoiceLines({ kind: "trial", priceCents: 0, interval: null, intervalCount: 1, enrollmentFeeCents: 0 }, "Free trial", "2026-09-16", 1).lines).toEqual([]);
     expect(firstInvoiceLines({ kind: "trial", priceCents: 2_900, interval: null, intervalCount: 1, enrollmentFeeCents: 0 }, "2-week trial", "2026-09-16", 1).lines).toHaveLength(1);
   });
+});
+
+describe("monthly equivalent (MRR)", () => {
+  it.each([
+    [16_900, "month", 1, 16_900],
+    [30_000, "month", 3, 10_000],
+    [4_500, "week", 1, 19_500],
+    [120_000, "year", 1, 10_000],
+    [100, "week", 2, 217],
+  ] as const)("%i per %s ×%i → %i", (price, interval, count, want) => expect(monthlyEquivalent(price, interval, count)).toBe(want));
+  it("rejects a zero interval count", () => expect(() => monthlyEquivalent(100, "month", 0)).toThrow());
+  it("defaults to one interval", () => expect(monthlyEquivalent(100, "month")).toBe(100));
 });

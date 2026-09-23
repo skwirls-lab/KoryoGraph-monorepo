@@ -196,6 +196,17 @@ export function computeInvoice(lines: readonly LineInput[], coupons: readonly Co
 }
 
 // ---------------------------------------------------------------------------------------------
+// Recurring revenue
+// ---------------------------------------------------------------------------------------------
+
+/** Monthly-equivalent (MRR) of a recurring price: weekly × 52/12, yearly ÷ 12, divided by the interval count. */
+export function monthlyEquivalent(priceCents: number, interval: Interval, intervalCount = 1): number {
+  if (intervalCount < 1) throw new Error("interval count must be ≥ 1");
+  const factor = interval === "week" ? 52 / 12 : interval === "month" ? 1 : 1 / 12;
+  return Math.round((priceCents * factor) / intervalCount);
+}
+
+// ---------------------------------------------------------------------------------------------
 // Paid-in-full revenue recognition
 // ---------------------------------------------------------------------------------------------
 

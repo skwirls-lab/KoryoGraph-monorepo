@@ -105,7 +105,7 @@ export const billingRun: Job = async ({ db, now, tenantId, log }) => {
             p: {
               membership_id: m.id, household_id: m.household_id, person_id: m.person_id, period_start: periodStart, period_end: periodEnd, next_bill_at: periodEnd,
               due_at: periodStart, subtotal_cents: invoice.subtotalCents, discount_cents: invoice.discountCents, tax_cents: invoice.taxCents, total_cents: invoice.totalCents,
-              lines: invoice.lines.map((l) => ({ kind: l.kind, description: l.description, quantity: l.quantity, unit_cents: l.unitCents, total_cents: l.totalCents, tax_rate: l.taxRate || null })),
+              lines: invoice.lines.map((l) => ({ kind: l.kind, description: l.description, quantity: l.quantity, unit_cents: l.unitCents, total_cents: l.totalCents, tax_cents: l.taxCents, tax_rate: l.taxRate || null })),
             } as unknown as Json,
           });
           if (invoiceId) {

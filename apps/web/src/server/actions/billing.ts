@@ -157,7 +157,7 @@ export async function enrollMembership(input: EnrollmentInput): Promise<ActionRe
       memo: q.coupon ? `Code ${q.coupon.code}` : "",
       lines: q.invoice.lines.map((l) => ({
         kind: l.kind, description: l.discountCents ? `${l.description} (−${(l.discountCents / 100).toFixed(2)})` : l.description,
-        quantity: l.quantity, unit_cents: l.unitCents, total_cents: l.totalCents, tax_rate: l.taxRate || null,
+        quantity: l.quantity, unit_cents: l.unitCents, total_cents: l.totalCents, tax_cents: l.taxCents, tax_rate: l.taxRate || null,
       })),
     },
     gear: q.gear.map((g) => ({ variant_id: g.chosenVariantId, product_name: g.productName, size: g.variants.find((x) => x.id === g.chosenVariantId)?.size ?? "" })),
