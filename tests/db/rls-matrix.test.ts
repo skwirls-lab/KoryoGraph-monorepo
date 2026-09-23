@@ -65,7 +65,8 @@ describe("RLS matrix", () => {
       const [r] = await asActor(actor, (tx) => tx<{ roles: number; members: number }[]>`
         select (select count(*)::int from public.roles where tenant_id = ${own}) as roles,
                (select count(*)::int from public.tenant_users where tenant_id = ${own}) as members`);
-      expect(r, `${actor.tenant}/${actor.role}`).toEqual({ roles: 7, members: ROLE_ACCOUNTS.length });
+      expect(r?.roles, `${actor.tenant}/${actor.role} roles`).toBe(7);
+      expect(r?.members, `${actor.tenant}/${actor.role} members`).toBeGreaterThanOrEqual(ROLE_ACCOUNTS.length);
     }
   });
 

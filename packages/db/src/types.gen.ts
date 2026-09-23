@@ -232,6 +232,70 @@ export type Database = {
           },
         ]
       }
+      billing_runs: {
+        Row: {
+          amount_cents: number
+          charges_attempted: number
+          created_at: string
+          errors: Json
+          id: string
+          invoices_created: number
+          job_run_id: string | null
+          run_date: string
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents?: number
+          charges_attempted?: number
+          created_at?: string
+          errors?: Json
+          id?: string
+          invoices_created?: number
+          job_run_id?: string | null
+          run_date: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          charges_attempted?: number
+          created_at?: string
+          errors?: Json
+          id?: string
+          invoices_created?: number
+          job_run_id?: string | null
+          run_date?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "billing_runs_job_run_id_fkey"
+            columns: ["job_run_id"]
+            isOneToOne: false
+            referencedRelation: "job_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "billing_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "billing_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       bookings: {
         Row: {
           booked_by_user_id: string | null
@@ -803,6 +867,13 @@ export type Database = {
             referencedColumns: ["tenant_id", "id"]
           },
           {
+            foreignKeyName: "communications_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
             foreignKeyName: "communications_tenant_id_person_id_fkey"
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
@@ -958,6 +1029,140 @@ export type Database = {
           },
         ]
       }
+      credits: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          expires_at: string | null
+          household_id: string
+          id: string
+          reason: string
+          remaining_cents: number
+          source_ref: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          expires_at?: string | null
+          household_id: string
+          id?: string
+          reason: string
+          remaining_cents: number
+          source_ref?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          expires_at?: string | null
+          household_id?: string
+          id?: string
+          reason?: string
+          remaining_cents?: number
+          source_ref?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "credits_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "credits_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "credits_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "credits_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+        ]
+      }
+      discounts: {
+        Row: {
+          active: boolean
+          applies_to: string
+          code: string | null
+          created_at: string
+          ends_at: string | null
+          id: string
+          kind: string
+          max_uses: number | null
+          name: string
+          starts_at: string | null
+          tenant_id: string
+          updated_at: string
+          uses: number
+          value: number
+        }
+        Insert: {
+          active?: boolean
+          applies_to?: string
+          code?: string | null
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          kind: string
+          max_uses?: number | null
+          name: string
+          starts_at?: string | null
+          tenant_id: string
+          updated_at?: string
+          uses?: number
+          value: number
+        }
+        Update: {
+          active?: boolean
+          applies_to?: string
+          code?: string | null
+          created_at?: string
+          ends_at?: string | null
+          id?: string
+          kind?: string
+          max_uses?: number | null
+          name?: string
+          starts_at?: string | null
+          tenant_id?: string
+          updated_at?: string
+          uses?: number
+          value?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "discounts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "discounts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       document_templates: {
         Row: {
           active: boolean
@@ -1087,6 +1292,13 @@ export type Database = {
             referencedColumns: ["tenant_id", "id"]
           },
           {
+            foreignKeyName: "documents_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
             foreignKeyName: "documents_tenant_id_person_id_fkey"
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
@@ -1113,6 +1325,51 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      dunning_policies: {
+        Row: {
+          created_at: string
+          id: string
+          is_default: boolean
+          name: string
+          steps: Json
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name: string
+          steps: Json
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          is_default?: boolean
+          name?: string
+          steps?: Json
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "dunning_policies_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "dunning_policies_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
           },
         ]
       }
@@ -1390,6 +1647,13 @@ export type Database = {
             referencedColumns: ["tenant_id", "id"]
           },
           {
+            foreignKeyName: "household_members_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
             foreignKeyName: "household_members_tenant_id_person_id_fkey"
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
@@ -1501,6 +1765,241 @@ export type Database = {
           {
             foreignKeyName: "households_tenant_id_primary_payer_person_id_fkey"
             columns: ["tenant_id", "primary_payer_person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      invoice_lines: {
+        Row: {
+          created_at: string
+          description: string
+          id: string
+          invoice_id: string
+          kind: string
+          quantity: number
+          ref_id: string | null
+          ref_type: string | null
+          tax_rate: number | null
+          tenant_id: string
+          total_cents: number
+          unit_cents: number
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          description: string
+          id?: string
+          invoice_id: string
+          kind: string
+          quantity?: number
+          ref_id?: string | null
+          ref_type?: string | null
+          tax_rate?: number | null
+          tenant_id: string
+          total_cents: number
+          unit_cents: number
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          description?: string
+          id?: string
+          invoice_id?: string
+          kind?: string
+          quantity?: number
+          ref_id?: string | null
+          ref_type?: string | null
+          tax_rate?: number | null
+          tenant_id?: string
+          total_cents?: number
+          unit_cents?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoice_lines_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoice_lines_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "invoice_lines_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "invoice_lines_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_ar_aging"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+        ]
+      }
+      invoices: {
+        Row: {
+          balance_cents: number
+          created_at: string
+          currency: string
+          discount_cents: number
+          due_at: string
+          dunning_state: Json
+          household_id: string
+          id: string
+          issued_at: string
+          membership_id: string | null
+          memo: string | null
+          number: number
+          paid_cents: number
+          period_end: string | null
+          period_start: string | null
+          person_id: string | null
+          source: string
+          status: string
+          stripe_payment_intent_id: string | null
+          subtotal_cents: number
+          tax_cents: number
+          tenant_id: string
+          total_cents: number
+          updated_at: string
+          void_reason: string | null
+          voided_at: string | null
+        }
+        Insert: {
+          balance_cents?: number
+          created_at?: string
+          currency?: string
+          discount_cents?: number
+          due_at?: string
+          dunning_state?: Json
+          household_id: string
+          id?: string
+          issued_at?: string
+          membership_id?: string | null
+          memo?: string | null
+          number: number
+          paid_cents?: number
+          period_end?: string | null
+          period_start?: string | null
+          person_id?: string | null
+          source?: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          subtotal_cents?: number
+          tax_cents?: number
+          tenant_id: string
+          total_cents?: number
+          updated_at?: string
+          void_reason?: string | null
+          voided_at?: string | null
+        }
+        Update: {
+          balance_cents?: number
+          created_at?: string
+          currency?: string
+          discount_cents?: number
+          due_at?: string
+          dunning_state?: Json
+          household_id?: string
+          id?: string
+          issued_at?: string
+          membership_id?: string | null
+          memo?: string | null
+          number?: number
+          paid_cents?: number
+          period_end?: string | null
+          period_start?: string | null
+          person_id?: string | null
+          source?: string
+          status?: string
+          stripe_payment_intent_id?: string | null
+          subtotal_cents?: number
+          tax_cents?: number
+          tenant_id?: string
+          total_cents?: number
+          updated_at?: string
+          void_reason?: string | null
+          voided_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
             isOneToOne: false
             referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
@@ -1714,6 +2213,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "households"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "kiosk_pins_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
           },
           {
             foreignKeyName: "kiosk_pins_tenant_id_person_id_fkey"
@@ -1973,6 +2479,257 @@ export type Database = {
           },
         ]
       }
+      membership_plans: {
+        Row: {
+          active: boolean
+          attendance_rule: Json
+          auto_renew: boolean
+          class_pack_size: number | null
+          contract_months: number | null
+          created_at: string
+          description: string
+          early_termination_fee_cents: number | null
+          enrollment_fee_cents: number
+          family_discount: Json
+          gear_package_product_ids: string[]
+          id: string
+          interval: string | null
+          interval_count: number
+          kind: string
+          name: string
+          price_cents: number
+          program_ids: string[]
+          public: boolean
+          sort: number
+          tax_class: string
+          tenant_id: string
+          term_months: number | null
+          trial_days: number | null
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          attendance_rule?: Json
+          auto_renew?: boolean
+          class_pack_size?: number | null
+          contract_months?: number | null
+          created_at?: string
+          description?: string
+          early_termination_fee_cents?: number | null
+          enrollment_fee_cents?: number
+          family_discount?: Json
+          gear_package_product_ids?: string[]
+          id?: string
+          interval?: string | null
+          interval_count?: number
+          kind: string
+          name: string
+          price_cents: number
+          program_ids?: string[]
+          public?: boolean
+          sort?: number
+          tax_class?: string
+          tenant_id: string
+          term_months?: number | null
+          trial_days?: number | null
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          attendance_rule?: Json
+          auto_renew?: boolean
+          class_pack_size?: number | null
+          contract_months?: number | null
+          created_at?: string
+          description?: string
+          early_termination_fee_cents?: number | null
+          enrollment_fee_cents?: number
+          family_discount?: Json
+          gear_package_product_ids?: string[]
+          id?: string
+          interval?: string | null
+          interval_count?: number
+          kind?: string
+          name?: string
+          price_cents?: number
+          program_ids?: string[]
+          public?: boolean
+          sort?: number
+          tax_class?: string
+          tenant_id?: string
+          term_months?: number | null
+          trial_days?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "membership_plans_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "membership_plans_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
+      memberships: {
+        Row: {
+          autopay: boolean
+          billing_day: number | null
+          cancel_at: string | null
+          cancel_reason: string | null
+          class_pack_remaining: number | null
+          contract_ends_at: string | null
+          created_at: string
+          discount_ids: string[]
+          ends_at: string | null
+          hold_from: string | null
+          hold_until: string | null
+          household_id: string
+          id: string
+          next_bill_at: string | null
+          notes: string | null
+          payment_method_id: string | null
+          person_id: string
+          plan_id: string
+          price_override_cents: number | null
+          starts_at: string
+          status: string
+          stripe_subscription_id: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          autopay?: boolean
+          billing_day?: number | null
+          cancel_at?: string | null
+          cancel_reason?: string | null
+          class_pack_remaining?: number | null
+          contract_ends_at?: string | null
+          created_at?: string
+          discount_ids?: string[]
+          ends_at?: string | null
+          hold_from?: string | null
+          hold_until?: string | null
+          household_id: string
+          id?: string
+          next_bill_at?: string | null
+          notes?: string | null
+          payment_method_id?: string | null
+          person_id: string
+          plan_id: string
+          price_override_cents?: number | null
+          starts_at: string
+          status?: string
+          stripe_subscription_id?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          autopay?: boolean
+          billing_day?: number | null
+          cancel_at?: string | null
+          cancel_reason?: string | null
+          class_pack_remaining?: number | null
+          contract_ends_at?: string | null
+          created_at?: string
+          discount_ids?: string[]
+          ends_at?: string | null
+          hold_from?: string | null
+          hold_until?: string | null
+          household_id?: string
+          id?: string
+          next_bill_at?: string | null
+          notes?: string | null
+          payment_method_id?: string | null
+          person_id?: string
+          plan_id?: string
+          price_override_cents?: number | null
+          starts_at?: string
+          status?: string
+          stripe_subscription_id?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_payment_method_id_fkey"
+            columns: ["tenant_id", "payment_method_id"]
+            isOneToOne: false
+            referencedRelation: "payment_methods"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_plan_id_fkey"
+            columns: ["tenant_id", "plan_id"]
+            isOneToOne: false
+            referencedRelation: "membership_plans"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       message_templates: {
         Row: {
           active: boolean
@@ -2086,6 +2843,13 @@ export type Database = {
             referencedRelation: "households"
             referencedColumns: ["tenant_id", "id"]
           },
+          {
+            foreignKeyName: "message_threads_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
         ]
       }
       modules: {
@@ -2196,6 +2960,262 @@ export type Database = {
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
             referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      payment_allocations: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          id: string
+          invoice_id: string
+          payment_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          id?: string
+          invoice_id: string
+          payment_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          id?: string
+          invoice_id?: string
+          payment_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_allocations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_allocations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "payment_allocations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "payment_allocations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_ar_aging"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "payment_allocations_tenant_id_payment_id_fkey"
+            columns: ["tenant_id", "payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      payment_methods: {
+        Row: {
+          brand: string | null
+          created_at: string
+          exp_month: number | null
+          exp_year: number | null
+          household_id: string
+          id: string
+          is_default: boolean
+          kind: string
+          last4: string | null
+          status: string
+          stripe_payment_method_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          brand?: string | null
+          created_at?: string
+          exp_month?: number | null
+          exp_year?: number | null
+          household_id: string
+          id?: string
+          is_default?: boolean
+          kind: string
+          last4?: string | null
+          status?: string
+          stripe_payment_method_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          brand?: string | null
+          created_at?: string
+          exp_month?: number | null
+          exp_year?: number | null
+          household_id?: string
+          id?: string
+          is_default?: boolean
+          kind?: string
+          last4?: string | null
+          status?: string
+          stripe_payment_method_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payment_methods_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payment_methods_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "payment_methods_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "payment_methods_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+        ]
+      }
+      payments: {
+        Row: {
+          amount_cents: number
+          created_at: string
+          failure_code: string | null
+          failure_message: string | null
+          household_id: string
+          id: string
+          invoice_id: string | null
+          memo: string | null
+          method: string
+          payment_method_id: string | null
+          received_at: string
+          received_by_user_id: string | null
+          refunded_cents: number
+          status: string
+          stripe_charge_id: string | null
+          stripe_payment_intent_id: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          created_at?: string
+          failure_code?: string | null
+          failure_message?: string | null
+          household_id: string
+          id?: string
+          invoice_id?: string | null
+          memo?: string | null
+          method: string
+          payment_method_id?: string | null
+          received_at?: string
+          received_by_user_id?: string | null
+          refunded_cents?: number
+          status?: string
+          stripe_charge_id?: string | null
+          stripe_payment_intent_id?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          created_at?: string
+          failure_code?: string | null
+          failure_message?: string | null
+          household_id?: string
+          id?: string
+          invoice_id?: string | null
+          memo?: string | null
+          method?: string
+          payment_method_id?: string | null
+          received_at?: string
+          received_by_user_id?: string | null
+          refunded_cents?: number
+          status?: string
+          stripe_charge_id?: string | null
+          stripe_payment_intent_id?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "payments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "payments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "payments_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "payments_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "payments_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "payments_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_ar_aging"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "payments_tenant_id_payment_method_id_fkey"
+            columns: ["tenant_id", "payment_method_id"]
+            isOneToOne: false
+            referencedRelation: "payment_methods"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -3099,6 +4119,70 @@ export type Database = {
           },
         ]
       }
+      refunds: {
+        Row: {
+          amount_cents: number
+          as_credit: boolean
+          by_user_id: string | null
+          created_at: string
+          id: string
+          payment_id: string
+          reason: string
+          status: string
+          stripe_refund_id: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          as_credit?: boolean
+          by_user_id?: string | null
+          created_at?: string
+          id?: string
+          payment_id: string
+          reason: string
+          status?: string
+          stripe_refund_id?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          as_credit?: boolean
+          by_user_id?: string | null
+          created_at?: string
+          id?: string
+          payment_id?: string
+          reason?: string
+          status?: string
+          stripe_refund_id?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "refunds_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "refunds_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "refunds_tenant_id_payment_id_fkey"
+            columns: ["tenant_id", "payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       role_permissions: {
         Row: {
           created_at: string
@@ -3876,6 +4960,94 @@ export type Database = {
           },
         ]
       }
+      stripe_events: {
+        Row: {
+          account_id: string | null
+          created_at: string
+          error: string | null
+          id: string
+          livemode: boolean
+          payload: Json
+          processed_at: string | null
+          type: string
+        }
+        Insert: {
+          account_id?: string | null
+          created_at?: string
+          error?: string | null
+          id: string
+          livemode?: boolean
+          payload: Json
+          processed_at?: string | null
+          type: string
+        }
+        Update: {
+          account_id?: string | null
+          created_at?: string
+          error?: string | null
+          id?: string
+          livemode?: boolean
+          payload?: Json
+          processed_at?: string | null
+          type?: string
+        }
+        Relationships: []
+      }
+      tax_rates: {
+        Row: {
+          applies_to: string[]
+          created_at: string
+          id: string
+          location_id: string | null
+          name: string
+          rate: number
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          applies_to?: string[]
+          created_at?: string
+          id?: string
+          location_id?: string | null
+          name: string
+          rate: number
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          applies_to?: string[]
+          created_at?: string
+          id?: string
+          location_id?: string | null
+          name?: string
+          rate?: number
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tax_rates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tax_rates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "tax_rates_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       tenant_counters: {
         Row: {
           created_at: string
@@ -4420,6 +5592,52 @@ export type Database = {
       }
     }
     Views: {
+      v_ar_aging: {
+        Row: {
+          balance_cents: number | null
+          bucket: string | null
+          days_overdue: number | null
+          due_at: string | null
+          dunning_stage: number | null
+          household_id: string | null
+          household_name: string | null
+          invoice_id: string | null
+          number: number | null
+          status: string | null
+          tenant_id: string | null
+          total_cents: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+        ]
+      }
       v_attendance_by_class: {
         Row: {
           attendances: number | null
@@ -4676,6 +5894,32 @@ export type Database = {
           },
         ]
       }
+      v_household_balance: {
+        Row: {
+          credit_cents: number | null
+          household_id: string | null
+          name: string | null
+          open_cents: number | null
+          past_due_cents: number | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "households_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "households_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       v_member_roster: {
         Row: {
           classes_30d: number | null
@@ -4739,6 +5983,75 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_owner_dashboard"
             referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
+      v_mrr: {
+        Row: {
+          household_id: string | null
+          membership_id: string | null
+          mrr_cents: number | null
+          person_id: string | null
+          plan_name: string | null
+          program_ids: string[] | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
           },
         ]
       }
@@ -5089,6 +6402,11 @@ export type Database = {
       }
       my_household_ids: { Args: never; Returns: string[] }
       my_person_id: { Args: never; Returns: string }
+      next_invoice_number: { Args: never; Returns: number }
+      next_invoice_number_for: {
+        Args: { p_tenant_id: string }
+        Returns: number
+      }
       promote: {
         Args: {
           p_enrollment_id: string
