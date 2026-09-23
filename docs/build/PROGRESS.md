@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M3.09 gate M3
+M4.01
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -27,8 +27,8 @@ port 3000          → in use by another container on the host → dev server us
 | M0 | done | GREEN (typecheck, lint, unit 16, db 22, e2e 14) | m0-complete | 2026-09-22 |
 | M1 | done | GREEN (typecheck, lint, unit, db, seed demo + invariants, e2e m0–m1) | m1-complete | 2026-09-23 |
 | M2 | done | GREEN (typecheck, lint, unit 167, billing coverage 100%, db 98, seed demo + invariants 11, e2e m0–m2 54; @stripe/@ai-live/@email = HANDOFF) | m2-complete | 2026-09-23 |
-| M3 | todo |  |  |  |
-| M4 | todo |  |  |  |
+| M3 | done | GREEN (typecheck, lint, unit 167, billing coverage 100%, db 124, seed demo + invariants 13, e2e m0–m3 63; @stripe/@ai-live/@email = HANDOFF) | m3-complete | 2026-09-23 |
+| M4 | in_progress |  |  |  |
 | M5 | todo |  |  |  |
 
 ## Tasks
@@ -81,8 +81,8 @@ port 3000          → in use by another container on the host → dev server us
 | M3.06 | done | 120c7ae | staff ops; DB 5 tests, e2e staff.spec green; staff invites stay in M5.02 |
 | M3.07 | done | 5e19608 | growth reports; DB 5 tests vs SQL truth; e2e growth-reports.spec |
 | M3.08 | done | f4279b0 | demo seed v3; seed invariants 13/13 incl. determinism; Youth TKD 14 eligible / 17 almost (ADR-0029) |
-| M3.09 | todo |  |  |
-| M4.01 | todo |  |  |
+| M3.09 | done | 1178152 | gate green after 1 fix (staff_profiles collision between db tests and demo seed) |
+| M4.01 | doing |  |  |
 | M4.02 | todo |  |  |
 | M4.03 | todo |  |  |
 | M4.04 | todo |  |  |
