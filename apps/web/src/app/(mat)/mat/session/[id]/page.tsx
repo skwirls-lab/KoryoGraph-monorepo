@@ -45,7 +45,7 @@ export default async function MatSessionPage({ params }: { params: Promise<{ id:
         ) : null}
         {ctx.permissions.has("comms.send") && !cancelled && rows.length > 0 ? <MessageClass sessionId={s.id} /> : null}
         <MatRoster sessionId={s.id} rows={rows} progress={progress} canPromote={ctx.permissions.has("ranks.promote")} disabled={cancelled} />
-        <LessonPlanPanel sessionId={s.id} current={plan} plans={lessonPlans} skills={new Map((skills ?? []).map((k) => [k.id, k.name]))} />
+        <LessonPlanPanel sessionId={s.id} current={plan} plans={lessonPlans} skills={new Map((skills ?? []).map((k) => [k.id, k.name]))} canBuild={ctx.modules.has("intelligence") && ctx.permissions.has("curriculum.write")} />
         {ctx.modules.has("intelligence") && ctx.permissions.has("attendance.write") && !cancelled ? <RecordClass sessionId={s.id} gaps={gaps} recordings={recordings} /> : null}
       </div>
     </>

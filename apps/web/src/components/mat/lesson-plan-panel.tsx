@@ -1,12 +1,13 @@
 "use client";
 
+import Link from "next/link";
 import { useTransition } from "react";
 import { toast } from "sonner";
 import type { LessonSection } from "@/lib/curriculum";
 import { assignLessonPlan } from "@/server/actions/mat";
 
-export function LessonPlanPanel({ sessionId, current, plans, skills }: {
-  sessionId: string; current: { id: string; name: string; sections: LessonSection[] } | null; plans: { id: string; name: string }[]; skills: Map<string, string>;
+export function LessonPlanPanel({ sessionId, current, plans, skills, canBuild = false }: {
+  sessionId: string; current: { id: string; name: string; sections: LessonSection[] } | null; plans: { id: string; name: string }[]; skills: Map<string, string>; canBuild?: boolean;
 }) {
   const [pending, start] = useTransition();
   return (
@@ -32,7 +33,7 @@ export function LessonPlanPanel({ sessionId, current, plans, skills }: {
             </li>
           ))}
         </ol>
-      ) : <p className="text-sm text-fg-muted">No plan attached. Pick one of your templates.</p>}
+      ) : <p className="text-sm text-fg-muted">No plan attached. Pick one of your templates{canBuild ? <>, or <Link href={`/mat/session/${sessionId}/plan`}>plan this class</Link> with the lesson builder</> : null}.</p>}
     </section>
   );
 }

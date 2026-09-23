@@ -1,0 +1,44 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "plans": [
+      {
+        "name": "Roundhouse counters & footwork",
+        "week": 1,
+        "sections": [
+          {
+            "title": "Warm-up",
+            "minutes": 8,
+            "skillIds": [
+              "8cf028f8-f476-56b8-bab8-ae7e317c77ab"
+            ],
+            "notes": "Rope and dynamic stretching."
+          },
+          {
+            "title": "Footwork",
+            "minutes": 15,
+            "skillIds": [
+              "32d468e0-08f7-5447-ba6c-e1b7b7876824"
+            ],
+            "notes": "Mirror drill with a partner."
+          },
+          {
+            "title": "Counters",
+            "minutes": 20,
+            "skillIds": [
+              "3d9b1a83-9399-5c2f-b10e-237e3a6e4bff"
+            ],
+            "notes": "Slide back and counter; switch roles every 10 reps."
+          },
+          {
+            "title": "Games & cool-down",
+            "minutes": 12,
+            "skillIds": [],
+            "notes": "Tag-the-belt game, stretch, bow out."
+          }
+        ]
+      }
+    ],
+    "suggestedSkills": []
+  }
+}

@@ -27,6 +27,7 @@ export default async function CurriculumPage({ searchParams }: { searchParams: P
         actions={
           <>
             <Button asChild variant="outline" size="sm"><Link href="/desk/curriculum/lesson-plans">Lesson plans</Link></Button>
+            {ctx.modules.has("intelligence") && ctx.permissions.has("curriculum.write") ? <Button asChild variant="outline" size="sm"><Link href="/desk/curriculum/build">Lesson builder</Link></Button> : null}
             {canWrite ? <SkillDialog programs={programOptions} trigger={<Button size="sm" className="gap-2"><Plus aria-hidden className="size-4" /> New skill</Button>} /> : null}
           </>
         }

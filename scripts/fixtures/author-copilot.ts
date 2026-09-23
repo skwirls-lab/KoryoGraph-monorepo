@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { actionBoard, copilotStep, driftOutreach, homeAssistant, inputHash, transcribe } from "@koryo/ai";
+import { actionBoard, copilotStep, driftOutreach, homeAssistant, inputHash, lessonBuilder, transcribe } from "@koryo/ai";
 import { AB, AB_TRANSCRIPT } from "../../tests/fixtures/action-board";
 import { sid } from "../lib/ids";
 
@@ -101,5 +101,39 @@ for (const combo of COMBOS) {
     ],
     injuries: [{ personId: dee!.id, note: "Rolled her ankle a little during sparring; keep an eye on it next class.", confidence: 0.9 }],
     followUps: [{ title: "Call Eli's parents about moving up to the advanced class", personId: eli!.id }],
+  } });
+}
+
+// Lesson builder (M4.07): plans that reference real demo-library skills (and one bogus id, which must be dropped).
+{
+  const sk = (cat: string, name: string) => sid(`skill:ridgeline:${cat}:${name}`);
+  const key = (prompt: string, weeks: number) => lessonBuilder.fixtureKey!({ prompt, programName: "Youth Taekwondo", rankBand: [], weeks, classMinutes: 55, skills: [] });
+  write("lesson_builder", key("A 2-week sparring block for green to blue belts: footwork, counters and ring awareness", 2), { output: {
+    plans: [
+      { name: "Sparring block · week 1: footwork & distance", week: 1, sections: [
+        { title: "Warm-up", minutes: 8, skillIds: [sk("conditioning", "Jump rope 2 min")], notes: "Rope, then dynamic stretching; finish with 20 s of fast feet." },
+        { title: "Footwork", minutes: 15, skillIds: [sk("sparring", "Fighting stance & footwork"), sk("sparring", "Ring awareness")], notes: "Step-in / step-back / pivot ladder drills; partner mirrors to keep distance." },
+        { title: "Counters", minutes: 15, skillIds: [sk("sparring", "Roundhouse counter"), "00000000-0000-4000-8000-000000000000"], notes: "Partner throws roundhouse; defender slides back and counters." },
+        { title: "Controlled rounds", minutes: 12, skillIds: [sk("sparring", "Controlled light contact"), sk("sparring", "Sparring etiquette")], notes: "3 × 90 s rounds, rotate partners; coaches call out ring position." },
+        { title: "Cool-down", minutes: 5, skillIds: [], notes: "Stretch, bow out, one takeaway each." },
+      ] },
+      { name: "Sparring block · week 2: counters under pressure", week: 2, sections: [
+        { title: "Warm-up", minutes: 8, skillIds: [sk("conditioning", "Agility ladder")], notes: "Ladder patterns, then shadow sparring." },
+        { title: "Timing", minutes: 15, skillIds: [sk("sparring", "Cut kick timing"), sk("sparring", "Counter back kick")], notes: "Pad holder feeds; students pick cut kick or back kick counter." },
+        { title: "Ring craft", minutes: 12, skillIds: [sk("sparring", "Ring awareness"), sk("sparring", "Feint and switch")], notes: "Start near the edge; escape with a feint and switch." },
+        { title: "Rounds", minutes: 15, skillIds: [sk("sparring", "Point sparring rules")], notes: "Point rounds with a scorer; review two exchanges per pair." },
+        { title: "Cool-down", minutes: 5, skillIds: [], notes: "Stretch and bow out." },
+      ] },
+    ],
+    suggestedSkills: [{ name: "Corner escape drill", category: "sparring", reason: "Week 2 works on escaping the ring edge, which your library doesn't have a skill for." }],
+  } });
+  write("lesson_builder", key("Roundhouse counters and footwork with partner drills", 1), { output: {
+    plans: [{ name: "Roundhouse counters & footwork", week: 1, sections: [
+      { title: "Warm-up", minutes: 8, skillIds: [sk("conditioning", "Jump rope 2 min")], notes: "Rope and dynamic stretching." },
+      { title: "Footwork", minutes: 15, skillIds: [sk("sparring", "Fighting stance & footwork")], notes: "Mirror drill with a partner." },
+      { title: "Counters", minutes: 20, skillIds: [sk("sparring", "Roundhouse counter")], notes: "Slide back and counter; switch roles every 10 reps." },
+      { title: "Games & cool-down", minutes: 12, skillIds: [], notes: "Tag-the-belt game, stretch, bow out." },
+    ] }],
+    suggestedSkills: [],
   } });
 }
