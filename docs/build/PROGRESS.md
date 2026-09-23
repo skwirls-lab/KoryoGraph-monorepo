@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M2.11
+M2.12
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -71,8 +71,8 @@ port 3000          → in use by another container on the host → dev server us
 | M2.08 | done | 686b2bc |  |
 | M2.09 | done | 1c76520 | Terminal + card-on-file tenders need Stripe keys (HANDOFF) |
 | M2.10 | done | 97f51b6 |  |
-| M2.11 | doing |  |  |
-| M2.12 | todo |  |  |
+| M2.11 | done | 9115ee0 |  |
+| M2.12 | doing |  |  |
 | M3.01 | todo |  |  |
 | M3.02 | todo |  |  |
 | M3.03 | todo |  |  |
