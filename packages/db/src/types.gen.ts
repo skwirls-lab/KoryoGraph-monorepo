@@ -593,6 +593,7 @@ export type Database = {
           last_used_at: string | null
           name: string
           prefix: string
+          request_count: number
           revoked_at: string | null
           scopes: string[]
           tenant_id: string
@@ -606,6 +607,7 @@ export type Database = {
           last_used_at?: string | null
           name: string
           prefix: string
+          request_count?: number
           revoked_at?: string | null
           scopes?: string[]
           tenant_id: string
@@ -619,6 +621,7 @@ export type Database = {
           last_used_at?: string | null
           name?: string
           prefix?: string
+          request_count?: number
           revoked_at?: string | null
           scopes?: string[]
           tenant_id?: string
@@ -12878,6 +12881,16 @@ export type Database = {
           limit_cents: number
           used_cents: number
         }[]
+      }
+      api_list: {
+        Args: {
+          p_cursor?: string
+          p_filters?: Json
+          p_key: string
+          p_limit?: number
+          p_resource: string
+        }
+        Returns: Json
       }
       apply_credit: {
         Args: { p_amount_cents?: number; p_invoice_id: string }

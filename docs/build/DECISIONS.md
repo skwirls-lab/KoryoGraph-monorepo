@@ -647,3 +647,21 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
 - **Deviation — attendance:** the spec lists attendance as a target. Individual historical check-ins are not
   imported, because KoryoGraph attendance needs a real class session. What eligibility needs — "classes since
   last promotion" — is imported onto the enrollment.
+
+## ADR-0041 — Public API: keys resolved and scoped inside the database; signed webhooks with retries
+- **Date / task:** 2026-09-25 · M5.04
+- **Keys:** `kg_live_<8>_<32>`, stored only as SHA-256. `/api/v1/*` uses the anon client (no service role)
+  and calls the security-definer `api_list`. The function hashes the key, finds its school and scopes,
+  counts the request against a 120/min limit (`app.api_rate`, an unexposed table), and returns that school's
+  rows through explicit column lists. Tenant isolation is therefore enforced in SQL, not in the route.
+- **API shape:** read-only in v1 — people, attendance, invoices, memberships — with keyset pagination
+  (`next_cursor`) and filters. OpenAPI 3.1 is served at `/api/v1/openapi.json`.
+- **Webhooks:**
+  - Triggers queue `member.created`, `attendance.created` and `invoice.paid` for each active, subscribed
+    endpoint. Seed bulk-loads run with triggers off, so they queue nothing.
+  - The `webhook_dispatch` job POSTs with `KoryoGraph-Signature: t=…,v1=HMAC-SHA256(secret, "t.body")` and
+    retries after 1 min, 5 min, 30 min, 2 h and 12 h before marking a delivery failed.
+  - In production it refuses non-https and internal destinations: localhost, private and link-local ranges,
+    `.internal` / `.local`.
+  - DNS rebinding (a public name resolving to a private address) is not defended against yet; this is noted
+    for the security review.

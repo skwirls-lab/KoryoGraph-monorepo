@@ -12,6 +12,7 @@ import { outboxDispatch } from "./outbox-dispatch";
 import { parentNarratives } from "./parent-narratives";
 import { scheduleSuggestionsJob } from "./schedule-suggestions";
 import { techniqueFeedbackJob } from "./technique-feedback";
+import { webhookDispatch } from "./webhook-dispatch";
 import { signaturePdfs } from "./signature-pdfs";
 import { transcribeJob } from "./transcribe";
 import type { Job } from "./types";
@@ -32,6 +33,7 @@ export const JOBS: Record<string, Job> = {
   parent_narratives: parentNarratives,
   schedule_suggestions: scheduleSuggestionsJob,
   technique_feedback: techniqueFeedbackJob,
+  webhook_dispatch: webhookDispatch,
   signature_pdfs: signaturePdfs,
   transcribe: transcribeJob,
 };
