@@ -2132,6 +2132,7 @@ export type Database = {
           person_id: string | null
           provider: string | null
           provider_message_id: string | null
+          read_at: string | null
           related_id: string | null
           related_type: string | null
           scheduled_for: string | null
@@ -2161,6 +2162,7 @@ export type Database = {
           person_id?: string | null
           provider?: string | null
           provider_message_id?: string | null
+          read_at?: string | null
           related_id?: string | null
           related_type?: string | null
           scheduled_for?: string | null
@@ -2190,6 +2192,7 @@ export type Database = {
           person_id?: string | null
           provider?: string | null
           provider_message_id?: string | null
+          read_at?: string | null
           related_id?: string | null
           related_type?: string | null
           scheduled_for?: string | null
@@ -7851,6 +7854,64 @@ export type Database = {
           },
         ]
       }
+      push_subscriptions: {
+        Row: {
+          auth: string
+          created_at: string
+          endpoint: string
+          id: string
+          p256dh: string
+          tenant_id: string
+          updated_at: string
+          user_agent: string | null
+          user_id: string
+        }
+        Insert: {
+          auth: string
+          created_at?: string
+          endpoint: string
+          id?: string
+          p256dh: string
+          tenant_id: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id: string
+        }
+        Update: {
+          auth?: string
+          created_at?: string
+          endpoint?: string
+          id?: string
+          p256dh?: string
+          tenant_id?: string
+          updated_at?: string
+          user_agent?: string | null
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "push_subscriptions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "push_subscriptions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "push_subscriptions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       rank_requirements: {
         Row: {
           created_at: string
@@ -13184,6 +13245,7 @@ export type Database = {
         }[]
       }
       log_ai_run: { Args: { p: Json }; Returns: string }
+      mark_notifications_read: { Args: { p_ids?: string[] }; Returns: number }
       mark_payment_method_detached: {
         Args: { p_payment_method_id: string }
         Returns: undefined

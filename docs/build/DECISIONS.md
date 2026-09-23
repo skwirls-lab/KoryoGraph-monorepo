@@ -665,3 +665,20 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
     `.internal` / `.local`.
   - DNS rebinding (a public name resolving to a private address) is not defended against yet; this is noted
     for the security review.
+
+## ADR-0042 — Home PWA: offline shell only; in-app notifications; web push only with VAPID keys
+- **Date / task:** 2026-09-25 · M5.05
+- `app/manifest.ts` makes Home installable: start `/home`, standalone display, 192/512 icons plus a maskable
+  icon (a simple generated mark). The service worker (`public/sw.js`) caches only `/offline`. It never caches
+  school data: Home navigations go to the network and fall back to the offline page. It also displays pushes
+  and opens Notifications on click.
+- **Notifications:** `/home/notifications` lists delivered (`sent`) in-app messages. Families mark them read
+  through `mark_notifications_read`, since they can't update communications directly. An unread badge sits
+  in the Home header. In-app messages now keep their subject so they have a title.
+- **Web push:** subscriptions (own rows only) and sending (`web-push`, from the outbox job) happen only when
+  `NEXT_PUBLIC_VAPID_PUBLIC_KEY` / `VAPID_PRIVATE_KEY` are set. Without them the page says push isn't set up
+  and notifications stay in-app. Live push is HANDOFF: it can't be verified without keys and a real push
+  service.
+- Chrome's Lighthouse no longer has a PWA category (removed in v12). The spec checks the installability
+  criteria directly: a valid manifest with PNG icons, a service worker controlling the page, and working
+  offline behaviour.

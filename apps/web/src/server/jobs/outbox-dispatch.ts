@@ -1,6 +1,7 @@
 import { DEFAULT_QUIET_HOURS, SYSTEM_TEMPLATES, decide, render, textToHtml, type Channel, type QuietHours } from "@koryo/comms";
 import { providersFromEnv } from "@koryo/comms/providers";
 import type { TablesUpdate } from "@koryo/db/types";
+import { pushConfigured, pushToPerson } from "./push";
 import type { Job } from "./types";
 
 function formatWhen(iso: string, tz: string): string {
@@ -66,10 +67,17 @@ export const outboxDispatch: Job = async ({ db, now, tenantId, log }) => {
       channel, address: row.to_address, consent: { email: person?.email_consent ?? false, sms: person?.phone_sms_consent ?? false },
       now, timeZone: tz, quietHours: settings.quiet_hours ?? DEFAULT_QUIET_HOURS,
     });
-    const update: TablesUpdate<"communications"> = { subject: channel === "email" ? subject : null, body_text: body, body_html: channel === "email" ? textToHtml(body) : null };
+    const update: TablesUpdate<"communications"> = { subject: channel === "email" || channel === "inapp" ? subject : null, body_text: body, body_html: channel === "email" ? textToHtml(body) : null };
     if (decision.action === "opted_out" || decision.action === "no_address") update.status = decision.action;
     else if (decision.action === "defer") Object.assign(update, { status: "deferred", scheduled_for: decision.until.toISOString() });
-    else if (channel === "inapp") Object.assign(update, { status: "sent", provider: "inapp", sent_at: now.toISOString() });
+    else if (channel === "inapp") {
+      Object.assign(update, { status: "sent", provider: "inapp", sent_at: now.toISOString() });
+      // Also to the recipient's phone/browser when web push is configured (VAPID keys).
+      if (row.person_id && pushConfigured()) {
+        const p = await pushToPerson(db, row.person_id, { title: subject || tenant?.name || "Your school", body: body.slice(0, 180), url: "/home/notifications" });
+        stats.pushed = Number(stats.pushed ?? 0) + p.sent;
+      }
+    }
     else {
       const p = channel === "email" ? providers.email : channel === "sms" ? providers.sms : null;
       if (!p) update.status = "unsent_no_provider";
