@@ -31,7 +31,7 @@ afterAll(async () => {
   await sql`delete from commissions where ref_id = any(${refs}::uuid[])`;
   if (created.sales.length) await sql`delete from pos_sales where id in ${sql(created.sales)}`;
   if (created.memberships.length) await sql`delete from memberships where id in ${sql(created.memberships)}`;
-  await sql`update staff_profiles set pay_rates = '{}'::jsonb where user_id = ${owner}`;
+  await sql`delete from staff_profiles where tenant_id = ${R} and user_id = ${owner}`;
   await sql.end();
 });
 

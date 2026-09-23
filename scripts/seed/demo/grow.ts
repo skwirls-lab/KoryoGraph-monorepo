@@ -259,7 +259,12 @@ export async function seedGrow(ctx: SeedContext, rng: Rng, now: Date, people: De
     { email: "frontdesk@ridgelinetkd.demo", title: "Front desk lead", rates: { hourly_cents: 1900, commission_pct: 5 }, programs: [] },
     { email: "frontdesk2@ridgelinetkd.demo", title: "Front desk", rates: { hourly_cents: 1700, commission_pct: 5 }, programs: [] },
   ];
-  await insertChunks(sql, "staff_profiles", STAFF.map((s) => ({ id: sid(`staff_profile:${T}:${s.email}`), tenant_id: t, user_id: user(s.email), title: s.title, pay_rates: sql.json(s.rates), programs: s.programs.map((p) => sid(`program:${T}:${p}`)), hire_date: "2022-08-15" })));
+  for (const s of STAFF) {
+    // Upsert on the person, not the row id: a profile may already exist for them.
+    await sql`insert into public.staff_profiles (id, tenant_id, user_id, title, pay_rates, programs, hire_date)
+      values (${sid(`staff_profile:${T}:${s.email}`)}, ${t}, ${user(s.email)}, ${s.title}, ${sql.json(s.rates)}, ${s.programs.map((p) => sid(`program:${T}:${p}`))}, '2022-08-15')
+      on conflict (tenant_id, user_id) do update set title = excluded.title, pay_rates = excluded.pay_rates, programs = excluded.programs, hire_date = excluded.hire_date`;
+  }
   // Kiosk staff PIN 2468 for everyone (documented in DEMO-ACCOUNTS.md).
   for (const s of STAFF) {
     await sql`insert into public.staff_pins (id, tenant_id, user_id, pin_hash) values (${sid(`staff_pin:${T}:${s.email}`)}, ${t}, ${user(s.email)}, extensions.crypt('2468', extensions.gen_salt('bf', 8)))
