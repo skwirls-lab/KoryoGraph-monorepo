@@ -4,14 +4,16 @@ import { EmptyState } from "@koryo/ui/components/app/empty-state";
 import { formatMoney } from "@koryo/ui/components/app/money-text";
 import { Badge } from "@koryo/ui/components/ui/badge";
 import { Button } from "@koryo/ui/components/ui/button";
+import { todayIn } from "@/lib/people";
 import type { Ctx } from "@/server/context";
+import { MembershipActions } from "./membership-actions";
 
 /** Person → Billing tab: memberships and their invoices. */
 export async function PersonBilling({ ctx, personId }: { ctx: Ctx; personId: string }) {
   if (!ctx.modules.has("billing")) return <EmptyState title="Billing isn't on your plan" description="Memberships and invoices are part of the Billing module." />;
   if (!ctx.permissions.has("billing.read")) return <EmptyState title="No access" description="You don't have permission to view billing." />;
   const [{ data: memberships }, { data: invoices }] = await Promise.all([
-    ctx.supabase.from("memberships").select("id, status, starts_at, ends_at, next_bill_at, contract_ends_at, autopay, price_override_cents, membership_plans(name, kind, price_cents, interval)").eq("person_id", personId).order("created_at", { ascending: false }),
+    ctx.supabase.from("memberships").select("id, status, starts_at, ends_at, next_bill_at, contract_ends_at, autopay, price_override_cents, hold_from, hold_until, cancel_at, membership_plans(name, kind, price_cents, interval)").eq("person_id", personId).order("created_at", { ascending: false }),
     ctx.supabase.from("invoices").select("id, number, status, issued_at, total_cents, balance_cents").eq("person_id", personId).order("issued_at", { ascending: false }).limit(10),
   ]);
   return (
@@ -30,7 +32,9 @@ export async function PersonBilling({ ctx, personId }: { ctx: Ctx; personId: str
                 <span className="tabular text-fg-secondary">{formatMoney(m.price_override_cents ?? m.membership_plans?.price_cents ?? 0, ctx.currency)}{m.membership_plans?.interval ? `/${m.membership_plans.interval}` : ""}</span>
                 <span className="text-xs text-fg-muted">
                   since {m.starts_at}{m.next_bill_at ? ` · next bill ${m.next_bill_at}` : ""}{m.ends_at ? ` · ends ${m.ends_at}` : ""}{m.contract_ends_at ? ` · contract to ${m.contract_ends_at}` : ""}{m.autopay ? " · autopay" : ""}
+                  {m.hold_from ? ` · hold ${m.hold_from} → ${m.hold_until ?? "?"}` : ""}{m.cancel_at ? ` · cancels ${m.cancel_at}` : ""}
                 </span>
+                {ctx.permissions.has("billing.charge") ? <span className="ml-auto"><MembershipActions membershipId={m.id} status={m.status} planName={m.membership_plans?.name ?? "membership"} today={todayIn(ctx.tz)} holdFrom={m.hold_from} /></span> : null}
               </li>
             ))}
           </ul>

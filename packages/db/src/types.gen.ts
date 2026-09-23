@@ -5257,6 +5257,109 @@ export type Database = {
         }
         Relationships: []
       }
+      tasks: {
+        Row: {
+          assignee_user_id: string | null
+          body: string | null
+          created_at: string
+          created_by: string | null
+          data: Json
+          done_at: string | null
+          done_by: string | null
+          due_at: string | null
+          id: string
+          lead_id: string | null
+          person_id: string | null
+          related_id: string | null
+          related_type: string | null
+          source: string
+          tenant_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          assignee_user_id?: string | null
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: Json
+          done_at?: string | null
+          done_by?: string | null
+          due_at?: string | null
+          id?: string
+          lead_id?: string | null
+          person_id?: string | null
+          related_id?: string | null
+          related_type?: string | null
+          source?: string
+          tenant_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          assignee_user_id?: string | null
+          body?: string | null
+          created_at?: string
+          created_by?: string | null
+          data?: Json
+          done_at?: string | null
+          done_by?: string | null
+          due_at?: string | null
+          id?: string
+          lead_id?: string | null
+          person_id?: string | null
+          related_id?: string | null
+          related_type?: string | null
+          source?: string
+          tenant_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tasks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tasks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "tasks_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "tasks_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "tasks_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "tasks_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       tax_rates: {
         Row: {
           applies_to: string[]
@@ -6850,6 +6953,10 @@ export type Database = {
           template_name: string
         }[]
       }
+      mark_payment_method_detached: {
+        Args: { p_payment_method_id: string }
+        Returns: undefined
+      }
       mark_thread_read: { Args: { p_thread_id: string }; Returns: undefined }
       message_recipients: {
         Args: { p_person_ids: string[] }
@@ -6931,6 +7038,15 @@ export type Database = {
         Args: { p_program_id: string; p_rank_ids: string[] }
         Returns: undefined
       }
+      request_membership_hold: {
+        Args: {
+          p_from: string
+          p_membership_id: string
+          p_reason: string
+          p_until: string
+        }
+        Returns: string
+      }
       session_taken: { Args: { p_session_id: string }; Returns: number }
       set_default_payment_method: {
         Args: { p_payment_method_id: string }
@@ -6942,6 +7058,14 @@ export type Database = {
       }
       set_household_stripe_customer: {
         Args: { p_customer_id: string; p_household_id: string }
+        Returns: undefined
+      }
+      set_membership_autopay: {
+        Args: {
+          p_enabled: boolean
+          p_membership_id: string
+          p_payment_method_id?: string
+        }
         Returns: undefined
       }
       sign_off_skill: {

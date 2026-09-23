@@ -36,7 +36,8 @@ beforeAll(async () => {
 afterAll(async () => {
   await sql`update public.membership_plans set program_ids = ${savedPrograms} where id = ${PLAN}`;
   await sql`delete from public.programs where id = ${PROGRAM}`;
-  await sql`delete from public.invoices where household_id = ${COOPER} and source = 'enrollment' and memo is null and membership_id is null`;
+  await sql`delete from public.payments where invoice_id in (select id from public.invoices where membership_id in (select id from public.memberships where household_id = ${COOPER} and notes = 'db test'))`;
+  await sql`delete from public.invoices where membership_id in (select id from public.memberships where household_id = ${COOPER} and notes = 'db test')`;
   await cleanup();
   await sql.end();
 });

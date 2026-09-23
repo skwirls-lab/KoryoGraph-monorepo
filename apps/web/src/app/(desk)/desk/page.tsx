@@ -1,5 +1,6 @@
 import Link from "next/link";
 import { FailedPayments } from "@/components/billing/failed-payments";
+import { OpenTasks } from "@/components/tasks/open-tasks";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { StatCard } from "@koryo/ui/components/app/stat-card";
 import { requireSurfacePage } from "@/server/context";
@@ -34,6 +35,7 @@ export default async function DeskDashboard() {
         ) : (
           <div className="rounded-xl border border-dashed border-default p-4 text-sm text-fg-secondary">Revenue and past-due balances appear here with the Billing module.</div>
         )}
+        <OpenTasks ctx={ctx} />
         <div className="rounded-xl border border-dashed border-default p-4 text-sm text-fg-secondary">Upcoming belt tests appear here once testing events are built (M3). At-risk students arrive with Intelligence (M4).</div>
       </section>
     </>

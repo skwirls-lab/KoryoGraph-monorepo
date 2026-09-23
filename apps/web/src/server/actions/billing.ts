@@ -9,6 +9,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import { fail, issuesToFieldErrors, ok, type ActionResult } from "@/lib/action-result";
 import { parseMoney } from "@/lib/curriculum";
+import { todayIn } from "@/lib/people";
 import { enrollmentQuoteSchema, enrollmentSchema, planSchema, type EnrollmentInput, type EnrollmentQuoteInput, type PlanInput } from "@/lib/validation/billing";
 import { chargeInvoiceWithCard } from "../billing/charge";
 import { quoteEnrollment, type EnrollmentQuote } from "../billing/enrollment";
@@ -403,4 +404,62 @@ export async function retryInvoicePayment(input: { invoiceId: string; attemptKey
   } catch (err) {
     return fail(stripeErrorMessage(err));
   }
+}
+
+// ---------------------------------------------------------------------------------------------
+// Membership changes (Desk): holds and cancellations. The daily billing run prorates held periods and
+// applies the status on the dates (billing_lifecycle).
+// ---------------------------------------------------------------------------------------------
+
+const dateStr = z.string().regex(/^\d{4}-\d{2}-\d{2}$/, { error: "Choose a date" });
+
+export async function setMembershipHold(input: { membershipId: string; from: string; until: string; taskId?: string }): Promise<ActionResult> {
+  const ctx = await getCtx();
+  const denied = authorize(ctx, { permission: "billing.charge", module: "billing" });
+  if (denied) return denied;
+  const parsed = z.object({ membershipId: z.uuid(), from: dateStr, until: dateStr, taskId: z.uuid().optional() }).safeParse(input);
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Check the dates");
+  const v = parsed.data;
+  if (v.until <= v.from) return fail("The hold must end after it starts.");
+  const today = todayIn(ctx.tz);
+  const { data: m, error } = await ctx.supabase.from("memberships")
+    .update({ hold_from: v.from, hold_until: v.until, ...(v.from <= today ? { status: "on_hold" } : {}) })
+    .eq("id", v.membershipId).in("status", ["active", "past_due", "on_hold"]).select("person_id").maybeSingle();
+  if (error || !m) return fail("Only active memberships can be put on hold.");
+  if (v.taskId) await ctx.supabase.from("tasks").update({ done_at: new Date().toISOString(), done_by: ctx.userId }).eq("id", v.taskId);
+  revalidatePath(`/desk/people/${m.person_id}`);
+  revalidatePath("/desk");
+  return ok();
+}
+
+export async function endMembershipHold(membershipId: string): Promise<ActionResult> {
+  const ctx = await getCtx();
+  const denied = authorize(ctx, { permission: "billing.charge", module: "billing" });
+  if (denied) return denied;
+  if (!z.uuid().safeParse(membershipId).success) return fail("Invalid membership.");
+  const { data: m } = await ctx.supabase.from("memberships").update({ hold_from: null, hold_until: null, status: "active" }).eq("id", membershipId).eq("status", "on_hold").select("person_id").maybeSingle();
+  if (!m) {
+    const { data: pending } = await ctx.supabase.from("memberships").update({ hold_from: null, hold_until: null }).eq("id", membershipId).select("person_id").maybeSingle();
+    if (!pending) return fail("Couldn't change the membership.");
+    revalidatePath(`/desk/people/${pending.person_id}`);
+    return ok();
+  }
+  revalidatePath(`/desk/people/${m.person_id}`);
+  return ok();
+}
+
+export async function scheduleCancellation(input: { membershipId: string; cancelAt: string; reason: string }): Promise<ActionResult> {
+  const ctx = await getCtx();
+  const denied = authorize(ctx, { permission: "billing.charge", module: "billing" });
+  if (denied) return denied;
+  const parsed = z.object({ membershipId: z.uuid(), cancelAt: dateStr, reason: z.string().trim().min(3, "Give a reason").max(300) }).safeParse(input);
+  if (!parsed.success) return fail(parsed.error.issues[0]?.message ?? "Check the details");
+  const v = parsed.data;
+  const today = todayIn(ctx.tz);
+  const { data: m, error } = await ctx.supabase.from("memberships")
+    .update({ cancel_at: v.cancelAt, cancel_reason: v.reason, ...(v.cancelAt <= today ? { status: "cancelled" } : {}) })
+    .eq("id", v.membershipId).not("status", "in", "(cancelled,expired)").select("person_id").maybeSingle();
+  if (error || !m) return fail("Couldn't schedule the cancellation.");
+  revalidatePath(`/desk/people/${m.person_id}`);
+  return ok();
 }

@@ -147,7 +147,7 @@ export async function removeCard(paymentMethodId: string): Promise<ActionResult>
   } catch (err) {
     return fail(stripeErrorMessage(err));
   }
-  await ctx.supabase.from("payment_methods").update({ status: "detached", is_default: false }).eq("id", pm.id);
+  await rpc(ctx.supabase, "mark_payment_method_detached", { p_payment_method_id: pm.id });
   revalidatePath(`/desk/households/${pm.household_id}`);
   return ok();
 }

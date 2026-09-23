@@ -5,6 +5,7 @@ import { toast } from "sonner";
 import { Badge } from "@koryo/ui/components/ui/badge";
 import { Button } from "@koryo/ui/components/ui/button";
 import { removeCard, setDefaultCard } from "@/server/actions/payments";
+import { removeMyCard } from "@/server/actions/wallet";
 import type { SavedCard } from "@/server/queries/payments";
 
 export function cardLabel(c: Pick<SavedCard, "brand" | "last4" | "kind">): string {
@@ -12,7 +13,7 @@ export function cardLabel(c: Pick<SavedCard, "brand" | "last4" | "kind">): strin
   return `${brand} ending ${c.last4 ?? "????"}`;
 }
 
-export function SavedCards({ cards, canManage, canRemove }: { cards: SavedCard[]; canManage: boolean; canRemove: boolean }) {
+export function SavedCards({ cards, canManage, canRemove, as = "staff" }: { cards: SavedCard[]; canManage: boolean; canRemove: boolean; as?: "staff" | "home" }) {
   const [pending, start] = useTransition();
   if (!cards.length) return <p className="text-sm text-fg-muted">No saved cards.</p>;
   return (
@@ -29,7 +30,7 @@ export function SavedCards({ cards, canManage, canRemove }: { cards: SavedCard[]
             </Button>
           ) : null}
           {canRemove ? (
-            <Button size="sm" variant="ghost" className="text-danger" disabled={pending} onClick={() => start(async () => { const r = await removeCard(c.id); if (r.ok) toast.success("Card removed"); else toast.error(r.error); })}>
+            <Button size="sm" variant="ghost" className="text-danger" disabled={pending} aria-label={`Remove ${cardLabel(c)}`} onClick={() => start(async () => { const r = await (as === "home" ? removeMyCard : removeCard)(c.id); if (r.ok) toast.success("Card removed"); else toast.error(r.error); })}>
               Remove
             </Button>
           ) : null}

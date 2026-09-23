@@ -22,6 +22,7 @@ beforeAll(async () => {
   await sql`delete from public.credits where household_id = ${ADAMS}`;
 });
 afterAll(async () => {
+  await sql`delete from public.payments where invoice_id = any(${made})`;
   await sql`delete from public.invoices where id = any(${made})`;
   await sql`delete from public.credits where household_id = ${ADAMS}`;
   await sql.end();

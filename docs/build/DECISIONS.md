@@ -289,3 +289,19 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   account credit creates a household credit that references it. Overpayments become credit.
 - **Dates:** invoice status, aging and credit expiry use the school's local date (`app.tenant_today`), not
   the database's UTC `current_date`, which turned invoices past due on their due-date evening.
+
+## ADR-0021 — Home wallet: browser pays, only Stripe's webhook writes the ledger
+- **Date / task:** 2026-09-23 · M2.07
+- **Decision:** Home "Pay now" creates an on-session PaymentIntent (setup_future_usage off_session) that
+  the browser confirms with the Payment Element. Home users get no RPC that records a payment: a forged
+  "succeeded" PaymentIntent could otherwise mark an invoice paid. The invoice becomes paid when the signed
+  `payment_intent.succeeded` webhook arrives (the page shows "processing" and refreshes). Locally this needs
+  `stripe listen`; the @stripe spec is skipped without it.
+- Member-safe RPCs (`set_membership_autopay`, `mark_payment_method_detached`, `request_membership_hold`)
+  check `app.can_manage_household_billing` (staff with billing.charge, or a member of that household).
+  Removing a card detaches it at Stripe first; the RPC then turns off autopay on memberships using it and
+  promotes another card to default.
+- Hold requests create a row in `tasks` (§4.9, brought forward from M3.02, `source = 'request'`, structured
+  `data`), shown on the Desk dashboard with "Apply hold"; staff can also hold/cancel/resume from the
+  person's Billing tab. `/home/wallet?invoice=` (the dunning link) redirects to Billing with the invoice
+  highlighted.
