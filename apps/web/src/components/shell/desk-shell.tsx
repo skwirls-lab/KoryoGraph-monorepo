@@ -20,6 +20,8 @@ export interface DeskShellProps {
   tenant: TenantOption;
   tenants: TenantOption[];
   user: { name: string; email: string | null; role: string | null };
+  /** Pending approval items (AI drafts waiting for a person). */
+  approvals?: number;
   children: ReactNode;
 }
 
@@ -58,7 +60,7 @@ function NavList({ nav, pathname, onNavigate }: { nav: ResolvedNavItem[]; pathna
   );
 }
 
-export function DeskShell({ nav, tenant, tenants, user, children }: DeskShellProps) {
+export function DeskShell({ nav, tenant, tenants, user, approvals = 0, children }: DeskShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -111,8 +113,9 @@ export function DeskShell({ nav, tenant, tenants, user, children }: DeskShellPro
             <kbd className="hidden rounded border border-default px-1.5 text-[10px] md:inline">⌘K</kbd>
           </Button>
           <Button variant="ghost" size="icon" asChild>
-            <Link href="/desk/inbox/approvals" aria-label="Approvals">
+            <Link href="/desk/inbox/approvals" aria-label={approvals ? `Approvals, ${approvals} waiting` : "Approvals"} className="relative">
               <Inbox className="size-5" />
+              {approvals ? <span aria-hidden className="absolute -right-1 -top-1 min-w-4 rounded-full bg-primary px-1 text-center text-[10px] font-semibold leading-4 text-primary-foreground">{approvals > 99 ? "99+" : approvals}</span> : null}
             </Link>
           </Button>
           <UserMenu name={user.name} email={user.email} role={user.role} />

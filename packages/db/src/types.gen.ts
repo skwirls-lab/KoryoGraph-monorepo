@@ -522,6 +522,132 @@ export type Database = {
           },
         ]
       }
+      approval_items: {
+        Row: {
+          ai_run_id: string | null
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          entity_id: string | null
+          entity_type: string | null
+          executed_at: string | null
+          execution_result: Json | null
+          expires_at: string | null
+          feedback: string | null
+          id: string
+          kind: string
+          payload: Json
+          person_id: string | null
+          preview: string
+          requested_by: string | null
+          status: string
+          tenant_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          ai_run_id?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          executed_at?: string | null
+          execution_result?: Json | null
+          expires_at?: string | null
+          feedback?: string | null
+          id?: string
+          kind: string
+          payload?: Json
+          person_id?: string | null
+          preview?: string
+          requested_by?: string | null
+          status?: string
+          tenant_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          ai_run_id?: string | null
+          created_at?: string
+          decided_at?: string | null
+          decided_by?: string | null
+          entity_id?: string | null
+          entity_type?: string | null
+          executed_at?: string | null
+          execution_result?: Json | null
+          expires_at?: string | null
+          feedback?: string | null
+          id?: string
+          kind?: string
+          payload?: Json
+          person_id?: string | null
+          preview?: string
+          requested_by?: string | null
+          status?: string
+          tenant_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "approval_items_ai_run_id_fkey"
+            columns: ["ai_run_id"]
+            isOneToOne: false
+            referencedRelation: "ai_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approval_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "approval_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "approval_items_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "approval_items_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "approval_items_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "approval_items_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "approval_items_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       attendance: {
         Row: {
           checked_in_at: string
@@ -11697,6 +11823,42 @@ export type Database = {
         Args: { p_name: string; p_slug: string; p_timezone: string }
         Returns: string
       }
+      decide_approval: {
+        Args: {
+          p_decision: string
+          p_feedback?: string
+          p_id: string
+          p_payload?: Json
+        }
+        Returns: {
+          ai_run_id: string | null
+          created_at: string
+          decided_at: string | null
+          decided_by: string | null
+          entity_id: string | null
+          entity_type: string | null
+          executed_at: string | null
+          execution_result: Json | null
+          expires_at: string | null
+          feedback: string | null
+          id: string
+          kind: string
+          payload: Json
+          person_id: string | null
+          preview: string
+          requested_by: string | null
+          status: string
+          tenant_id: string
+          title: string
+          updated_at: string
+        }
+        SetofOptions: {
+          from: "*"
+          to: "approval_items"
+          isOneToOne: true
+          isSetofReturn: false
+        }
+      }
       dunning_notify: {
         Args: {
           p_channels: string[]
@@ -11881,6 +12043,10 @@ export type Database = {
           p_required_for: Json
         }
         Returns: string
+      }
+      record_approval_execution: {
+        Args: { p_id: string; p_result: Json }
+        Returns: undefined
       }
       record_charge_refund_for: {
         Args: { p_charge: Json; p_tenant_id: string }
