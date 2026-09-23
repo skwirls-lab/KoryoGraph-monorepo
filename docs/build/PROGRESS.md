@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M5.07 accessibility & performance pass
+M5.08 security review
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -100,7 +100,7 @@ port 3000          → in use by another container on the host → dev server us
 | M5.04 | done | 8268a43 | Public API v1 + signed webhooks; DNS-rebinding not handled (noted); ADR-0041 |
 | M5.05 | done | c2cd8a9 | PWA + notifications; web push HANDOFF (no VAPID keys); ADR-0042 |
 | M5.06 | done | 698bcce | Multi-location RLS + switcher + rollup; ADR-0043 |
-| M5.07 | todo |  |  |
+| M5.07 | done | 5279bfb | a11y + perf; ADR-0044 |
 | M5.08 | todo |  |  |
 | M5.09 | todo |  |  |
 | M5.10 | todo |  |  |
