@@ -12672,6 +12672,7 @@ export type Database = {
       }
     }
     Functions: {
+      accept_invitation: { Args: { p_tenant_user_id: string }; Returns: string }
       add_household_person: {
         Args: { m: Json; p_household_id: string }
         Returns: string
@@ -12903,6 +12904,10 @@ export type Database = {
           table_name: string
         }[]
       }
+      go_live: {
+        Args: { p_cycle?: string; p_modules?: string[]; p_plan: string }
+        Returns: string[]
+      }
       guest_waiver_info: { Args: { p_token: string }; Returns: Json }
       intake_match: {
         Args: { p_skus: string[]; p_texts: string[] }
@@ -13040,6 +13045,16 @@ export type Database = {
         }[]
       }
       my_household_ids: { Args: never; Returns: string[] }
+      my_invitations: {
+        Args: never
+        Returns: {
+          invited_at: string
+          role_name: string
+          tenant_id: string
+          tenant_name: string
+          tenant_user_id: string
+        }[]
+      }
       my_person_id: { Args: never; Returns: string }
       next_invoice_number: { Args: never; Returns: number }
       next_invoice_number_for: {

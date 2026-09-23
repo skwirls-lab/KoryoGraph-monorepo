@@ -604,3 +604,23 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   via RLS; there is no admin inbox UI or email notification yet (HANDOFF).
 - A plan chosen on the site (`/signup?plan=…`) is carried through sign-up, including the email-confirmation
   path, and stored as `tenants.settings.plan_choice` for "Go live" to preselect.
+
+## ADR-0039 — Onboarding: steps derived from real data; invites via Supabase Auth; go-live without platform billing
+- **Date / task:** 2026-09-25 · M5.02
+- Each wizard step counts as done when the real data exists: a location with an address, programs with
+  ranks, an active class, a student, a connected Stripe account, a second staff member (active or invited),
+  saved branding, or the school being live. "Skip for now" is recorded and always shown as "Skipped". New
+  schools already have a default Taekwondo ladder, so "Programs" starts done.
+- **Staff invites:** Supabase Auth creates the user and sends the email (locally Mailpit; production uses
+  the project's SMTP — HANDOFF). This needs the service role, so it lives in `server/admin/invites.ts`. The
+  membership waits as `invited` until the person signs in and accepts on `/welcome`.
+  - Supabase invite links carry the session in the URL fragment, not as a PKCE code, so they land on
+    `/auth/accept`. That client page stores the session and continues.
+  - Found by the spec: before this, invite links failed with `missing_code`.
+- **Go live** (`go_live` RPC) makes the chosen plan's modules the school's entitlements (or a custom set,
+  always with core), ends the trial, and records the plan. Charging for the KoryoGraph subscription itself is
+  not connected, and the UI says so; the platform's Stripe Billing is HANDOFF.
+- **Branding:** a school default theme for its staff surfaces (a person's own choice still wins; Home stays
+  light) and a logo in the Desk, Mat and Home headers.
+- `audit_events.action` only allows create / update / delete / custom, so these events are `custom` with the
+  specific action in `note`.

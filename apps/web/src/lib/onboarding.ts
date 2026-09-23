@@ -1,15 +1,16 @@
 import { z } from "zod";
 
-/** F1.4 onboarding checklist. `href` is set only once the screen that completes the step exists. */
+/** F1.4 onboarding wizard. Each step is done when the real data exists (or the owner skips it). */
 export const ONBOARDING_STEPS = [
-  { key: "location", title: "Add your location", description: "Address, phone and rooms for your school.", href: null, milestone: "M5" },
-  { key: "programs", title: "Set up programs and ranks", description: "Programs, belt ladders and requirements.", href: "/desk/programs", milestone: "M1" },
-  { key: "schedule", title: "Build your class schedule", description: "Recurring classes with capacity and instructors.", href: "/desk/schedule/templates", milestone: "M1" },
-  { key: "students", title: "Add or import students", description: "Families, students and guardians.", href: "/desk/people/new", milestone: "M1" },
-  { key: "payments", title: "Connect Stripe", description: "Take card and ACH payments into your own account.", href: null, milestone: "M2" },
-  { key: "staff", title: "Invite your staff", description: "Front desk and instructors with the right roles.", href: null, milestone: "M1" },
-  { key: "branding", title: "Brand your school", description: "Logo, accent colour and terminology.", href: null, milestone: "M5" },
-] as const satisfies readonly { key: string; title: string; description: string; href: string | null; milestone: string }[];
+  { key: "location", title: "Your location", description: "Address and phone for your school." },
+  { key: "programs", title: "Programs and ranks", description: "Start from a Taekwondo, Karate, BJJ or Kickboxing ladder." },
+  { key: "schedule", title: "Class schedule", description: "Add your weekly classes." },
+  { key: "students", title: "Students", description: "Import from a spreadsheet or add a family." },
+  { key: "payments", title: "Payments", description: "Connect Stripe to take card payments into your own account." },
+  { key: "staff", title: "Staff", description: "Invite your front desk and instructors." },
+  { key: "branding", title: "Branding", description: "Your logo and the app's look." },
+  { key: "golive", title: "Go live", description: "Choose your plan when the trial ends." },
+] as const satisfies readonly { key: string; title: string; description: string }[];
 
 export type OnboardingStepKey = (typeof ONBOARDING_STEPS)[number]["key"];
 

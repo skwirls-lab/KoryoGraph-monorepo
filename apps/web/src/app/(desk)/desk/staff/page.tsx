@@ -3,6 +3,7 @@ import { forbidden } from "next/navigation";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { Badge } from "@koryo/ui/components/ui/badge";
 import { Button } from "@koryo/ui/components/ui/button";
+import { InviteForm } from "@/components/onboarding/steps";
 import { StaffCompliance } from "@/components/staff/compliance";
 import { CloseEntryButton } from "@/components/staff/staff-forms";
 import { requireSurfacePage } from "@/server/context";
@@ -13,7 +14,10 @@ export const metadata = { title: "Staff" };
 export default async function StaffPage() {
   const ctx = await requireSurfacePage("desk");
   if (!ctx.permissions.has("staff.manage")) forbidden();
-  const staff = await staffList(ctx);
+  const [staff, { data: invited }] = await Promise.all([
+    staffList(ctx),
+    ctx.supabase.from("tenant_users").select("id, invited_email, roles(name)").eq("status", "invited").order("created_at"),
+  ]);
   return (
     <>
       <PageHeader title="Staff" description="Profiles, certifications, the time clock, shifts and payroll."
@@ -39,6 +43,11 @@ export default async function StaffPage() {
         </section>
         <StaffCompliance ctx={ctx} />
       </div>
+      <section className="mt-4 rounded-xl border border-default bg-surface p-4 sm:p-5" aria-labelledby="invite-h">
+        <h2 id="invite-h" className="mb-3 text-base font-semibold">Invite staff</h2>
+        {invited?.length ? <ul className="mb-3 text-sm" aria-label="Pending invitations">{invited.map((i) => <li key={i.id}>{i.invited_email} · {i.roles?.name} · invited</li>)}</ul> : null}
+        <InviteForm />
+      </section>
     </>
   );
 }

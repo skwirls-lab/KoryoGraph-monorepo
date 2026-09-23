@@ -8,7 +8,7 @@ export default async function MatLayout({ children }: { children: ReactNode }) {
   const ctx = await requireSurfacePage("mat");
   const shell = await loadShellData(ctx);
   return (
-    <TabShell surface="mat" title={ctx.tenantName ?? "Mat"} nav={resolveNav(MAT_NAV, ctx.permissions, ctx.modules)} user={shell.user}>
+    <TabShell surface="mat" title={ctx.tenantName ?? "Mat"} nav={resolveNav(MAT_NAV, ctx.permissions, ctx.modules)} user={shell.user} logoUrl={shell.logoUrl}>
       {children}
     </TabShell>
   );

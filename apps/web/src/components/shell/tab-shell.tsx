@@ -10,13 +10,14 @@ import { UserMenu } from "./user-menu";
 
 /** Mobile-first shell with a bottom tab bar (Mat and Home). Tap targets ≥ 48px. */
 export function TabShell({
-  surface, title, nav, user, headerExtra, children,
+  surface, title, nav, user, headerExtra, logoUrl, children,
 }: {
   surface: "mat" | "home";
   title: string;
   nav: ResolvedNavItem[];
   user: { name: string; email: string | null; role: string | null };
   headerExtra?: ReactNode;
+  logoUrl?: string | null;
   children: ReactNode;
 }) {
   const pathname = usePathname();
@@ -24,6 +25,9 @@ export function TabShell({
   return (
     <div className="flex min-h-dvh flex-col pb-[calc(4.5rem+env(safe-area-inset-bottom))]">
       <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-default bg-background/90 px-4 backdrop-blur">
+        {/* Signed storage URL (short-lived); next/image would proxy and cache it. */}
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {logoUrl ? <img src={logoUrl} alt="" className="size-8 shrink-0 rounded object-contain" /> : null}
         <div className="min-w-0 flex-1">
           <div className="truncate font-display font-bold">{title}</div>
         </div>

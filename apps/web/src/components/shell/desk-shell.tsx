@@ -22,6 +22,8 @@ export interface DeskShellProps {
   user: { name: string; email: string | null; role: string | null };
   /** Pending approval items (AI drafts waiting for a person). */
   approvals?: number;
+  /** The school's logo (signed URL) when it has one. */
+  logoUrl?: string | null;
   children: ReactNode;
 }
 
@@ -60,7 +62,7 @@ function NavList({ nav, pathname, onNavigate }: { nav: ResolvedNavItem[]; pathna
   );
 }
 
-export function DeskShell({ nav, tenant, tenants, user, approvals = 0, children }: DeskShellProps) {
+export function DeskShell({ nav, tenant, tenants, user, approvals = 0, logoUrl = null, children }: DeskShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -106,6 +108,9 @@ export function DeskShell({ nav, tenant, tenants, user, approvals = 0, children 
               </div>
             </SheetContent>
           </Sheet>
+          {/* Signed storage URL (short-lived); next/image would proxy and cache it. */}
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          {logoUrl ? <img src={logoUrl} alt="" className="size-8 shrink-0 rounded object-contain" /> : null}
           <div className="min-w-0 flex-1">
             <TenantSwitcher current={tenant} tenants={tenants} />
           </div>

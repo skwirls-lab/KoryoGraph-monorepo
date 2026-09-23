@@ -21,6 +21,7 @@ export default async function DeskLayout({ children }: { children: ReactNode }) 
       tenants={shell.tenants}
       user={shell.user}
       approvals={approvals}
+      logoUrl={shell.logoUrl}
     >
       {children}
     </DeskShell>

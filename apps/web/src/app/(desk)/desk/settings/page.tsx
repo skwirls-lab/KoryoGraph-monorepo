@@ -5,6 +5,8 @@ import { requireSurfacePage } from "@/server/context";
 export const metadata = { title: "Settings" };
 
 const SECTIONS = [
+  { href: "/desk/settings/location", title: "Location", description: "Your school's address and phone.", permission: "settings.manage" },
+  { href: "/desk/settings/branding", title: "Branding", description: "Logo and the look of the staff apps.", permission: "settings.manage" },
   { href: "/desk/settings/payments", title: "Payments", description: "Connect Stripe, card readers and payment settings.", permission: "settings.manage" },
   { href: "/desk/settings/templates", title: "Message templates", description: "Wording of the emails and texts KoryoGraph sends.", permission: "comms.send" },
   { href: "/desk/settings/kiosks", title: "Kiosk devices", description: "Paired check-in tablets; revoke lost devices.", permission: "kiosk.manage" },

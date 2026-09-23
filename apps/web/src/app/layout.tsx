@@ -31,7 +31,14 @@ async function resolveTheme(signedIn: boolean, userId: string | null, supabase: 
     if (isTheme(data?.preferred_theme)) return data.preferred_theme;
   }
   const path = (await headers()).get("x-kg-path") ?? "";
-  return path === "/home" || path.startsWith("/home/") ? "light" : "koryo-red";
+  if (path === "/home" || path.startsWith("/home/")) return "light";
+  // The school's chosen look (Settings → Branding) for its staff surfaces.
+  if (signedIn && supabase?.tenantId) {
+    const { data } = await supabase.supabase.from("tenants").select("branding").eq("id", supabase.tenantId).maybeSingle();
+    const theme = ((data?.branding ?? {}) as { theme?: string }).theme;
+    if (isTheme(theme)) return theme;
+  }
+  return "koryo-red";
 }
 
 export default async function RootLayout({ children }: Readonly<{ children: ReactNode }>) {
