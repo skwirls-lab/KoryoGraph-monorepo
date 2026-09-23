@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M4.05 drift detector
+M4.06 action board
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -86,7 +86,7 @@ port 3000          → in use by another container on the host → dev server us
 | M4.02 | done | 697d27c | approvals; DB 2, e2e approvals.spec |
 | M4.03 | done | ce74272 | KB; 'refund policy' → refund policy first |
 | M4.04 | done | ed1806d | copilot + home assistant; fixtures hand-authored |
-| M4.05 | todo |  |  |
+| M4.05 | done | b1da63e | drift; 6 high on demo, all fixture drafts; Riley medium (shaped in M4.12) |
 | M4.06 | todo |  |  |
 | M4.07 | todo |  |  |
 | M4.08 | todo |  |  |
