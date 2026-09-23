@@ -9,7 +9,7 @@ import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, Di
 import { Input } from "@koryo/ui/components/ui/input";
 import { Label } from "@koryo/ui/components/ui/label";
 import { selectClass } from "@/components/forms/select-field";
-import { cardLabel } from "@/components/payments/saved-cards";
+import { cardLabel } from "@/lib/payments";
 import { parseMoney } from "@/lib/curriculum";
 import { addInvoiceLineAction, applyCreditToInvoice, emailReceipt, takeInvoicePayment, voidInvoiceAction } from "@/server/actions/billing";
 import { refundPaymentAction } from "@/server/actions/payments";

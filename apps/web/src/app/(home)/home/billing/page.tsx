@@ -7,7 +7,8 @@ import { AutopaySwitch, HoldRequestDialog, PayInvoiceButton } from "@/components
 import { InvoiceStatusBadge } from "@/components/billing/invoice-status";
 import { AddCardButton } from "@/components/payments/card-setup";
 import { cardEntryBlocker } from "@/components/payments/household-billing";
-import { cardLabel, SavedCards } from "@/components/payments/saved-cards";
+import { SavedCards } from "@/components/payments/saved-cards";
+import { cardLabel } from "@/lib/payments";
 import { displayName, todayIn } from "@/lib/people";
 import { requireSurfacePage } from "@/server/context";
 import { listSavedCards } from "@/server/queries/payments";

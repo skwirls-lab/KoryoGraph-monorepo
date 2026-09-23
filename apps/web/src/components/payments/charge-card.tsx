@@ -9,7 +9,7 @@ import { Input } from "@koryo/ui/components/ui/input";
 import { Label } from "@koryo/ui/components/ui/label";
 import { chargeSavedCard } from "@/server/actions/payments";
 import type { SavedCard } from "@/server/queries/payments";
-import { cardLabel } from "./saved-cards";
+import { cardLabel } from "@/lib/payments";
 
 const selectCls = "h-9 w-full rounded-md border border-input bg-transparent px-2 text-sm text-fg";
 

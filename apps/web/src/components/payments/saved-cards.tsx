@@ -6,12 +6,8 @@ import { Badge } from "@koryo/ui/components/ui/badge";
 import { Button } from "@koryo/ui/components/ui/button";
 import { removeCard, setDefaultCard } from "@/server/actions/payments";
 import { removeMyCard } from "@/server/actions/wallet";
+import { cardLabel } from "@/lib/payments";
 import type { SavedCard } from "@/server/queries/payments";
-
-export function cardLabel(c: Pick<SavedCard, "brand" | "last4" | "kind">): string {
-  const brand = c.brand ? c.brand.charAt(0).toUpperCase() + c.brand.slice(1) : c.kind === "us_bank_account" ? "Bank account" : "Card";
-  return `${brand} ending ${c.last4 ?? "????"}`;
-}
 
 export function SavedCards({ cards, canManage, canRemove, as = "staff" }: { cards: SavedCard[]; canManage: boolean; canRemove: boolean; as?: "staff" | "home" }) {
   const [pending, start] = useTransition();

@@ -10,7 +10,7 @@ import { Input } from "@koryo/ui/components/ui/input";
 import { Label } from "@koryo/ui/components/ui/label";
 import { selectClass } from "@/components/forms/select-field";
 import { AddCardButton } from "@/components/payments/card-setup";
-import { cardLabel } from "@/components/payments/saved-cards";
+import { cardLabel } from "@/lib/payments";
 import { PLAN_KIND_LABELS, type PlanKind } from "@/lib/validation/billing";
 import { enrollMembership, previewEnrollment } from "@/server/actions/billing";
 import type { EnrollmentQuote } from "@/server/billing/enrollment";
