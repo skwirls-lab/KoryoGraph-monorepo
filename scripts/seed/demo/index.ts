@@ -67,6 +67,9 @@ export async function seedDemo(ctx: SeedContext): Promise<void> {
   }
   await recomputeMoney(ctx);
   await sql`update public.tenants set onboarding = jsonb_set(onboarding, '{steps}', '{"location": true, "programs": true, "schedule": true, "students": true, "payments": false, "staff": true, "branding": true}'::jsonb) where slug = 'ridgeline'`;
+  // Planner statistics for the freshly bulk-loaded tables (autovacuum would get there eventually; queries
+  // right after a seed shouldn't pay for stale stats).
+  await sql`analyze`;
   // M4 data (risk scores, approvals of each kind, a recorded class, technique feedback, family updates) comes
   // from the product's own jobs and actions, run as the demo users — in a child process, since those are
   // server-only modules (react-server condition).

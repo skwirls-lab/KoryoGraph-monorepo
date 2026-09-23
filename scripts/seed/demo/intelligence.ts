@@ -42,12 +42,17 @@ async function signedIn(email: string): Promise<{ client: Db; userId: string }> 
 
 /** The first skill a student still needs for their next rank (what they'd ask for feedback on). */
 async function nextSkill(personId: string): Promise<string | null> {
-  const [e] = await must(db.from("v_enrollment_progress").select("enrollment_id, next_rank_id").eq("person_id", personId).eq("status", "active").not("next_rank_id", "is", null).limit(1), "progress");
-  if (!e?.next_rank_id) return null;
-  const req = await must(db.from("rank_skills").select("skill_id, skills(sort, name)").eq("rank_id", e.next_rank_id), "rank skills");
-  const signed = new Set((await must(db.from("skill_signoffs").select("skill_id").eq("enrollment_id", e.enrollment_id ?? ""), "signoffs")).map((x) => x.skill_id));
-  const open = req.filter((r) => !signed.has(r.skill_id)).sort((a, b) => (a.skills?.sort ?? 0) - (b.skills?.sort ?? 0) || (a.skills?.name ?? "").localeCompare(b.skills?.name ?? ""));
-  return (open[0] ?? req[0])?.skill_id ?? null;
+  // A student can be in several programs (e.g. a team with no skill requirements); take the first, in a fixed
+  // order, whose next rank requires skills.
+  const enrollments = await must(db.from("v_enrollment_progress").select("enrollment_id, next_rank_id").eq("person_id", personId).eq("status", "active").not("next_rank_id", "is", null).order("enrollment_id"), "progress");
+  for (const e of enrollments) {
+    const req = await must(db.from("rank_skills").select("skill_id, skills(sort, name)").eq("rank_id", e.next_rank_id ?? ""), "rank skills");
+    if (!req.length) continue;
+    const signed = new Set((await must(db.from("skill_signoffs").select("skill_id").eq("enrollment_id", e.enrollment_id ?? ""), "signoffs")).map((x) => x.skill_id));
+    const open = req.filter((r) => !signed.has(r.skill_id)).sort((a, b) => (a.skills?.sort ?? 0) - (b.skills?.sort ?? 0) || (a.skills?.name ?? "").localeCompare(b.skills?.name ?? ""));
+    return (open[0] ?? req[0])?.skill_id ?? null;
+  }
+  return null;
 }
 
 async function job(name: string): Promise<void> {
