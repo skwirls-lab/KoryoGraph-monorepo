@@ -337,3 +337,20 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   invariants, which also compare dashboard MRR and AR with the engine over the raw rows.
 - **MRR** everywhere (dashboard, `v_mrr`, `v_mrr_monthly`) = recurring/contract memberships that are
   active, past due or suspended; memberships on hold are paused and don't count; trials never do.
+
+## ADR-0024 — Automation events come from database triggers; one job runs everything
+- **Date / task:** 2026-09-24 · M3.03
+- **Context:** The spec sketches `emit('person.status_changed', …)` calls in server actions.
+- **Decision:** Domain events are emitted by database triggers (membership created, lead stage changed,
+  test invitation, payment failed via dunning state, promotion), which insert `automation_runs` for every
+  active automation with that trigger. Scheduled triggers (absence N days, birthday, membership expiring,
+  contract ending) are evaluated set-based in SQL by the `automations` job (every 5 min). The same job runs
+  due runs: conditions (status, program, tag, consent) are checked once, then actions execute in order —
+  send template (via the Outbox, so consent/quiet hours apply), wait N days (run pauses with `resume_at`),
+  create task, notify staff (unassigned task), add tag — each logged on the run. Dedupe keys make every
+  trigger fire once per person per streak/date/event.
+- **Why:** triggers can't be forgotten by a new code path (imports, the POS, jobs, Home, SQL RPCs all
+  emit), fire in the same transaction as the change, and keep execution in one trusted place. The demo seed
+  loads with triggers disabled, so seeding doesn't spray automations.
+- **Broadcasts** queue one message per recipient (guardians for minors, deduplicated) who has consent and an
+  address for the channel; the preview counts exactly those, and shows who was excluded and why.

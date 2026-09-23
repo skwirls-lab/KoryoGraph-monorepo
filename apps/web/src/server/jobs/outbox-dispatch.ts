@@ -40,7 +40,10 @@ export const outboxDispatch: Job = async ({ db, now, tenantId, log }) => {
     const base = tmpl?.channels[channel];
     let subject = row.subject ?? "";
     let body = row.body_text;
-    if (row.status === "queued") {
+    // Broadcasts arrive pre-rendered (subject/body_text set, no template).
+    if (row.status === "queued" && !row.template_key && row.body_text) {
+      // nothing to render
+    } else if (row.status === "queued") {
       if (!base) {
         await db.from("communications").update({ status: "failed", error: `No ${channel} template for ${row.template_key}` }).eq("id", row.id);
         stats.failed = (stats.failed ?? 0) + 1;

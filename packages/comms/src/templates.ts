@@ -140,6 +140,80 @@ export const SYSTEM_TEMPLATES: Record<string, SystemTemplate> = {
       inapp: { body: "{{student_name}} earned {{rank_name}}!" },
     },
   },
+  welcome_checkin: {
+    key: "welcome_checkin",
+    description: "Welcome sequence: one-week check-in",
+    variables: ["first_name", "student_name", "school_name"],
+    channels: {
+      email: { subject: "How is {{student_name}}'s first week going?", body: "Hi {{first_name}},\n\nIt's been a week since {{student_name}} started with us. How is it going? Reply any time with questions — about classes, gear or anything else.\n\n— {{school_name}}" },
+    },
+  },
+  absent_7: {
+    key: "absent_7",
+    description: "Absent 7 days",
+    variables: ["first_name", "student_name", "school_name"],
+    channels: {
+      email: { subject: "We miss {{student_name}}!", body: "Hi {{first_name}},\n\nWe haven't seen {{student_name}} on the mat this week — we miss them! Is everything OK? The schedule is in the app whenever you're ready.\n\n— {{school_name}}" },
+    },
+  },
+  absent_14: {
+    key: "absent_14",
+    description: "Absent 14 days",
+    variables: ["first_name", "student_name", "school_name"],
+    channels: {
+      email: { subject: "Checking in on {{student_name}}", body: "Hi {{first_name}},\n\nIt's been two weeks since {{student_name}}'s last class. If schedules have changed, we're happy to help find a class time that works. Just reply to this message.\n\n— {{school_name}}" },
+      sms: { body: "{{school_name}}: we miss {{student_name}}! Reply if we can help find a class time that works." },
+    },
+  },
+  absent_30: {
+    key: "absent_30",
+    description: "Absent 30 days",
+    variables: ["first_name", "student_name", "school_name"],
+    channels: {
+      email: { subject: "Can we help {{student_name}} get back to class?", body: "Hi {{first_name}},\n\nIt's been a month since {{student_name}} trained with us. If something's in the way — schedule, cost, confidence — tell us and we'll do what we can. We'd love to see them back.\n\n— {{school_name}}" },
+    },
+  },
+  trial_followup: {
+    key: "trial_followup",
+    description: "Trial follow-up",
+    variables: ["first_name", "student_name", "school_name"],
+    channels: {
+      email: { subject: "Thanks for trying a class, {{first_name}}!", body: "Hi {{first_name}},\n\nThanks for coming to your trial class! We'd love to have {{student_name}} keep going. Reply to this message or call us and we'll set up the next step.\n\n— {{school_name}}" },
+      sms: { body: "{{school_name}}: thanks for trying a class! Reply to set up your next step." },
+    },
+  },
+  test_invitation_reminder: {
+    key: "test_invitation_reminder",
+    description: "Belt test invitation reminder",
+    variables: ["first_name", "student_name", "school_name"],
+    channels: {
+      email: { subject: "Reminder: register {{student_name}} for testing", body: "Hi {{first_name}},\n\nJust a reminder that {{student_name}} is invited to the upcoming belt test. Registration closes soon — you can register in the app under Home.\n\n— {{school_name}}" },
+    },
+  },
+  birthday: {
+    key: "birthday",
+    description: "Happy birthday",
+    variables: ["first_name", "student_name", "school_name"],
+    channels: {
+      email: { subject: "Happy birthday, {{student_name}}!", body: "Hi {{first_name}},\n\nEveryone at {{school_name}} wishes {{student_name}} a very happy birthday!\n\n— {{school_name}}" },
+    },
+  },
+  membership_expiring: {
+    key: "membership_expiring",
+    description: "Membership ending soon",
+    variables: ["first_name", "student_name", "school_name"],
+    channels: {
+      email: { subject: "{{student_name}}'s membership ends soon", body: "Hi {{first_name}},\n\n{{student_name}}'s current membership ends in two weeks. Talk to us about renewing so training continues without a break.\n\n— {{school_name}}" },
+    },
+  },
+  review_request: {
+    key: "review_request",
+    description: "Review request after a promotion",
+    variables: ["first_name", "student_name", "school_name"],
+    channels: {
+      email: { subject: "Congratulations again — would you leave us a review?", body: "Hi {{first_name}},\n\nCongratulations again on {{student_name}}'s promotion! If you've enjoyed training with us, a short review helps other families find {{school_name}}. Thank you!\n\n— {{school_name}}" },
+    },
+  },
   thread_message: {
     key: "thread_message",
     description: "New message in a conversation",

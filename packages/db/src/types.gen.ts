@@ -253,6 +253,178 @@ export type Database = {
           },
         ]
       }
+      automation_runs: {
+        Row: {
+          automation_id: string
+          context: Json
+          created_at: string
+          dedupe_key: string
+          id: string
+          log: Json
+          person_id: string | null
+          resume_at: string | null
+          status: string
+          step: number
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          automation_id: string
+          context?: Json
+          created_at?: string
+          dedupe_key: string
+          id?: string
+          log?: Json
+          person_id?: string | null
+          resume_at?: string | null
+          status?: string
+          step?: number
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          automation_id?: string
+          context?: Json
+          created_at?: string
+          dedupe_key?: string
+          id?: string
+          log?: Json
+          person_id?: string | null
+          resume_at?: string | null
+          status?: string
+          step?: number
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automation_runs_tenant_id_automation_id_fkey"
+            columns: ["tenant_id", "automation_id"]
+            isOneToOne: false
+            referencedRelation: "automations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "automation_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automation_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "automation_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "automation_runs_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "automation_runs_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "automation_runs_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "automation_runs_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      automations: {
+        Row: {
+          actions: Json
+          active: boolean
+          conditions: Json
+          created_at: string
+          description: string
+          id: string
+          last_run_at: string | null
+          name: string
+          runs: number
+          template_key: string | null
+          tenant_id: string
+          trigger: Json
+          updated_at: string
+        }
+        Insert: {
+          actions?: Json
+          active?: boolean
+          conditions?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          last_run_at?: string | null
+          name: string
+          runs?: number
+          template_key?: string | null
+          tenant_id: string
+          trigger: Json
+          updated_at?: string
+        }
+        Update: {
+          actions?: Json
+          active?: boolean
+          conditions?: Json
+          created_at?: string
+          description?: string
+          id?: string
+          last_run_at?: string | null
+          name?: string
+          runs?: number
+          template_key?: string | null
+          tenant_id?: string
+          trigger?: Json
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "automations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "automations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "automations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       billing_runs: {
         Row: {
           amount_cents: number
@@ -444,6 +616,76 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_upcoming_for_person"
             referencedColumns: ["tenant_id", "session_id"]
+          },
+        ]
+      }
+      campaigns: {
+        Row: {
+          body: string
+          channel: string
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          scheduled_at: string | null
+          segment: Json
+          sent_at: string | null
+          stats: Json
+          subject: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          body: string
+          channel: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          scheduled_at?: string | null
+          segment?: Json
+          sent_at?: string | null
+          stats?: Json
+          subject?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          body?: string
+          channel?: string
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          scheduled_at?: string | null
+          segment?: Json
+          sent_at?: string | null
+          stats?: Json
+          subject?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "campaigns_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "campaigns_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "campaigns_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
           },
         ]
       }
@@ -1000,6 +1242,20 @@ export type Database = {
           updated_at?: string
         }
         Relationships: [
+          {
+            foreignKeyName: "communications_automation_run_fk"
+            columns: ["tenant_id", "automation_run_id"]
+            isOneToOne: false
+            referencedRelation: "automation_runs"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "communications_campaign_fk"
+            columns: ["tenant_id", "campaign_id"]
+            isOneToOne: false
+            referencedRelation: "campaigns"
+            referencedColumns: ["tenant_id", "id"]
+          },
           {
             foreignKeyName: "communications_tenant_id_fkey"
             columns: ["tenant_id"]
@@ -6071,6 +6327,55 @@ export type Database = {
           },
         ]
       }
+      segments: {
+        Row: {
+          created_at: string
+          definition: Json
+          id: string
+          name: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          definition?: Json
+          id?: string
+          name: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          definition?: Json
+          id?: string
+          name?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "segments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "segments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "segments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       signature_requests: {
         Row: {
           created_at: string
@@ -9278,6 +9583,21 @@ export type Database = {
         Args: { p_entity: string; p_rows: number }
         Returns: undefined
       }
+      automation_evaluate: {
+        Args: { p_tenant_id: string; p_today: string }
+        Returns: number
+      }
+      automation_notify: {
+        Args: {
+          p_channels: string[]
+          p_data: Json
+          p_person_ids: string[]
+          p_run_id: string
+          p_template_key: string
+          p_tenant_id: string
+        }
+        Returns: number
+      }
       award_stripe: {
         Args: { p_enrollment_id: string; p_note?: string }
         Returns: number
@@ -9544,6 +9864,11 @@ export type Database = {
         }
         Returns: string
       }
+      segment_preview: {
+        Args: { p_channel: string; p_definition: Json }
+        Returns: Json
+      }
+      send_broadcast: { Args: { p_campaign_id: string }; Returns: number }
       session_taken: { Args: { p_session_id: string }; Returns: number }
       set_default_payment_method: {
         Args: { p_payment_method_id: string }
