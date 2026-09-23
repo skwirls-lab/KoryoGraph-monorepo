@@ -1,6 +1,6 @@
 "use server";
 
-import { rpc } from "@koryo/db";
+import { DbError, rpc } from "@koryo/db";
 import type { Json } from "@koryo/db/types";
 import {
   accountStatus,
@@ -204,7 +204,13 @@ export async function chargeSavedCard(input: z.input<typeof chargeSchema>): Prom
 // Refunds (billing.refund). Card payments are refunded at Stripe first, then recorded.
 // ---------------------------------------------------------------------------------------------
 
-const refundSchema = z.object({ paymentId: z.uuid(), amountCents: z.number().int().positive(), reason: z.string().trim().min(2, "Give a reason").max(200) });
+const refundSchema = z.object({
+  paymentId: z.uuid(),
+  amountCents: z.number().int().positive(),
+  reason: z.string().trim().min(2, "Give a reason").max(200),
+  /** true = issue account credit (a credit note) instead of returning the money. */
+  asCredit: z.boolean().default(false),
+});
 
 export async function refundPaymentAction(input: z.input<typeof refundSchema>): Promise<ActionResult<{ refundId: string }>> {
   const ctx = await getCtx();
@@ -217,7 +223,7 @@ export async function refundPaymentAction(input: z.input<typeof refundSchema>): 
   if (!p) return fail("Payment not found.");
   if (v.amountCents > p.amount_cents - p.refunded_cents) return fail(`You can refund at most ${((p.amount_cents - p.refunded_cents) / 100).toFixed(2)}.`);
   let stripeRefundId: string | null = null;
-  if (p.stripe_payment_intent_id) {
+  if (p.stripe_payment_intent_id && !v.asCredit) {
     const ready = await readyStripe(ctx);
     if ("error" in ready) return fail(ready.error);
     try {
@@ -229,10 +235,12 @@ export async function refundPaymentAction(input: z.input<typeof refundSchema>): 
     }
   }
   try {
-    const refundId = await rpc(ctx.supabase, "record_refund", { p_payment_id: p.id, p_amount_cents: v.amountCents, p_reason: v.reason, p_stripe_refund_id: stripeRefundId ?? undefined });
+    const refundId = await rpc(ctx.supabase, "record_refund", { p_payment_id: p.id, p_amount_cents: v.amountCents, p_reason: v.reason, p_stripe_refund_id: stripeRefundId ?? undefined, p_as_credit: v.asCredit });
     revalidatePath(`/desk/households/${p.household_id}`);
+    revalidatePath("/desk/billing", "layout");
     return ok({ refundId });
   } catch (err) {
+    if (!stripeRefundId) return fail(err instanceof DbError && err.code === "22023" ? err.message : "Couldn't record the refund.");
     logger(ctx).error({ err: err instanceof Error ? err.message : String(err), stripe_refund: stripeRefundId }, "refund recorded at Stripe but not in the ledger; the charge.refunded webhook will reconcile it");
     return fail("The refund went through at Stripe but couldn't be recorded yet; it will appear once Stripe confirms it.");
   }

@@ -23,7 +23,7 @@ test.describe("@m2 payments without Stripe keys", () => {
   test("household page offers no card entry and explains why", async ({ browser }) => {
     const page = await (await browser.newContext({ storageState: authState("ridgeline", "owner") })).newPage();
     await page.goto(`/desk/households/${ADAMS}`);
-    await expect(page.getByRole("heading", { name: "Payment methods" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Billing", level: 2 })).toBeVisible();
     await expect(page.getByRole("button", { name: "Add card" })).toBeDisabled();
     await expect(page.getByText(/card payments are unavailable/)).toBeVisible();
     await expect(page.getByRole("button", { name: "Charge card" })).toHaveCount(0);

@@ -71,6 +71,17 @@ export const SYSTEM_TEMPLATES: Record<string, SystemTemplate> = {
       sms: { body: "{{school_name}}: please sign {{document_name}} for {{student_name}}: {{link}}" },
     },
   },
+  payment_receipt: {
+    key: "payment_receipt",
+    description: "Receipt for an invoice payment",
+    variables: ["first_name", "school_name", "invoice_number", "amount", "paid_on", "method", "balance", "lines"],
+    channels: {
+      email: {
+        subject: "Receipt for invoice #{{invoice_number}} — {{school_name}}",
+        body: "Hi {{first_name}},\n\nThanks — we received {{amount}} by {{method}} on {{paid_on}} for invoice #{{invoice_number}}.\n\n{{lines}}\n\nBalance remaining on this invoice: {{balance}}.\n\n— {{school_name}}",
+      },
+    },
+  },
   thread_message: {
     key: "thread_message",
     description: "New message in a conversation",

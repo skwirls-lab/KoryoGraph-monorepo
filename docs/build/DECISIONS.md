@@ -271,3 +271,21 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   included in the plan (no separate charge); sizes pre-fill from the student's uniform/belt sizes.
 - **Contracts:** when a school has an active `contract` document, contract plans require a desk e-signature
   at enrollment (stored as a normal `signatures` row + PDF).
+
+## ADR-0020 — Billing run and AR: SQL owns money state, the engine owns the math, tenant-local dates
+- **Date / task:** 2026-09-23 · M2.05
+- **Decision:** `billing_run` (daily 06:00 job, service role) runs per tenant with the Billing module:
+  `billing_lifecycle(tenant, today)` applies date-driven transitions (cancel_at, expiries, holds on/off,
+  past-due marking), then each due (membership, period) is priced by `packages/billing` (hold proration,
+  family discount by rank over the household's live memberships, tax by class) and written by
+  `billing_run_invoice`, which inserts the invoice and advances `next_bill_at` in one statement guarded by
+  the unique `(membership_id, period_start)` — so re-runs, rewinds and concurrent runs can't double-bill.
+  Coupons apply to the enrollment invoice only. Autopay charges go through Stripe only when it is
+  configured and the school is connected; otherwise the run records "N autopay charge(s) not attempted"
+  on `billing_runs.errors` (shown on the AR dashboard) and the invoices stay open.
+- **AR operations** are definer RPCs (`record_manual_payment`, `apply_credit`, `add_invoice_line`,
+  `void_invoice`, `record_refund(..., p_as_credit)`), each re-checking tenant, module and permission.
+  Every refund gets a numbered credit note (`refunds.credit_note_number`, per-tenant counter); refunding to
+  account credit creates a household credit that references it. Overpayments become credit.
+- **Dates:** invoice status, aging and credit expiry use the school's local date (`app.tenant_today`), not
+  the database's UTC `current_date`, which turned invoices past due on their due-date evening.

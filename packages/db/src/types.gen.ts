@@ -4365,6 +4365,7 @@ export type Database = {
           as_credit: boolean
           by_user_id: string | null
           created_at: string
+          credit_note_number: number | null
           id: string
           payment_id: string
           reason: string
@@ -4378,6 +4379,7 @@ export type Database = {
           as_credit?: boolean
           by_user_id?: string | null
           created_at?: string
+          credit_note_number?: number | null
           id?: string
           payment_id: string
           reason: string
@@ -4391,6 +4393,7 @@ export type Database = {
           as_credit?: boolean
           by_user_id?: string | null
           created_at?: string
+          credit_note_number?: number | null
           id?: string
           payment_id?: string
           reason?: string
@@ -6250,6 +6253,21 @@ export type Database = {
           },
         ]
       }
+      v_invoice_activity: {
+        Row: {
+          amount_cents: number | null
+          at: string | null
+          credit_note_number: number | null
+          invoice_id: string | null
+          kind: string | null
+          method: string | null
+          note: string | null
+          payment_id: string | null
+          payment_status: string | null
+          tenant_id: string | null
+        }
+        Relationships: []
+      }
       v_member_roster: {
         Row: {
           classes_30d: number | null
@@ -6597,6 +6615,20 @@ export type Database = {
         Args: { m: Json; p_household_id: string }
         Returns: string
       }
+      add_invoice_line: {
+        Args: {
+          p_description: string
+          p_invoice_id: string
+          p_kind: string
+          p_quantity: number
+          p_unit_cents: number
+        }
+        Returns: string
+      }
+      apply_credit: {
+        Args: { p_amount_cents?: number; p_invoice_id: string }
+        Returns: string
+      }
       audit_export: {
         Args: { p_entity: string; p_rows: number }
         Returns: undefined
@@ -6604,6 +6636,14 @@ export type Database = {
       award_stripe: {
         Args: { p_enrollment_id: string; p_note?: string }
         Returns: number
+      }
+      billing_lifecycle: {
+        Args: { p_tenant_id: string; p_today: string }
+        Returns: Json
+      }
+      billing_run_invoice: {
+        Args: { p: Json; p_tenant_id: string }
+        Returns: string
       }
       book_session: {
         Args: {
@@ -6761,6 +6801,15 @@ export type Database = {
         Returns: string
       }
       record_communication: { Args: { p: Json }; Returns: string }
+      record_manual_payment: {
+        Args: {
+          p_amount_cents: number
+          p_invoice_id: string
+          p_memo?: string
+          p_method: string
+        }
+        Returns: string
+      }
       record_payment_intent: { Args: { p_pi: Json }; Returns: string }
       record_payment_intent_for: {
         Args: { p_pi: Json; p_tenant_id: string }
@@ -6777,6 +6826,7 @@ export type Database = {
       record_refund: {
         Args: {
           p_amount_cents: number
+          p_as_credit?: boolean
           p_payment_id: string
           p_reason: string
           p_stripe_refund_id?: string
@@ -6825,6 +6875,10 @@ export type Database = {
         }[]
       }
       switch_tenant: { Args: { p_tenant_id: string }; Returns: undefined }
+      void_invoice: {
+        Args: { p_invoice_id: string; p_reason: string }
+        Returns: undefined
+      }
     }
     Enums: {
       [_ in never]: never
