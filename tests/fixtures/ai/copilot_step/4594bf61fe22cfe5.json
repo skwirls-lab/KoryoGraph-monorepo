@@ -1,0 +1,11 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "type": "tool",
+    "tool": "run_report",
+    "args": {
+      "key": "attendance_by_week",
+      "weeks": 4
+    }
+  }
+}

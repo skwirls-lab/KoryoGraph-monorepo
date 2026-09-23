@@ -64,6 +64,8 @@ export function DeskShell({ nav, tenant, tenants, user, approvals = 0, children 
   const pathname = usePathname();
   const router = useRouter();
   const [paletteOpen, setPaletteOpen] = useState(false);
+  const [paletteQuery, setPaletteQuery] = useState("");
+  const copilot = nav.find((i) => i.href === "/desk/copilot" && !i.locked);
   const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
@@ -125,9 +127,21 @@ export function DeskShell({ nav, tenant, tenants, user, approvals = 0, children 
         </main>
       </div>
       <CommandDialog open={paletteOpen} onOpenChange={setPaletteOpen} title="Go to" description="Jump to a page">
-        <CommandInput placeholder="Go to…" />
+        <CommandInput placeholder={copilot ? "Go to… or ask the copilot" : "Go to…"} value={paletteQuery} onValueChange={setPaletteQuery} />
         <CommandList>
           <CommandEmpty>No matching pages.</CommandEmpty>
+          {copilot && paletteQuery.trim().length > 2 ? (
+            <CommandGroup heading="Ask">
+              <CommandItem value={`ask copilot ${paletteQuery}`} onSelect={() => {
+                setPaletteOpen(false);
+                router.push(`/desk/copilot?q=${encodeURIComponent(paletteQuery.trim())}`);
+                setPaletteQuery("");
+              }}>
+                <NavIcon icon="bot" className="size-4" />
+                Ask Copilot: “{paletteQuery.trim()}”
+              </CommandItem>
+            </CommandGroup>
+          ) : null}
           <CommandGroup heading="Pages">
             {nav.map((item) => (
               <CommandItem

@@ -463,3 +463,23 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   `everyone` documents, enforced by RLS.
 - Seeded KB documents are embedded with the deterministic fixture embedding and labelled "dev fixture
   vectors" in Settings; "Re-index" with a key replaces them with real embeddings.
+
+## ADR-0032 — Copilot: structured tool steps with grounded placeholders; private conversations
+- **Date / task:** 2026-09-25 · M4.04
+- The Desk copilot is a loop of structured-output steps (`copilot_step`): each step is either a typed call to
+  one read-only tool (find_person, person_summary, attendance_summary, invoices_for_household, run_report,
+  kb_search, propose_action) or the final answer. This keeps every model response schema-validated (retry
+  once, then fail) and lets fixtures replay whole conversations. Tools run as the signed-in staff member, so
+  RLS and permissions bound what the copilot can see; `propose_action` only creates a `copilot_write`
+  approval item.
+- **Numbers are grounded:** answers quote tool results through `{{obs.N.path}}` placeholders that the server
+  fills from the actual observations (`renderGrounded`); unfillable ones render as "[unknown]" and the answer
+  says so. A fixture answer to "How many students are past due?" therefore shows today's AR numbers.
+- Steps stream to the browser as NDJSON (tool steps as they run, then the answer) from a route handler.
+- **Home assistant** gets only family-visible KB chunks (RLS) and the caller's own household facts; it can't
+  reveal other families because it never receives their data. Low confidence / out-of-scope → "Message the
+  front desk" opens an ordinary thread.
+- Conversations are private to their user (no staff override); the audit trigger records who/when but strips
+  message text, citations and titles.
+- Fixtures for 6 copilot prompts and 2 Home questions are hand-authored (`scripts/fixtures/author-copilot.ts`);
+  any other question in fixture mode gets an honest "not one of the recorded dev examples" reply.

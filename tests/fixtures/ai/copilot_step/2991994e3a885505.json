@@ -1,0 +1,14 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "type": "answer",
+    "text": "{{obs.0.total}} check-ins over the last {{obs.0.weeks}} weeks and this week so far:\n- {{obs.0.by_week.0.week}}: {{obs.0.by_week.0.check_ins}}\n- {{obs.0.by_week.1.week}}: {{obs.0.by_week.1.check_ins}}\n- {{obs.0.by_week.2.week}}: {{obs.0.by_week.2.check_ins}}\n- {{obs.0.by_week.3.week}}: {{obs.0.by_week.3.check_ins}}\n- {{obs.0.by_week.4.week}}: {{obs.0.by_week.4.check_ins}}",
+    "citations": [
+      {
+        "kind": "report",
+        "id": "attendance_by_week",
+        "label": "Attendance"
+      }
+    ]
+  }
+}

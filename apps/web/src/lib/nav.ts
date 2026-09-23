@@ -1,7 +1,7 @@
 /** Navigation per surface. Items gate on permission (hidden) and module (shown locked → upgrade). */
 export const ICONS = [
   "dashboard", "rocket", "users", "calendar", "award", "book", "credit-card", "shopping-bag", "megaphone",
-  "party", "inbox", "chart", "settings", "check-square", "home", "message", "trending-up", "wallet", "sparkles", "clipboard", "bus", "id-card", "list-todo",
+  "party", "inbox", "chart", "settings", "check-square", "home", "message", "trending-up", "wallet", "sparkles", "clipboard", "bus", "id-card", "list-todo", "bot",
 ] as const;
 export type IconKey = (typeof ICONS)[number];
 
@@ -25,6 +25,7 @@ export interface ResolvedNavItem {
 export const DESK_NAV: NavItem[] = [
   { href: "/desk", label: "Dashboard", icon: "dashboard", permission: "desk.access" },
   { href: "/desk/people", label: "People", icon: "users", permission: "people.read" },
+  { href: "/desk/copilot", label: "Copilot", icon: "bot", permission: "ai.use", module: "intelligence" },
   { href: "/desk/schedule", label: "Schedule", icon: "calendar", permission: "desk.access" },
   { href: "/desk/programs", label: "Programs", icon: "award", permission: "desk.access" },
   { href: "/desk/curriculum", label: "Curriculum", icon: "book", permission: "desk.access" },
@@ -58,6 +59,7 @@ export const HOME_NAV: NavItem[] = [
   { href: "/home/progress", label: "Progress", icon: "trending-up", permission: "home.access" },
   { href: "/home/billing", label: "Billing", icon: "wallet", permission: "home.access", module: "billing" },
   { href: "/home/messages", label: "Messages", icon: "message", permission: "home.access" },
+  { href: "/home/assistant", label: "Ask", icon: "bot", permission: "home.access", module: "intelligence" },
   { href: "/home/events", label: "Events", icon: "party", permission: "home.access", module: "programs_plus" },
   { href: "/home/documents", label: "Forms", icon: "clipboard", permission: "home.access" },
 ];

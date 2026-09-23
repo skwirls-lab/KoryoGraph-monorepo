@@ -1,0 +1,14 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "type": "answer",
+    "text": "You have {{obs.0.active_students}} active students, {{obs.0.trials}} on a trial and {{obs.0.leads}} leads in the pipeline.",
+    "citations": [
+      {
+        "kind": "report",
+        "id": "active_students",
+        "label": "Membership roster"
+      }
+    ]
+  }
+}

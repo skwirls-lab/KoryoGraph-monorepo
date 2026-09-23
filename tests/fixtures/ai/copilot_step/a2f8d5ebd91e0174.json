@@ -1,0 +1,19 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "type": "answer",
+    "text": "{{obs.1.name}} is {{obs.1.status}}, training in {{obs.1.programs.0.program}} at {{obs.1.programs.0.rank}}. Her last class was {{obs.1.last_class}}. The {{obs.1.household}} has {{obs.1.balance.open}} open ({{obs.1.balance.past_due}} past due).",
+    "citations": [
+      {
+        "kind": "person",
+        "id": "5a206908-e0b6-5be1-be59-c05397b5dedc",
+        "label": "Maya Cooper"
+      },
+      {
+        "kind": "household",
+        "id": "a039dc0c-903a-5755-99d3-15ce10666606",
+        "label": "Cooper family"
+      }
+    ]
+  }
+}

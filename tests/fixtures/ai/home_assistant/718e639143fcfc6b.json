@@ -1,0 +1,8 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "answer": "I can only help with your own family, so I can't share anything about other students. If you'd like, I can pass your question to the front desk.",
+    "citations": [],
+    "escalate": true
+  }
+}

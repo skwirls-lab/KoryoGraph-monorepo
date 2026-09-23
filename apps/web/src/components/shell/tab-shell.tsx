@@ -38,19 +38,19 @@ export function TabShell({
           {nav.map((item) => {
             const active = item.href === root ? pathname === root : pathname.startsWith(item.href);
             return (
-              <li key={item.href} className="flex-1">
+              <li key={item.href} className="min-w-0 flex-1">
                 <Link
                   href={item.locked ? `${root}` : item.href}
                   aria-current={active ? "page" : undefined}
                   aria-disabled={item.locked || undefined}
                   className={cn(
-                    "flex min-h-14 flex-col items-center justify-center gap-1 text-xs font-medium text-fg-secondary no-underline",
+                    "flex min-h-14 flex-col items-center justify-center gap-1 px-0.5 text-[10px] font-medium text-fg-secondary no-underline sm:text-xs",
                     active && "text-brand-text",
                     item.locked && "opacity-50",
                   )}
                 >
                   <NavIcon icon={item.icon} className="size-5" />
-                  {item.label}
+                  <span className="max-w-full truncate">{item.label}</span>
                 </Link>
               </li>
             );

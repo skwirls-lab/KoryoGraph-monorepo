@@ -1,0 +1,11 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "answer": "Yes — testing fees are refundable up to 48 hours before the test. After that they aren't refundable, but if your student doesn't pass they can retest at the next test at no extra charge.",
+    "citations": [
+      "6e593ca0-ed12-5a8b-aff9-b11eb6f1011b",
+      "217c5ff2-5e7a-5477-b1eb-8166648497a1"
+    ],
+    "escalate": false
+  }
+}

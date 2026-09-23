@@ -1,0 +1,19 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "type": "answer",
+    "text": "I drafted a friendly text to Maya's family. It's waiting in Approvals for someone to review — nothing has been sent.",
+    "citations": [
+      {
+        "kind": "person",
+        "id": "5a206908-e0b6-5be1-be59-c05397b5dedc",
+        "label": "Maya Cooper"
+      },
+      {
+        "kind": "approval",
+        "id": "queue",
+        "label": "Approvals"
+      }
+    ]
+  }
+}
