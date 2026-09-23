@@ -39,6 +39,7 @@ export function isSharedPath(pathname: string): boolean {
     pathname.startsWith("/kiosk") ||
     pathname.startsWith("/sign/") ||
     pathname.startsWith("/widget/") ||
+    pathname.startsWith("/s/") ||
     ["/login", "/signup", "/forgot-password", "/reset-password", "/welcome"].includes(pathname)
   );
 }

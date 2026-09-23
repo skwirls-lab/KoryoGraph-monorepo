@@ -28,6 +28,7 @@ export const DESK_NAV: NavItem[] = [
   { href: "/desk/schedule", label: "Schedule", icon: "calendar", permission: "desk.access" },
   { href: "/desk/programs", label: "Programs", icon: "award", permission: "desk.access" },
   { href: "/desk/curriculum", label: "Curriculum", icon: "book", permission: "desk.access" },
+  { href: "/desk/crm", label: "Pipeline", icon: "trending-up", permission: "crm.manage", module: "grow" },
   { href: "/desk/testing", label: "Testing", icon: "check-square", permission: "testing.manage" },
   { href: "/desk/billing", label: "Billing", icon: "credit-card", permission: "billing.read", module: "billing" },
   { href: "/desk/retail", label: "Retail", icon: "shopping-bag", permission: "retail.sell", module: "retail" },

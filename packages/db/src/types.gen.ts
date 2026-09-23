@@ -2863,6 +2863,218 @@ export type Database = {
           },
         ]
       }
+      lead_activities: {
+        Row: {
+          at: string
+          body: string | null
+          by_user_id: string | null
+          created_at: string
+          id: string
+          kind: string
+          lead_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          at?: string
+          body?: string | null
+          by_user_id?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          lead_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          at?: string
+          body?: string | null
+          by_user_id?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          lead_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "lead_activities_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "lead_activities_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "lead_activities_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "lead_activities_tenant_id_lead_id_fkey"
+            columns: ["tenant_id", "lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      leads: {
+        Row: {
+          ai_run_id: string | null
+          converted_household_id: string | null
+          created_at: string
+          id: string
+          lost_reason: string | null
+          message: string | null
+          next_action: string | null
+          next_action_at: string | null
+          owner_user_id: string | null
+          person_id: string
+          program_interest: string[]
+          score: number | null
+          source: string | null
+          stage_changed_at: string
+          stage_id: string
+          tenant_id: string
+          trial_booking_id: string | null
+          updated_at: string
+          utm: Json
+          value_cents: number | null
+        }
+        Insert: {
+          ai_run_id?: string | null
+          converted_household_id?: string | null
+          created_at?: string
+          id?: string
+          lost_reason?: string | null
+          message?: string | null
+          next_action?: string | null
+          next_action_at?: string | null
+          owner_user_id?: string | null
+          person_id: string
+          program_interest?: string[]
+          score?: number | null
+          source?: string | null
+          stage_changed_at?: string
+          stage_id: string
+          tenant_id: string
+          trial_booking_id?: string | null
+          updated_at?: string
+          utm?: Json
+          value_cents?: number | null
+        }
+        Update: {
+          ai_run_id?: string | null
+          converted_household_id?: string | null
+          created_at?: string
+          id?: string
+          lost_reason?: string | null
+          message?: string | null
+          next_action?: string | null
+          next_action_at?: string | null
+          owner_user_id?: string | null
+          person_id?: string
+          program_interest?: string[]
+          score?: number | null
+          source?: string | null
+          stage_changed_at?: string
+          stage_id?: string
+          tenant_id?: string
+          trial_booking_id?: string | null
+          updated_at?: string
+          utm?: Json
+          value_cents?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_tenant_id_converted_household_id_fkey"
+            columns: ["tenant_id", "converted_household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_converted_household_id_fkey"
+            columns: ["tenant_id", "converted_household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_stage_id_fkey"
+            columns: ["tenant_id", "stage_id"]
+            isOneToOne: false
+            referencedRelation: "pipeline_stages"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_trial_booking_id_fkey"
+            columns: ["tenant_id", "trial_booking_id"]
+            isOneToOne: false
+            referencedRelation: "bookings"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       lesson_plans: {
         Row: {
           ai_run_id: string | null
@@ -4211,6 +4423,61 @@ export type Database = {
           key?: string
         }
         Relationships: []
+      }
+      pipeline_stages: {
+        Row: {
+          created_at: string
+          id: string
+          key: string | null
+          kind: string
+          name: string
+          position: number
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          key?: string | null
+          kind?: string
+          name: string
+          position?: number
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          key?: string | null
+          kind?: string
+          name?: string
+          position?: number
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pipeline_stages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pipeline_stages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "pipeline_stages_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
       }
       plan_modules: {
         Row: {
@@ -6640,6 +6907,13 @@ export type Database = {
             referencedColumns: ["tenant_id"]
           },
           {
+            foreignKeyName: "tasks_tenant_id_lead_id_fkey"
+            columns: ["tenant_id", "lead_id"]
+            isOneToOne: false
+            referencedRelation: "leads"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
             foreignKeyName: "tasks_tenant_id_person_id_fkey"
             columns: ["tenant_id", "person_id"]
             isOneToOne: false
@@ -9016,6 +9290,10 @@ export type Database = {
         Args: { p: Json; p_tenant_id: string }
         Returns: string
       }
+      book_lead_trial: {
+        Args: { p_lead_id: string; p_session_id: string }
+        Returns: string
+      }
       book_session: {
         Args: {
           p_person_id: string
@@ -9202,6 +9480,7 @@ export type Database = {
         }
         Returns: string
       }
+      public_trial_info: { Args: { p_slug: string }; Returns: Json }
       publish_document: {
         Args: {
           p_body: string
@@ -9318,6 +9597,7 @@ export type Database = {
           version: number
         }[]
       }
+      submit_trial_request: { Args: { p: Json; p_slug: string }; Returns: Json }
       switch_tenant: { Args: { p_tenant_id: string }; Returns: undefined }
       void_invoice: {
         Args: { p_invoice_id: string; p_reason: string }
