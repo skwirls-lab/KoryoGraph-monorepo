@@ -6,6 +6,7 @@ import { EmptyState } from "@koryo/ui/components/app/empty-state";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { UrlTabs } from "@/components/common/url-tabs";
 import { PersonDocuments } from "@/components/documents/person-documents";
+import { PersonAttendance, PersonMessages } from "@/components/people/person-activity";
 import { PersonEditSheet } from "@/components/people/person-edit-sheet";
 import { ConsentToggles, MedicalNotes, NoteForm, StatusControl, TagList } from "@/components/people/person-controls";
 import { StatusBadge } from "@/components/people/status-badge";
@@ -158,14 +159,14 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
         tabs={[
           { value: "overview", label: "Overview", content: overview },
           { value: "household", label: "Household", content: householdTab },
-          { value: "attendance", label: "Attendance", content: <EmptyState title="No attendance yet" description="Class attendance is recorded once the schedule exists (M1.06–M1.09)." /> },
+          { value: "attendance", label: "Attendance", content: <PersonAttendance ctx={ctx} personId={p.id} /> },
           { value: "progress", label: "Progress", content: (
             <ProgressPanel personId={p.id} progress={progress} timeZone={ctx.tz} programs={programs}
               canPromote={ctx.permissions.has("ranks.promote")} canEnroll={canWrite} />
           ) },
           { value: "billing", label: "Billing", content: <EmptyState title="No memberships" description="The Billing module lands in M2." /> },
           { value: "documents", label: "Documents", content: <PersonDocuments ctx={ctx} personId={p.id} /> },
-          { value: "messages", label: "Messages", content: <EmptyState title="No messages" description="Messaging arrives in M1.11." /> },
+          { value: "messages", label: "Messages", content: <PersonMessages ctx={ctx} personId={p.id} /> },
           { value: "notes", label: "Notes", content: notesTab },
         ]}
       />

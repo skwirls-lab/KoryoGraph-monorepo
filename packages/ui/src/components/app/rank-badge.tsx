@@ -17,6 +17,7 @@ export function RankBadge({ name, beltColor, stripes = 0, stripesMax = 0, classN
         "inline-flex items-center gap-2 rounded-full border border-default bg-elevated px-2.5 py-1 text-xs font-medium text-fg",
         className,
       )}
+      role="img"
       aria-label={label}
     >
       <span aria-hidden className="relative inline-flex h-2.5 w-7 items-center justify-end overflow-hidden rounded-sm border border-strong" style={{ backgroundColor: beltColor }}>
