@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M4.03 knowledge base + RAG
+M4.04 copilot + home assistant
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -84,7 +84,7 @@ port 3000          → in use by another container on the host → dev server us
 | M3.09 | done | 1178152 | gate green after 1 fix (staff_profiles collision between db tests and demo seed) |
 | M4.01 | done | 1a32f0c | gateway; no key → fixture mode; ai:eval HANDOFF; model tiers env-only (ADR-0030) |
 | M4.02 | done | 697d27c | approvals; DB 2, e2e approvals.spec |
-| M4.03 | todo |  |  |
+| M4.03 | done | ce74272 | KB; 'refund policy' → refund policy first |
 | M4.04 | todo |  |  |
 | M4.05 | todo |  |  |
 | M4.06 | todo |  |  |
