@@ -500,3 +500,22 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   saved: …") instead of half-writing.
 - The test/demo class audio is a 1-second tone whose recorded fixture transcript is the scripted class notes
   (dev fixture); live transcription replaces it when a key exists.
+
+## ADR-0034 — NL reports: schema `nl`, role `nl_reader`, two independent guards
+- **Date / task:** 2026-09-25 · M4.09
+- Model-written SQL runs only through `public.run_nl_report`, which switches to the role `nl_reader` for the
+  statement (read-only transaction, 5 s timeout, ≤ 5000 rows, json rows in column order). `nl_reader` can
+  select only the views in schema `nl`; `authenticated` may `SET ROLE nl_reader` but doesn't inherit its
+  privileges (`WITH INHERIT FALSE`).
+- The `nl` views read through security-definer row functions (the existing report views are
+  `security_invoker`, which would otherwise need base-table grants for `nl_reader`); each function returns
+  only the caller's tenant and only if they hold the relevant permission (reports.read / billing.read /
+  crm.manage / people.read).
+- Because the RPC is reachable directly over the API, the database repeats the essential checks: a single
+  SELECT/WITH, and no `set_config` / `current_setting` / `pg_*` / large-object / dblink / xml / unicode-escaped
+  identifiers — otherwise a query could rewrite the JWT claims the tenant filter reads. The TypeScript
+  validator (`validateReportSql`, unit-tested) is stricter still: allowlisted views and functions only,
+  no comments or quoted identifiers, LIMIT ≤ 5000.
+- Charts use recharts with the chart palette re-stepped to pass the dataviz checks (lightness band, chroma,
+  CVD, contrast) on light and dark surfaces: teal `#0d9488` and amber `#d97706` replaced the lighter green and
+  amber. Multi-series charts always have a legend and the table below them.

@@ -1,0 +1,14 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "title": "Active members with no class in 30 days",
+    "sql": "select display_name, programs, last_attended_on from v_members where status = 'active' and (last_attended_on is null or last_attended_on < current_date - 30) order by last_attended_on nulls first, display_name",
+    "chart": {
+      "type": "table",
+      "x": null,
+      "y": [],
+      "series": null
+    },
+    "explanation": "Active members whose last check-in was more than 30 days ago (or who never checked in)."
+  }
+}

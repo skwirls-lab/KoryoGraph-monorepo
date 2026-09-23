@@ -6,3 +6,4 @@ export { chunkText } from "./chunk";
 export * from "./tasks";
 export { renderGrounded } from "./grounding";
 export * from "./drift";
+export * from "./sql-guard";

@@ -4,6 +4,7 @@ import { copilotStep, homeAssistant } from "./copilot";
 import { driftOutreach } from "./drift";
 import { packingSlip } from "./intake";
 import { lessonBuilder } from "./lessons";
+import { nlReport } from "./nl-report";
 import { ping } from "./ping";
 
 /** Every task the product runs (ai:eval and ai:record iterate this). */
@@ -16,6 +17,7 @@ export const TASKS: Record<string, AiTask<never, unknown>> = {
   action_board: actionBoard as unknown as AiTask<never, unknown>,
   lesson_builder: lessonBuilder as unknown as AiTask<never, unknown>,
   packing_slip: packingSlip as unknown as AiTask<never, unknown>,
+  nl_report: nlReport as unknown as AiTask<never, unknown>,
 };
 export { ping };
 export * from "./copilot";
@@ -23,3 +25,4 @@ export * from "./drift";
 export * from "./action-board";
 export * from "./lessons";
 export * from "./intake";
+export * from "./nl-report";

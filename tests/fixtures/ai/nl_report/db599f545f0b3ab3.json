@@ -1,0 +1,16 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "title": "Revenue by category — last 6 months",
+    "sql": "select to_char(month, 'YYYY-MM') as month, category, round(sum(net_cents) / 100.0, 2) as revenue from v_revenue_monthly where month >= date_trunc('month', current_date)::date - interval '5 months' group by 1, 2 order by 1, 2",
+    "chart": {
+      "type": "bar",
+      "x": "month",
+      "y": [
+        "revenue"
+      ],
+      "series": "category"
+    },
+    "explanation": "Invoiced revenue before tax, in dollars, by month and category."
+  }
+}

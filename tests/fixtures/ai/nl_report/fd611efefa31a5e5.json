@@ -1,0 +1,19 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "title": "Trial funnel by lead source",
+    "sql": "select source, sum(leads) as leads, sum(trials_booked) as trials_booked, sum(trials_attended) as trials_attended, sum(won) as enrolled from v_trial_funnel group by source order by leads desc",
+    "chart": {
+      "type": "bar",
+      "x": "source",
+      "y": [
+        "leads",
+        "trials_booked",
+        "trials_attended",
+        "enrolled"
+      ],
+      "series": null
+    },
+    "explanation": "All-time leads per source and how far they got."
+  }
+}

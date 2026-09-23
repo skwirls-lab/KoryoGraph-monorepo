@@ -1,0 +1,16 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "title": "Attendance by program — last 8 weeks",
+    "sql": "select week_start, program, sum(check_ins) as check_ins from v_attendance_weekly where week_start >= date_trunc('week', current_date)::date - 56 and week_start < date_trunc('week', current_date)::date group by week_start, program order by week_start, program",
+    "chart": {
+      "type": "line",
+      "x": "week_start",
+      "y": [
+        "check_ins"
+      ],
+      "series": "program"
+    },
+    "explanation": "Weekly check-ins for each program over the last 8 complete weeks (a class that serves two programs counts for both)."
+  }
+}

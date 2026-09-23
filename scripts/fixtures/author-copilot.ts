@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { actionBoard, copilotStep, driftOutreach, homeAssistant, inputHash, lessonBuilder, packingSlip, transcribe } from "@koryo/ai";
+import { actionBoard, copilotStep, driftOutreach, homeAssistant, inputHash, lessonBuilder, nlReport, packingSlip, transcribe } from "@koryo/ai";
 import { AB, AB_TRANSCRIPT } from "../../tests/fixtures/action-board";
 import { sid } from "../lib/ids";
 
@@ -154,4 +154,21 @@ for (const combo of COMBOS) {
       { description: "Rebreakable board, black (hard)", skuText: "RB-BLK", quantity: 2, unitCostCents: 2400 },
     ],
   } });
+}
+
+// NL reports (M4.09): real SQL over the nl views — the rows come from live data.
+{
+  const nl = (q: string, out: unknown) => write("nl_report", nlReport.fixtureKey!({ question: q, today: "", school: "" }), { output: out });
+  nl("attendance by program, last 8 weeks", { title: "Attendance by program — last 8 weeks",
+    sql: "select week_start, program, sum(check_ins) as check_ins from v_attendance_weekly where week_start >= date_trunc('week', current_date)::date - 56 and week_start < date_trunc('week', current_date)::date group by week_start, program order by week_start, program",
+    chart: { type: "line", x: "week_start", y: ["check_ins"], series: "program" }, explanation: "Weekly check-ins for each program over the last 8 complete weeks (a class that serves two programs counts for both)." });
+  nl("revenue by category for the last 6 months", { title: "Revenue by category — last 6 months",
+    sql: "select to_char(month, 'YYYY-MM') as month, category, round(sum(net_cents) / 100.0, 2) as revenue from v_revenue_monthly where month >= date_trunc('month', current_date)::date - interval '5 months' group by 1, 2 order by 1, 2",
+    chart: { type: "bar", x: "month", y: ["revenue"], series: "category" }, explanation: "Invoiced revenue before tax, in dollars, by month and category." });
+  nl("which members haven't attended in 30 days", { title: "Active members with no class in 30 days",
+    sql: "select display_name, programs, last_attended_on from v_members where status = 'active' and (last_attended_on is null or last_attended_on < current_date - 30) order by last_attended_on nulls first, display_name",
+    chart: { type: "table", x: null, y: [], series: null }, explanation: "Active members whose last check-in was more than 30 days ago (or who never checked in)." });
+  nl("trial funnel by source", { title: "Trial funnel by lead source",
+    sql: "select source, sum(leads) as leads, sum(trials_booked) as trials_booked, sum(trials_attended) as trials_attended, sum(won) as enrolled from v_trial_funnel group by source order by leads desc",
+    chart: { type: "bar", x: "source", y: ["leads", "trials_booked", "trials_attended", "enrolled"], series: null }, explanation: "All-time leads per source and how far they got." });
 }

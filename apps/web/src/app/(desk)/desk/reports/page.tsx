@@ -25,6 +25,7 @@ const REPORTS = [
 export default async function ReportsPage() {
   const ctx = await requireSurfacePage("desk");
   const money = canSeeMoney(ctx);
+  const { data: saved } = await ctx.supabase.from("saved_reports").select("id, name, question").order("created_at", { ascending: false }).limit(20);
   return (
     <>
       <PageHeader title="Reports" description="Live from your data; every report exports to CSV." />
@@ -33,7 +34,19 @@ export default async function ReportsPage() {
           <li key={r.href}><Link href={r.href} className="block rounded-xl border border-default bg-surface p-4 text-fg no-underline hover:border-strong"><h2 className="font-semibold">{r.title}</h2><p className="text-sm text-fg-secondary">{r.description}</p></Link></li>
         ))}
       </ul>
-      <p className="mt-6 text-sm text-fg-muted">Ask-in-plain-English reports arrive with Intelligence (M4).</p>
+      {ctx.modules.has("intelligence") ? (
+        <section aria-labelledby="ask-h" className="mt-6 rounded-xl border border-default bg-surface p-4">
+          <h2 id="ask-h" className="font-semibold">Ask in plain English</h2>
+          <p className="mb-2 text-sm text-fg-secondary">“attendance by program, last 8 weeks” — KoryoGraph writes the query, charts it and shows its work.</p>
+          <Link href="/desk/reports/ask">Ask a report</Link>
+        </section>
+      ) : null}
+      {saved?.length ? (
+        <section aria-labelledby="saved-h" className="mt-6">
+          <h2 id="saved-h" className="mb-2 font-semibold">Saved reports</h2>
+          <ul className="grid gap-2 md:grid-cols-2" aria-label="Saved reports">{saved.map((s) => <li key={s.id}><Link href={`/desk/reports/saved/${s.id}`} className="block rounded-xl border border-default bg-surface p-3 text-fg no-underline hover:border-strong">{s.name}<span className="block text-xs text-fg-muted">“{s.question}”</span></Link></li>)}</ul>
+        </section>
+      ) : null}
     </>
   );
 }

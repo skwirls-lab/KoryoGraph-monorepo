@@ -8073,6 +8073,74 @@ export type Database = {
           },
         ]
       }
+      saved_reports: {
+        Row: {
+          ai_run_id: string | null
+          chart: Json
+          created_at: string
+          created_by: string | null
+          id: string
+          name: string
+          question: string
+          sql: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          ai_run_id?: string | null
+          chart?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name: string
+          question: string
+          sql: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          ai_run_id?: string | null
+          chart?: Json
+          created_at?: string
+          created_by?: string | null
+          id?: string
+          name?: string
+          question?: string
+          sql?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "saved_reports_ai_run_id_fkey"
+            columns: ["ai_run_id"]
+            isOneToOne: false
+            referencedRelation: "ai_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_reports_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "saved_reports_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "saved_reports_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       schedule_exceptions: {
         Row: {
           created_at: string
@@ -12716,6 +12784,7 @@ export type Database = {
         }
         Returns: string
       }
+      run_nl_report: { Args: { p_sql: string }; Returns: Json }
       save_afterschool_program: { Args: { p: Json }; Returns: string }
       segment_preview: {
         Args: { p_channel: string; p_definition: Json }
