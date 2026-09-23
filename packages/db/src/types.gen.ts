@@ -343,6 +343,121 @@ export type Database = {
           },
         ]
       }
+      ai_models: {
+        Row: {
+          context_length: number | null
+          id: string
+          input_per_m_cents: number
+          name: string | null
+          output_per_m_cents: number
+          synced_at: string
+        }
+        Insert: {
+          context_length?: number | null
+          id: string
+          input_per_m_cents?: number
+          name?: string | null
+          output_per_m_cents?: number
+          synced_at?: string
+        }
+        Update: {
+          context_length?: number | null
+          id?: string
+          input_per_m_cents?: number
+          name?: string | null
+          output_per_m_cents?: number
+          synced_at?: string
+        }
+        Relationships: []
+      }
+      ai_runs: {
+        Row: {
+          attempts: number
+          cost_cents: number
+          created_at: string
+          error: string | null
+          id: string
+          input: Json | null
+          input_hash: string
+          latency_ms: number
+          model: string | null
+          output: Json | null
+          status: string
+          task_id: string
+          tenant_id: string
+          tier: string
+          tokens_in: number
+          tokens_out: number
+          transport: string
+          updated_at: string
+          user_id: string | null
+        }
+        Insert: {
+          attempts?: number
+          cost_cents?: number
+          created_at?: string
+          error?: string | null
+          id?: string
+          input?: Json | null
+          input_hash: string
+          latency_ms?: number
+          model?: string | null
+          output?: Json | null
+          status: string
+          task_id: string
+          tenant_id: string
+          tier: string
+          tokens_in?: number
+          tokens_out?: number
+          transport: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Update: {
+          attempts?: number
+          cost_cents?: number
+          created_at?: string
+          error?: string | null
+          id?: string
+          input?: Json | null
+          input_hash?: string
+          latency_ms?: number
+          model?: string | null
+          output?: Json | null
+          status?: string
+          task_id?: string
+          tenant_id?: string
+          tier?: string
+          tokens_in?: number
+          tokens_out?: number
+          transport?: string
+          updated_at?: string
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "ai_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       api_keys: {
         Row: {
           created_at: string
@@ -8618,6 +8733,52 @@ export type Database = {
           },
         ]
       }
+      tenant_ai_budgets: {
+        Row: {
+          created_at: string
+          id: string
+          monthly_limit_cents: number
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          monthly_limit_cents?: number
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          monthly_limit_cents?: number
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "tenant_ai_budgets_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "tenant_ai_budgets_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "tenant_ai_budgets_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: true
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       tenant_counters: {
         Row: {
           created_at: string
@@ -9675,6 +9836,42 @@ export type Database = {
       }
     }
     Views: {
+      v_ai_usage: {
+        Row: {
+          cost_cents: number | null
+          period: string | null
+          runs: number | null
+          status: string | null
+          task_id: string | null
+          tenant_id: string | null
+          tokens_in: number | null
+          tokens_out: number | null
+          transport: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "ai_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "ai_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "ai_runs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       v_ar_aging: {
         Row: {
           balance_cents: number | null
@@ -11404,6 +11601,20 @@ export type Database = {
         }
         Returns: string
       }
+      ai_budget_status: {
+        Args: never
+        Returns: {
+          limit_cents: number
+          used_cents: number
+        }[]
+      }
+      ai_budget_status_for: {
+        Args: { p_tenant: string }
+        Returns: {
+          limit_cents: number
+          used_cents: number
+        }[]
+      }
       apply_credit: {
         Args: { p_amount_cents?: number; p_invoice_id: string }
         Returns: string
@@ -11602,6 +11813,7 @@ export type Database = {
           template_name: string
         }[]
       }
+      log_ai_run: { Args: { p: Json }; Returns: string }
       mark_payment_method_detached: {
         Args: { p_payment_method_id: string }
         Returns: undefined

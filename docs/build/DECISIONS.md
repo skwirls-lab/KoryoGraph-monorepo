@@ -430,3 +430,24 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   pickup name and times but no signature path — the seed never invents signature images.
 - Broadcasts and automation messages in the history are `unsent_no_provider` (the Outbox), as they would be on
   a server without email/SMS keys; nothing claims to have been delivered.
+
+## ADR-0030 — AI gateway: models per deployment, fixtures never invent answers
+- **Date / task:** 2026-09-25 · M4.01
+- **Model tiers are environment-only** (`AI_MODEL_FAST|FRONTIER|VISION|AUDIO|EMBED`). M4.01 asks for default
+  picks recorded here, but the build conventions (Appendix D.2) forbid model identifiers in pushed code and
+  docs, and this environment has no OpenRouter key to verify the current catalogue. So no defaults ship: a
+  live call to an unset tier fails with `no_model`, Settings → AI shows each tier as "not set", and choosing
+  models is a deploy-time step (HANDOFF). Prices come from the provider catalogue (`ai_models_sync` job) or
+  from OpenRouter's usage accounting on each response.
+- **Transport:** `AI_TRANSPORT=live|fixture`, or unset = live with a key, recorded fixtures without.
+  Fixtures are refused in production (a production server without a key says "no key"). The gate verifies
+  the e2e server is in fixture mode (`/api/health`). Fixtures replay only recorded inputs
+  (`tests/fixtures/ai/<task>/<hash of the task's fixture key>.json`); an unrecorded input fails with
+  `no_fixture` rather than returning a made-up answer, and every fixture answer is badged "dev fixture".
+  Fixtures in this repo are hand-authored to the task schemas (no key) and say so in a `note`; `npm run
+  ai:record` replaces them when a key exists. Fixture embeddings are a deterministic hashed bag of words
+  (lexical, clearly not semantic).
+- **Every run is logged** (`ai_runs`: ok or not, live or fixture, tokens, cost, attempts) through
+  `log_ai_run` as the signed-in user, or by jobs with the service role; the budget (`tenant_ai_budgets`,
+  default $50/month) is checked against this month's spend plus the task's cost ceiling before any call.
+- Tenant bring-your-own keys (optional in the spec) are not built: the platform key is the only key.

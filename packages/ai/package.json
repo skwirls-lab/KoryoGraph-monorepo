@@ -1,0 +1,23 @@
+{
+  "name": "@koryo/ai",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "openai": "7.22.0",
+    "zod": "4.6.5"
+  },
+  "devDependencies": {
+    "@koryo/config": "*",
+    "@types/node": "22.20.4",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3"
+  }
+}

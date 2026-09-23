@@ -63,6 +63,7 @@ if (level >= 1 && demoSeedReady) {
   steps.push({ name: "seed demo", cmd: "npx tsx scripts/seed/index.ts --profile demo" });
   steps.push({ name: "seed invariants", cmd: "npx vitest run --project seed" });
 }
+if (level >= MILESTONES.indexOf("m4")) steps.push({ name: "AI transport is fixture for e2e", cmd: "npx tsx scripts/check-ai-transport.ts" });
 steps.push({
   name: `e2e (${e2eDirs.map((d) => path.basename(d)).join(", ")})`,
   cmd: `npx playwright test ${e2eDirs.join(" ")}${grepInvert}`,
