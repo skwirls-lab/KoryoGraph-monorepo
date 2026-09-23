@@ -591,3 +591,16 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
 - Seed invariants now cover this state: Riley #1, one pending board reading 9 / 3 / 1, pending approvals of
   each kind, all fixture-labelled, Maya's released feedback with 3 tips, and Home updates for the Cooper
   family.
+
+## ADR-0038 — Public site: prices in the database, honest placeholders
+- **Date / task:** 2026-09-25 · M5.01
+- Module prices live on `modules` (`monthly_cents`, `annual_cents`, `price_note`), using the spec's suggested
+  prices; annual is 10× monthly, like the plans. `/pricing` and the landing page read `plans`/`modules`
+  anonymously, so the business changes prices in data, not code. The module picker's total and its "bundle is
+  cheaper" hint come from a unit-tested `quote()`.
+- Testimonials are omitted: there are no customers to quote. `/privacy` and `/terms` are plain-language
+  drafts marked "Draft — legal review pending".
+- `/contact` writes to `contact_messages` through a rate-limited, honeypotted RPC. Platform admins can read it
+  via RLS; there is no admin inbox UI or email notification yet (HANDOFF).
+- A plan chosen on the site (`/signup?plan=…`) is carried through sign-up, including the email-confirmation
+  path, and stored as `tenants.settings.plan_choice` for "Go live" to preselect.

@@ -6,7 +6,7 @@ import { getOptionalCtx, landingPath } from "@/server/context";
 
 export const metadata = { title: "Welcome" };
 
-const pendingSchool = z.object({ name: z.string(), timezone: z.string() });
+const pendingSchool = z.object({ name: z.string(), timezone: z.string(), plan: z.string().nullish() });
 
 /** Signed in but not (yet) a member of any school: create one, or wait for an invitation. */
 export default async function WelcomePage() {
@@ -25,7 +25,7 @@ export default async function WelcomePage() {
         </form>
       }
     >
-      <SchoolForm defaultName={pending.success ? pending.data.name : ""} defaultTimezone={pending.success ? pending.data.timezone : ""} />
+      <SchoolForm defaultName={pending.success ? pending.data.name : ""} defaultTimezone={pending.success ? pending.data.timezone : ""} plan={pending.success ? pending.data.plan ?? undefined : undefined} />
     </AuthCard>
   );
 }

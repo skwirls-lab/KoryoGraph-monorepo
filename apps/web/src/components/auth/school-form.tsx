@@ -10,10 +10,10 @@ import { schoolSchema } from "@/lib/validation/signup";
 import { createTenantForCurrentUser } from "@/server/actions/tenant";
 
 /** For a signed-in user without a school (e.g. after confirming their email). */
-export function SchoolForm({ defaultName = "", defaultTimezone = "" }: { defaultName?: string; defaultTimezone?: string }) {
+export function SchoolForm({ defaultName = "", defaultTimezone = "", plan }: { defaultName?: string; defaultTimezone?: string; plan?: string }) {
   const { form, pending, submit } = useActionForm({
     schema: schoolSchema,
-    defaultValues: { schoolName: defaultName, timezone: defaultTimezone },
+    defaultValues: { schoolName: defaultName, timezone: defaultTimezone, plan },
     action: createTenantForCurrentUser,
   });
   return (

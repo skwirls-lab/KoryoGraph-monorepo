@@ -11,8 +11,10 @@ import { saveThemePreference } from "@/server/actions/session";
 import { getOptionalCtx } from "@/server/context";
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3100"),
   title: { default: "KoryoGraph", template: "%s · KoryoGraph" },
   description: "The operating system for martial arts schools.",
+  openGraph: { siteName: "KoryoGraph", type: "website" },
 };
 
 export const viewport: Viewport = {

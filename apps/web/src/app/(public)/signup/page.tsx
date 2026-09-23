@@ -3,11 +3,15 @@ import { redirect } from "next/navigation";
 import { AuthCard } from "@/components/auth/auth-card";
 import { SignupForm } from "@/components/auth/signup-form";
 import { getOptionalCtx, landingPath } from "@/server/context";
+import { loadPricing } from "@/server/queries/pricing";
 
 export const metadata = { title: "Start your school" };
 
-export default async function SignupPage() {
+export default async function SignupPage({ searchParams }: { searchParams: Promise<{ plan?: string }> }) {
   const ctx = await getOptionalCtx();
+  const { plan: raw } = await searchParams;
+  const { plans } = await loadPricing();
+  const chosen = raw === "custom" ? { key: "custom", name: "Custom (modules you picked)" } : plans.find((p) => p.key === raw);
   if (ctx) redirect(ctx.tenantId ? landingPath(ctx) : "/welcome");
   return (
     <AuthCard
@@ -19,7 +23,7 @@ export default async function SignupPage() {
         </>
       }
     >
-      <SignupForm />
+      <SignupForm plan={chosen?.key} planName={chosen?.name} />
     </AuthCard>
   );
 }

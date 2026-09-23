@@ -10,9 +10,13 @@ export const timezone = z.string().refine((tz) => {
   }
 }, { error: "Choose a valid timezone" });
 
+/** A plan chosen on the public site (`/signup?plan=…`), remembered on the school for "Go live". */
+export const planChoice = z.string().regex(/^[a-z_]{2,40}$/).optional();
+
 export const schoolSchema = z.object({
   schoolName: z.string().trim().min(2, { error: "Enter your school's name" }).max(80),
   timezone,
+  plan: planChoice,
 });
 export type SchoolInput = z.infer<typeof schoolSchema>;
 

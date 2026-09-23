@@ -10,11 +10,11 @@ import { useActionForm } from "@/components/forms/use-action-form";
 import { signupSchema } from "@/lib/validation/signup";
 import { signUpWithSchool } from "@/server/auth/actions";
 
-export function SignupForm() {
+export function SignupForm({ plan, planName }: { plan?: string; planName?: string }) {
   const [confirmTo, setConfirmTo] = useState<string | null>(null);
   const { form, pending, submit } = useActionForm({
     schema: signupSchema,
-    defaultValues: { schoolName: "", fullName: "", email: "", password: "", timezone: "" },
+    defaultValues: { schoolName: "", fullName: "", email: "", password: "", timezone: "", plan },
     action: signUpWithSchool,
     onSuccess: (d, v) => {
       if (d.confirmEmail) setConfirmTo(v.email);
@@ -30,6 +30,7 @@ export function SignupForm() {
   return (
     <Form {...form}>
       <form onSubmit={submit} className="space-y-4" noValidate>
+        {planName ? <p className="rounded-md border border-default bg-elevated p-3 text-sm">Plan: <strong>{planName}</strong> — you&apos;ll confirm it when you go live. The trial includes every module.</p> : null}
         <TextField form={form} name="schoolName" label="School name" autoComplete="organization" />
         <TextField form={form} name="fullName" label="Your name" autoComplete="name" />
         <TextField form={form} name="email" label="Email" type="email" autoComplete="email" />

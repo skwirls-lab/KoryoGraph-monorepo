@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { fail, issuesToFieldErrors, ok, type ActionResult } from "@/lib/action-result";
 import { safeNext } from "@/lib/surfaces";
+import { rememberPlanChoice } from "../lib/plan-choice";
 import {
   forgotPasswordSchema,
   loginSchema,
@@ -101,13 +102,13 @@ export async function signOut(): Promise<void> {
 export async function signUpWithSchool(input: SignupInput): Promise<ActionResult<{ confirmEmail: boolean }>> {
   const parsed = signupSchema.safeParse(input);
   if (!parsed.success) return fail("Check the highlighted fields", issuesToFieldErrors(parsed.error.issues));
-  const { email, password, fullName, schoolName, timezone } = parsed.data;
+  const { email, password, fullName, schoolName, timezone, plan } = parsed.data;
   const supabase = await supabaseServer();
   const { data, error } = await supabase.auth.signUp({
     email,
     password,
     options: {
-      data: { full_name: fullName, pending_school: { name: schoolName, timezone } },
+      data: { full_name: fullName, pending_school: { name: schoolName, timezone, plan: plan ?? null } },
       emailRedirectTo: callbackUrl("/welcome"),
     },
   });
@@ -127,5 +128,7 @@ export async function signUpWithSchool(input: SignupInput): Promise<ActionResult
   await supabase.auth.updateUser({ data: { pending_school: null } });
   const { error: refreshError } = await supabase.auth.refreshSession();
   if (refreshError) redirect("/login?next=/desk/onboarding");
+  if (plan) await rememberPlanChoice(supabase, tenantId, plan);
   redirect("/desk/onboarding");
 }
+

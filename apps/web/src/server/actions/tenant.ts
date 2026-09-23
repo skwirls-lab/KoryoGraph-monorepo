@@ -3,6 +3,7 @@
 import { redirect } from "next/navigation";
 import { fail, issuesToFieldErrors, type ActionResult } from "@/lib/action-result";
 import { schoolSchema, type SchoolInput } from "@/lib/validation/signup";
+import { rememberPlanChoice } from "../lib/plan-choice";
 import { getCtx } from "../context";
 import { logger } from "../log";
 
@@ -27,6 +28,7 @@ export async function createTenantForCurrentUser(input: SchoolInput): Promise<Ac
     logger({ ...ctx, tenantId }).error({ err: refreshError.message }, "refresh after create_tenant failed");
     return fail("Your school was created, but your session couldn't refresh. Sign in again to continue.");
   }
+  if (parsed.data.plan) await rememberPlanChoice(ctx.supabase, tenantId, parsed.data.plan);
   logger({ ...ctx, tenantId }).info("tenant created via self-serve signup");
   redirect("/desk/onboarding");
 }

@@ -2412,6 +2412,42 @@ export type Database = {
           },
         ]
       }
+      contact_messages: {
+        Row: {
+          created_at: string
+          email: string
+          id: string
+          message: string
+          name: string
+          school: string | null
+          status: string
+          topic: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          email: string
+          id?: string
+          message: string
+          name: string
+          school?: string | null
+          status?: string
+          topic?: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          email?: string
+          id?: string
+          message?: string
+          name?: string
+          school?: string | null
+          status?: string
+          topic?: string
+          updated_at?: string
+        }
+        Relationships: []
+      }
       credits: {
         Row: {
           amount_cents: number
@@ -5784,28 +5820,37 @@ export type Database = {
       }
       modules: {
         Row: {
+          annual_cents: number
           created_at: string
           description: string
           key: string
+          monthly_cents: number
           name: string
+          price_note: string
           required: boolean
           sort: number
           updated_at: string
         }
         Insert: {
+          annual_cents?: number
           created_at?: string
           description?: string
           key: string
+          monthly_cents?: number
           name: string
+          price_note?: string
           required?: boolean
           sort?: number
           updated_at?: string
         }
         Update: {
+          annual_cents?: number
           created_at?: string
           description?: string
           key?: string
+          monthly_cents?: number
           name?: string
+          price_note?: string
           required?: boolean
           sort?: number
           updated_at?: string
@@ -13225,6 +13270,7 @@ export type Database = {
           version: number
         }[]
       }
+      submit_contact: { Args: { p: Json }; Returns: Json }
       submit_technique: {
         Args: {
           p_duration_ms: number
