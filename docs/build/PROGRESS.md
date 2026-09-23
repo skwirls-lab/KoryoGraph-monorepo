@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M1.15
+M2.01
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -25,8 +25,8 @@ port 3000          → in use by another container on the host → dev server us
 | Milestone | Status | Gate result | Tag | Date |
 |---|---|---|---|---|
 | M0 | done | GREEN (typecheck, lint, unit 16, db 22, e2e 14) | m0-complete | 2026-09-22 |
-| M1 | in_progress |  |  |  |
-| M2 | todo |  |  |  |
+| M1 | done | GREEN (typecheck, lint, unit, db, seed demo + invariants, e2e m0–m1) | m1-complete | 2026-09-23 |
+| M2 | in_progress |  |  |  |
 | M3 | todo |  |  |  |
 | M4 | todo |  |  |  |
 | M5 | todo |  |  |  |
@@ -60,8 +60,8 @@ port 3000          → in use by another container on the host → dev server us
 | M1.12 | done | cd03e33 |  |
 | M1.13 | done | f09919e |  |
 | M1.14 | done | 856e197 |  |
-| M1.15 | doing |  |  |
-| M2.01 | todo |  |  |
+| M1.15 | done | 9a18242 |  |
+| M2.01 | doing |  |  |
 | M2.02 | todo |  |  |
 | M2.03 | todo |  |  |
 | M2.04 | todo |  |  |
