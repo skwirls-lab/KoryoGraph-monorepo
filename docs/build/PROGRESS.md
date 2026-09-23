@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M4.10 billing recovery, narratives, lead scoring
+M4.11 technique feedback + schedule suggestions
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -91,7 +91,7 @@ port 3000          → in use by another container on the host → dev server us
 | M4.07 | done | 2f83786 | lesson builder |
 | M4.08 | done | 3d04605 | packing-slip intake; import mapping assist built with the importer in M5.03 |
 | M4.09 | done | 2eac560 | NL reports; two-layer guard |
-| M4.10 | todo |  |  |
+| M4.10 | done | 5e25f2d | Billing recovery (off/approve/auto, template fallback), weekly parent narratives → Home after approval, rule-based lead score + AI next step; ADR-0035 |
 | M4.11 | todo |  |  |
 | M4.12 | todo |  |  |
 | M5.01 | todo |  |  |
