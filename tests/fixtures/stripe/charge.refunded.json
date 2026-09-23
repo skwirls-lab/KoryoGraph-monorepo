@@ -1,0 +1,31 @@
+{
+  "id": "evt_fixture_charge_refunded",
+  "object": "event",
+  "api_version": "2026-08-26.dahlia",
+  "account": "__ACCOUNT__",
+  "created": 1790000000,
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": null,
+    "idempotency_key": null
+  },
+  "type": "charge.refunded",
+  "data": {
+    "object": {
+      "id": "ch_fixture_invoice",
+      "object": "charge",
+      "amount": 12000,
+      "amount_captured": 12000,
+      "amount_refunded": 5000,
+      "refunded": false,
+      "currency": "usd",
+      "customer": "cus_fixture_adams",
+      "payment_intent": "pi_fixture_invoice",
+      "status": "succeeded",
+      "livemode": false,
+      "created": 1790000100,
+      "metadata": {}
+    }
+  }
+}

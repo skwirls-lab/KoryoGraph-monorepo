@@ -1,0 +1,36 @@
+{
+  "id": "evt_fixture_pm_attached",
+  "object": "event",
+  "api_version": "2026-08-26.dahlia",
+  "account": "__ACCOUNT__",
+  "created": 1790000000,
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": null,
+    "idempotency_key": null
+  },
+  "type": "payment_method.attached",
+  "data": {
+    "object": {
+      "id": "pm_fixture_mc",
+      "object": "payment_method",
+      "type": "card",
+      "customer": "cus_fixture_adams",
+      "billing_details": {
+        "name": "Adams Household"
+      },
+      "created": 1790000000,
+      "livemode": false,
+      "metadata": {},
+      "card": {
+        "brand": "mastercard",
+        "last4": "4444",
+        "exp_month": 12,
+        "exp_year": 2030,
+        "country": "US",
+        "funding": "credit"
+      }
+    }
+  }
+}

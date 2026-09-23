@@ -1,0 +1,37 @@
+{
+  "id": "evt_fixture_pi_retry_succeeded",
+  "object": "event",
+  "api_version": "2026-08-26.dahlia",
+  "account": "__ACCOUNT__",
+  "created": 1790000000,
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": null,
+    "idempotency_key": null
+  },
+  "type": "payment_intent.succeeded",
+  "data": {
+    "object": {
+      "id": "pi_fixture_decline",
+      "object": "payment_intent",
+      "amount": 100,
+      "amount_received": 100,
+      "currency": "usd",
+      "customer": "cus_fixture_adams",
+      "status": "succeeded",
+      "livemode": false,
+      "description": "KoryoGraph invoice",
+      "latest_charge": "ch_fixture_decline",
+      "payment_method": "pm_fixture_visa",
+      "last_payment_error": null,
+      "created": 1790000000,
+      "metadata": {
+        "tenant_id": "__TENANT__",
+        "household_id": "__HOUSEHOLD__",
+        "invoice_id": "",
+        "method": "card"
+      }
+    }
+  }
+}

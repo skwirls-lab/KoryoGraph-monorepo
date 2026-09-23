@@ -1,0 +1,28 @@
+{
+  "id": "evt_fixture_customer_created",
+  "object": "event",
+  "api_version": "2026-08-26.dahlia",
+  "account": "__ACCOUNT__",
+  "created": 1790000000,
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": null,
+    "idempotency_key": null
+  },
+  "type": "customer.created",
+  "data": {
+    "object": {
+      "id": "cus_fixture_cooper",
+      "object": "customer",
+      "name": "Cooper Household",
+      "email": null,
+      "livemode": false,
+      "created": 1790000000,
+      "metadata": {
+        "tenant_id": "__TENANT__",
+        "household_id": "__HOUSEHOLD_COOPER__"
+      }
+    }
+  }
+}

@@ -1,0 +1,26 @@
+{
+  "id": "evt_fixture_account_updated",
+  "object": "event",
+  "api_version": "2026-08-26.dahlia",
+  "account": "__ACCOUNT__",
+  "created": 1790000000,
+  "livemode": false,
+  "pending_webhooks": 1,
+  "request": {
+    "id": null,
+    "idempotency_key": null
+  },
+  "type": "account.updated",
+  "data": {
+    "object": {
+      "id": "__ACCOUNT__",
+      "object": "account",
+      "type": "standard",
+      "charges_enabled": true,
+      "details_submitted": true,
+      "payouts_enabled": true,
+      "country": "US",
+      "default_currency": "usd"
+    }
+  }
+}

@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { forbidden, notFound } from "next/navigation";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
+import { HouseholdBilling } from "@/components/payments/household-billing";
 import { AddExistingMember, AddNewMember, HouseholdDetails, MemberActions, PinForm } from "@/components/people/household-controls";
 import { StatusBadge } from "@/components/people/status-badge";
 import { ageOn, displayName, todayIn } from "@/lib/people";
@@ -65,6 +66,7 @@ export default async function HouseholdPage({ params }: { params: Promise<{ id: 
               <PinForm householdId={h.id} hasPin={Boolean(pin) || false} />
             </section>
           ) : null}
+          {ctx.modules.has("billing") && ctx.permissions.has("billing.read") ? <HouseholdBilling ctx={ctx} householdId={h.id} /> : null}
         </div>
       </div>
     </>

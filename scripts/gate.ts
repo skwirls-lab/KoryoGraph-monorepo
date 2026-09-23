@@ -52,7 +52,7 @@ const demoSeedReady = readFileSync(path.join(repoRoot, "scripts/seed/index.ts"),
 const steps: Step[] = [
   { name: "typecheck", cmd: "npm run typecheck" },
   { name: "lint", cmd: "npm run lint" },
-  { name: "unit", cmd: "npx vitest run --project unit" },
+  { name: "unit", cmd: "npx tsx scripts/stripe-mock.ts && npx vitest run --project unit" },
   ...(level >= 2 ? [{ name: "billing engine coverage (100% branches)", cmd: "npm run test:billing" }] : []),
   {
     name: "db",

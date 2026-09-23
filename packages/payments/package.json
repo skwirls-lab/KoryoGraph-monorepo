@@ -1,0 +1,22 @@
+{
+  "name": "@koryo/payments",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "lint": "eslint . --max-warnings 0",
+    "typecheck": "tsc --noEmit"
+  },
+  "dependencies": {
+    "stripe": "22.6.2"
+  },
+  "devDependencies": {
+    "@koryo/config": "*",
+    "@types/node": "22.20.4",
+    "eslint": "9.39.5",
+    "typescript": "5.9.3"
+  }
+}

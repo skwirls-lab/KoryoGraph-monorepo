@@ -6425,14 +6425,48 @@ export type Database = {
         }
         Returns: string
       }
+      record_charge_refund_for: {
+        Args: { p_charge: Json; p_tenant_id: string }
+        Returns: string
+      }
       record_communication: { Args: { p: Json }; Returns: string }
+      record_payment_intent: { Args: { p_pi: Json }; Returns: string }
+      record_payment_intent_for: {
+        Args: { p_pi: Json; p_tenant_id: string }
+        Returns: string
+      }
+      record_payment_method: {
+        Args: { p_household_id: string; p_pm: Json }
+        Returns: string
+      }
+      record_payment_method_for: {
+        Args: { p_household_id: string; p_pm: Json; p_tenant_id: string }
+        Returns: string
+      }
+      record_refund: {
+        Args: {
+          p_amount_cents: number
+          p_payment_id: string
+          p_reason: string
+          p_stripe_refund_id?: string
+        }
+        Returns: string
+      }
       reorder_ranks: {
         Args: { p_program_id: string; p_rank_ids: string[] }
         Returns: undefined
       }
       session_taken: { Args: { p_session_id: string }; Returns: number }
+      set_default_payment_method: {
+        Args: { p_payment_method_id: string }
+        Returns: undefined
+      }
       set_household_pin: {
         Args: { p_household_id: string; p_pin: string }
+        Returns: undefined
+      }
+      set_household_stripe_customer: {
+        Args: { p_customer_id: string; p_household_id: string }
         Returns: undefined
       }
       sign_off_skill: {

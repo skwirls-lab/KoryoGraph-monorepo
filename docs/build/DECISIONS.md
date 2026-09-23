@@ -236,3 +236,23 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   is consistent. Signature PDFs are left to the `signature_pdfs` job (newest first). Counts are close to
   Appendix C (≈220 students, 130 households, 5 programs) rather than exact. Timeline is relative to "now",
   so ids are identical across resets on the same day.
+
+## ADR-0018 — Stripe Connect Standard; ledger written from Stripe objects, never from the browser
+- **Date / task:** 2026-09-23 · M2.03
+- **Decision:** Platform-level keys; each school connects a **Standard** account (`tenants.stripe_account_id`)
+  and every call carries `stripeAccount`, with an optional `application_fee_amount` from
+  `STRIPE_PLATFORM_FEE_BPS`. The ledger is updated only from Stripe objects fetched server-side or delivered
+  by a signature-verified webhook, through definer SQL functions (`app.record_payment_intent`,
+  `app.record_payment_method`, `app.apply_refund`, `app.record_charge_refund`) that are idempotent: payments
+  are keyed by PaymentIntent id, a settled payment never regresses, `charge.refunded` only records the
+  difference between Stripe's `amount_refunded` and refunds already in the ledger. A succeeded payment is
+  allocated to its invoice up to the balance; any remainder becomes household credit (`source_ref
+  payment:<id>`); refunds reverse that credit first, then invoice allocations newest-first.
+- **Consequences:** Desk card charges (off-session, idempotency key per dialog attempt) record the result
+  immediately via the staff RPC, and the webhook later confirms the same intent without duplicates. Home
+  users may call `record_payment_method` only for their own household's Stripe customer; the server passes
+  the SetupIntent it re-read from Stripe. The webhook route and `server/admin/stripe/events.ts` are the only
+  service-role paths; `stripe_events` gives exactly-once processing per event id (failed events stay
+  unprocessed so Stripe's retry re-runs them). Unit tests run against a digest-pinned stripe-mock;
+  the live `stripe.spec` needs real test keys plus a pre-onboarded connected account and is a HANDOFF
+  until those exist.

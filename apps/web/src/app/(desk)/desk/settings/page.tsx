@@ -5,6 +5,7 @@ import { requireSurfacePage } from "@/server/context";
 export const metadata = { title: "Settings" };
 
 const SECTIONS = [
+  { href: "/desk/settings/payments", title: "Payments", description: "Connect Stripe, card readers and payment settings.", permission: "settings.manage" },
   { href: "/desk/settings/templates", title: "Message templates", description: "Wording of the emails and texts KoryoGraph sends.", permission: "comms.send" },
   { href: "/desk/settings/kiosks", title: "Kiosk devices", description: "Paired check-in tablets; revoke lost devices.", permission: "kiosk.manage" },
   { href: "/desk/settings/export", title: "Data export", description: "Download all of your school's data as a ZIP.", permission: "exports.run" },
@@ -27,7 +28,7 @@ export default async function SettingsPage() {
           </li>
         ))}
       </ul>
-      <p className="mt-6 text-sm text-fg-muted">School profile, locations, roles, payments and the audit log are added to Settings in later milestones.</p>
+      <p className="mt-6 text-sm text-fg-muted">School profile, locations, roles and the audit log are added to Settings in later milestones.</p>
     </>
   );
 }
