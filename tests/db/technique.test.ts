@@ -12,7 +12,7 @@ const created: string[] = [];
 const fb = { scores: [{ criterion: "Technique", score: 4, note: "Good" }], overall: 4, summary: "Nice work overall.", tips: ["One", "Two", "Three"] };
 
 beforeAll(async () => {
-  const [s] = await sql<{ id: string }[]>`select id from skills where tenant_id = ${R} and archived_at is null order by sort limit 1`;
+  const [s] = await sql<{ id: string }[]>`insert into skills (tenant_id, category, name) values (${R}, 'kick', 'DB technique test kick') returning id`;
   skillId = s?.id ?? "";
   saved = await sql`select * from consents where person_id in (${MAYA}, ${RILEY}) and kind = 'ai_processing'`;
   await sql`delete from consents where person_id in (${MAYA}, ${RILEY}) and kind = 'ai_processing'`;
@@ -20,7 +20,8 @@ beforeAll(async () => {
 
 afterAll(async () => {
   await sql`delete from approval_items where kind = 'vision_feedback' and entity_id = any(${created}::uuid[])`;
-  await sql`delete from technique_submissions where id = any(${created}::uuid[])`;
+  await sql`delete from technique_submissions where id = any(${created}::uuid[]) or skill_id = ${skillId}`;
+  await sql`delete from skills where id = ${skillId}`;
   await sql`delete from consents where person_id in (${MAYA}, ${RILEY}) and kind = 'ai_processing'`;
   for (const c of saved) await sql`insert into consents ${sql(c)}`;
   await sql.end();

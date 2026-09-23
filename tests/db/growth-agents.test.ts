@@ -40,11 +40,13 @@ describe("schedule suggestions (A12)", () => {
   it("stats are service-only; suggestions are for schedule managers", async () => {
     const owner = await seededClaims("owner@ridgelinetkd.demo");
     await expect(asClaims(owner, (tx) => tx`select * from public.schedule_stats(${R}, 4)`)).rejects.toMatchObject({ code: "42501" });
-    const [t] = await sql<{ id: string }[]>`select id from class_templates where tenant_id = ${R} limit 1`;
+    const [t] = await sql<{ id: string }[]>`insert into class_templates (tenant_id, location_id, name, rrule, start_date, start_time)
+      values (${R}, (select id from locations where tenant_id = ${R} and is_default), 'DB suggestion test', 'FREQ=WEEKLY;BYDAY=MO', '2020-01-06', '17:00') returning id`;
     await sql`insert into schedule_suggestions (tenant_id, week_of, kind, template_id, title, rationale) values (${R}, ${WEEK}, 'move', ${t?.id ?? ""}, 'T', 'R')`;
     const parent = await seededClaims("parent@ridgelinetkd.demo");
     expect(await asClaims(parent, (tx) => tx`select id from schedule_suggestions where week_of = ${WEEK}`)).toHaveLength(0);
     expect(await asClaims(owner, (tx) => tx`select id from schedule_suggestions where week_of = ${WEEK}`)).toHaveLength(1);
     await sql`delete from schedule_suggestions where week_of = ${WEEK}`;
+    await sql`delete from class_templates where id = ${t?.id ?? ""}`;
   });
 });
