@@ -9,6 +9,7 @@ const SECTIONS = [
   { href: "/desk/settings/templates", title: "Message templates", description: "Wording of the emails and texts KoryoGraph sends.", permission: "comms.send" },
   { href: "/desk/settings/kiosks", title: "Kiosk devices", description: "Paired check-in tablets; revoke lost devices.", permission: "kiosk.manage" },
   { href: "/desk/settings/ai", title: "AI", description: "Provider key status, model tiers, monthly budget and usage.", permission: "settings.manage" },
+  { href: "/desk/settings/knowledge", title: "Knowledge base", description: "Policies and FAQs the copilot and Home assistant answer from.", permission: "settings.manage" },
   { href: "/desk/settings/export", title: "Data export", description: "Download all of your school's data as a ZIP.", permission: "exports.run" },
   { href: "/desk/schedule/holidays", title: "Holidays", description: "Dates when classes don't run.", permission: "schedule.manage" },
 ];

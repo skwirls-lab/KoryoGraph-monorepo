@@ -4273,6 +4273,147 @@ export type Database = {
         }
         Relationships: []
       }
+      kb_chunks: {
+        Row: {
+          content: string
+          created_at: string
+          document_id: string
+          embedding: string | null
+          embedding_model: string | null
+          id: string
+          ordinal: number
+          tenant_id: string
+          tsv: unknown
+          updated_at: string
+        }
+        Insert: {
+          content: string
+          created_at?: string
+          document_id: string
+          embedding?: string | null
+          embedding_model?: string | null
+          id?: string
+          ordinal: number
+          tenant_id: string
+          tsv?: unknown
+          updated_at?: string
+        }
+        Update: {
+          content?: string
+          created_at?: string
+          document_id?: string
+          embedding?: string | null
+          embedding_model?: string | null
+          id?: string
+          ordinal?: number
+          tenant_id?: string
+          tsv?: unknown
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_chunks_tenant_id_document_id_fkey"
+            columns: ["tenant_id", "document_id"]
+            isOneToOne: false
+            referencedRelation: "kb_documents"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "kb_chunks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kb_chunks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "kb_chunks_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
+      kb_documents: {
+        Row: {
+          audience: string
+          body: string
+          chunk_count: number
+          created_at: string
+          created_by: string | null
+          embedding_model: string | null
+          id: string
+          index_error: string | null
+          indexed_at: string | null
+          kind: string
+          source: string
+          tenant_id: string
+          title: string
+          updated_at: string
+        }
+        Insert: {
+          audience?: string
+          body?: string
+          chunk_count?: number
+          created_at?: string
+          created_by?: string | null
+          embedding_model?: string | null
+          id?: string
+          index_error?: string | null
+          indexed_at?: string | null
+          kind?: string
+          source?: string
+          tenant_id: string
+          title: string
+          updated_at?: string
+        }
+        Update: {
+          audience?: string
+          body?: string
+          chunk_count?: number
+          created_at?: string
+          created_by?: string | null
+          embedding_model?: string | null
+          id?: string
+          index_error?: string | null
+          indexed_at?: string | null
+          kind?: string
+          source?: string
+          tenant_id?: string
+          title?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "kb_documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "kb_documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "kb_documents_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       kiosk_devices: {
         Row: {
           created_at: string
@@ -11888,6 +12029,24 @@ export type Database = {
         }[]
       }
       guest_waiver_info: { Args: { p_token: string }; Returns: Json }
+      kb_search: {
+        Args: {
+          p_embedding?: string
+          p_k?: number
+          p_model?: string
+          p_query: string
+        }
+        Returns: {
+          chunk_id: string
+          content: string
+          document_id: string
+          kind: string
+          score: number
+          text_rank: number
+          title: string
+          vector_rank: number
+        }[]
+      }
       kiosk_check_in: {
         Args: {
           p_household_id: string

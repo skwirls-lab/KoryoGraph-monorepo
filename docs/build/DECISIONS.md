@@ -451,3 +451,15 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   `log_ai_run` as the signed-in user, or by jobs with the service role; the budget (`tenant_ai_budgets`,
   default $50/month) is checked against this month's spend plus the task's cost ceiling before any call.
 - Tenant bring-your-own keys (optional in the spec) are not built: the platform key is the only key.
+
+## ADR-0031 — Knowledge base: model-tagged vectors, hybrid search, fixture vectors in seeds
+- **Date / task:** 2026-09-25 · M4.03
+- `kb_chunks.embedding` is an untyped pgvector column plus `embedding_model` (the spec's `vector(1536)`
+  assumes one embedding model; here the model is a deployment choice). `public.kb_search` (security invoker,
+  so RLS applies) only compares a query vector with chunks from the same model and dimension, fuses that
+  ranking with full-text rank (RRF, k=60), and still returns text matches when there's no query embedding —
+  so the KB works, honestly degraded, without a key. At this size brute-force cosine is fine; no ANN index.
+- Documents have an audience (`everyone` | `staff`): families (and the Home assistant) only ever see
+  `everyone` documents, enforced by RLS.
+- Seeded KB documents are embedded with the deterministic fixture embedding and labelled "dev fixture
+  vectors" in Settings; "Re-index" with a key replaces them with real embeddings.

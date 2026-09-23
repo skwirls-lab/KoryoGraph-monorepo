@@ -1,6 +1,7 @@
 import { sid } from "../lib/ids";
 import { ROLE_ACCOUNTS, TENANTS, PLATFORM_ADMIN_EMAIL, accountEmail } from "./accounts";
 import { seedBillingCatalog } from "./billing";
+import { seedKnowledgeBase } from "./kb";
 import { ensureUser, type SeedContext } from "./context";
 import { seedHousehold } from "./households";
 import { seedMember, seedTenant } from "./tenant";
@@ -64,6 +65,7 @@ export async function seedMinimal(ctx: SeedContext): Promise<void> {
   ctx.log("households: cooper, adams (ridgeline); quinn (harbor)");
 
   await seedBillingCatalog(ctx);
+  ctx.log(`knowledge base: ${await seedKnowledgeBase(ctx)} chunks (ridgeline, fixture embeddings)`);
 
   const adminId = await ensureUser(ctx, PLATFORM_ADMIN_EMAIL, "Platform Admin");
   await ctx.sql`insert into public.platform_admins (user_id) values (${adminId}) on conflict do nothing`;
