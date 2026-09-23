@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M4.12 demo seed v4 + fixtures, then GATE M4
+M5.01 public site
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -28,8 +28,8 @@ port 3000          → in use by another container on the host → dev server us
 | M1 | done | GREEN (typecheck, lint, unit, db, seed demo + invariants, e2e m0–m1) | m1-complete | 2026-09-23 |
 | M2 | done | GREEN (typecheck, lint, unit 167, billing coverage 100%, db 98, seed demo + invariants 11, e2e m0–m2 54; @stripe/@ai-live/@email = HANDOFF) | m2-complete | 2026-09-23 |
 | M3 | done | GREEN (typecheck, lint, unit 167, billing coverage 100%, db 124, seed demo + invariants 13, e2e m0–m3 63; @stripe/@ai-live/@email = HANDOFF) | m3-complete | 2026-09-23 |
-| M4 | in_progress |  |  |  |
-| M5 | todo |  |  |  |
+| M4 | done | GREEN (typecheck, lint, unit 204+76, billing coverage 100%, db 141, seed demo + invariants 14, e2e m0–m4 80; ai:eval HANDOFF (no key); @stripe/@ai-live/@email = HANDOFF) | m4-complete | 2026-09-23 |
+| M5 | in_progress |  |  |  |
 
 ## Tasks
 | Task | Status (todo/doing/done/blocked) | Commit | Notes |
@@ -93,7 +93,7 @@ port 3000          → in use by another container on the host → dev server us
 | M4.09 | done | 2eac560 | NL reports; two-layer guard |
 | M4.10 | done | 5e25f2d | Billing recovery (off/approve/auto, template fallback), weekly parent narratives → Home after approval, rule-based lead score + AI next step; ADR-0035 |
 | M4.11 | done | 77f5a5a | Technique feedback (consent, ffmpeg keyframes, vision rubric, Mat release, gold clips) + schedule suggestions card; ai_transport on reviewed rows; ADR-0036 |
-| M4.12 | todo |  |  |
+| M4.12 | done | 98ed320 | Demo seed v4 via real jobs/actions (fixtures); Riley #1; 9/3/1 board; ADR-0037 |
 | M5.01 | todo |  |  |
 | M5.02 | todo |  |  |
 | M5.03 | todo |  |  |
