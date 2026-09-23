@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M4.08 document intake
+M4.09 NL reports
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -89,7 +89,7 @@ port 3000          → in use by another container on the host → dev server us
 | M4.05 | done | b1da63e | drift; 6 high on demo, all fixture drafts; Riley medium (shaped in M4.12) |
 | M4.06 | done | bb450b1 | action board; 9/3/1 acceptance green |
 | M4.07 | done | 2f83786 | lesson builder |
-| M4.08 | todo |  |  |
+| M4.08 | done | 3d04605 | packing-slip intake; import mapping assist built with the importer in M5.03 |
 | M4.09 | todo |  |  |
 | M4.10 | todo |  |  |
 | M4.11 | todo |  |  |
