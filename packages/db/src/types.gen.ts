@@ -412,6 +412,76 @@ export type Database = {
           },
         ]
       }
+      cash_drawers: {
+        Row: {
+          closed_at: string | null
+          closed_by: string | null
+          closing_cents: number | null
+          created_at: string
+          expected_cents: number | null
+          id: string
+          location_id: string
+          opened_at: string
+          opened_by: string | null
+          opening_cents: number
+          tenant_id: string
+          updated_at: string
+          variance_cents: number | null
+        }
+        Insert: {
+          closed_at?: string | null
+          closed_by?: string | null
+          closing_cents?: number | null
+          created_at?: string
+          expected_cents?: number | null
+          id?: string
+          location_id: string
+          opened_at?: string
+          opened_by?: string | null
+          opening_cents: number
+          tenant_id: string
+          updated_at?: string
+          variance_cents?: number | null
+        }
+        Update: {
+          closed_at?: string | null
+          closed_by?: string | null
+          closing_cents?: number | null
+          created_at?: string
+          expected_cents?: number | null
+          id?: string
+          location_id?: string
+          opened_at?: string
+          opened_by?: string | null
+          opening_cents?: number
+          tenant_id?: string
+          updated_at?: string
+          variance_cents?: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "cash_drawers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "cash_drawers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "cash_drawers_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       certificate_templates: {
         Row: {
           background_path: string | null
@@ -1887,6 +1957,159 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      inventory_levels: {
+        Row: {
+          created_at: string
+          id: string
+          location_id: string
+          on_hand: number
+          reorder_point: number
+          reserved: number
+          tenant_id: string
+          updated_at: string
+          variant_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          location_id: string
+          on_hand?: number
+          reorder_point?: number
+          reserved?: number
+          tenant_id: string
+          updated_at?: string
+          variant_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          location_id?: string
+          on_hand?: number
+          reorder_point?: number
+          reserved?: number
+          tenant_id?: string
+          updated_at?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_levels_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_levels_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "inventory_levels_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "inventory_levels_tenant_id_variant_id_fkey"
+            columns: ["tenant_id", "variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "inventory_levels_tenant_id_variant_id_fkey"
+            columns: ["tenant_id", "variant_id"]
+            isOneToOne: false
+            referencedRelation: "v_inventory"
+            referencedColumns: ["tenant_id", "variant_id"]
+          },
+        ]
+      }
+      inventory_movements: {
+        Row: {
+          by_user_id: string | null
+          created_at: string
+          delta: number
+          id: string
+          location_id: string
+          note: string | null
+          reason: string
+          ref_id: string | null
+          ref_type: string | null
+          tenant_id: string
+          updated_at: string
+          variant_id: string
+        }
+        Insert: {
+          by_user_id?: string | null
+          created_at?: string
+          delta: number
+          id?: string
+          location_id: string
+          note?: string | null
+          reason: string
+          ref_id?: string | null
+          ref_type?: string | null
+          tenant_id: string
+          updated_at?: string
+          variant_id: string
+        }
+        Update: {
+          by_user_id?: string | null
+          created_at?: string
+          delta?: number
+          id?: string
+          location_id?: string
+          note?: string | null
+          reason?: string
+          ref_id?: string | null
+          ref_type?: string | null
+          tenant_id?: string
+          updated_at?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "inventory_movements_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_tenant_id_variant_id_fkey"
+            columns: ["tenant_id", "variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "inventory_movements_tenant_id_variant_id_fkey"
+            columns: ["tenant_id", "variant_id"]
+            isOneToOne: false
+            referencedRelation: "v_inventory"
+            referencedColumns: ["tenant_id", "variant_id"]
           },
         ]
       }
@@ -3696,6 +3919,324 @@ export type Database = {
         }
         Relationships: []
       }
+      pos_sale_lines: {
+        Row: {
+          created_at: string
+          discount_cents: number
+          id: string
+          original_line_id: string | null
+          qty: number
+          sale_id: string
+          tax_cents: number
+          tenant_id: string
+          total_cents: number
+          unit_cents: number
+          updated_at: string
+          variant_id: string
+        }
+        Insert: {
+          created_at?: string
+          discount_cents?: number
+          id?: string
+          original_line_id?: string | null
+          qty: number
+          sale_id: string
+          tax_cents?: number
+          tenant_id: string
+          total_cents: number
+          unit_cents: number
+          updated_at?: string
+          variant_id: string
+        }
+        Update: {
+          created_at?: string
+          discount_cents?: number
+          id?: string
+          original_line_id?: string | null
+          qty?: number
+          sale_id?: string
+          tax_cents?: number
+          tenant_id?: string
+          total_cents?: number
+          unit_cents?: number
+          updated_at?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pos_sale_lines_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pos_sale_lines_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "pos_sale_lines_tenant_id_sale_id_fkey"
+            columns: ["tenant_id", "sale_id"]
+            isOneToOne: false
+            referencedRelation: "pos_sales"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_sale_lines_tenant_id_variant_id_fkey"
+            columns: ["tenant_id", "variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_sale_lines_tenant_id_variant_id_fkey"
+            columns: ["tenant_id", "variant_id"]
+            isOneToOne: false
+            referencedRelation: "v_inventory"
+            referencedColumns: ["tenant_id", "variant_id"]
+          },
+        ]
+      }
+      pos_sales: {
+        Row: {
+          cashier_user_id: string | null
+          created_at: string
+          discount_cents: number
+          drawer_id: string | null
+          household_id: string | null
+          id: string
+          invoice_id: string | null
+          kind: string
+          location_id: string
+          original_sale_id: string | null
+          person_id: string | null
+          receipt_number: number | null
+          status: string
+          subtotal_cents: number
+          tax_cents: number
+          tenant_id: string
+          terminal_reader_id: string | null
+          total_cents: number
+          updated_at: string
+        }
+        Insert: {
+          cashier_user_id?: string | null
+          created_at?: string
+          discount_cents?: number
+          drawer_id?: string | null
+          household_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          kind?: string
+          location_id: string
+          original_sale_id?: string | null
+          person_id?: string | null
+          receipt_number?: number | null
+          status?: string
+          subtotal_cents?: number
+          tax_cents?: number
+          tenant_id: string
+          terminal_reader_id?: string | null
+          total_cents?: number
+          updated_at?: string
+        }
+        Update: {
+          cashier_user_id?: string | null
+          created_at?: string
+          discount_cents?: number
+          drawer_id?: string | null
+          household_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          kind?: string
+          location_id?: string
+          original_sale_id?: string | null
+          person_id?: string | null
+          receipt_number?: number | null
+          status?: string
+          subtotal_cents?: number
+          tax_cents?: number
+          tenant_id?: string
+          terminal_reader_id?: string | null
+          total_cents?: number
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pos_sales_tenant_id_drawer_id_fkey"
+            columns: ["tenant_id", "drawer_id"]
+            isOneToOne: false
+            referencedRelation: "cash_drawers"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_ar_aging"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_dunning"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_original_sale_id_fkey"
+            columns: ["tenant_id", "original_sale_id"]
+            isOneToOne: false
+            referencedRelation: "pos_sales"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_sales_tenant_id_terminal_reader_id_fkey"
+            columns: ["tenant_id", "terminal_reader_id"]
+            isOneToOne: false
+            referencedRelation: "terminal_readers"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      pos_tenders: {
+        Row: {
+          amount_cents: number
+          change_cents: number
+          created_at: string
+          id: string
+          method: string
+          payment_id: string | null
+          sale_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          amount_cents: number
+          change_cents?: number
+          created_at?: string
+          id?: string
+          method: string
+          payment_id?: string | null
+          sale_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          amount_cents?: number
+          change_cents?: number
+          created_at?: string
+          id?: string
+          method?: string
+          payment_id?: string | null
+          sale_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "pos_tenders_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "pos_tenders_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "pos_tenders_tenant_id_payment_id_fkey"
+            columns: ["tenant_id", "payment_id"]
+            isOneToOne: false
+            referencedRelation: "payments"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "pos_tenders_tenant_id_sale_id_fkey"
+            columns: ["tenant_id", "sale_id"]
+            isOneToOne: false
+            referencedRelation: "pos_sales"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       private_lesson_slots: {
         Row: {
           booked_person_id: string | null
@@ -4188,6 +4729,146 @@ export type Database = {
             columns: ["tenant_id", "to_rank_id"]
             isOneToOne: false
             referencedRelation: "ranks"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      purchase_order_lines: {
+        Row: {
+          created_at: string
+          id: string
+          po_id: string
+          qty_ordered: number
+          qty_received: number
+          tenant_id: string
+          unit_cost_cents: number
+          updated_at: string
+          variant_id: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          po_id: string
+          qty_ordered: number
+          qty_received?: number
+          tenant_id: string
+          unit_cost_cents?: number
+          updated_at?: string
+          variant_id: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          po_id?: string
+          qty_ordered?: number
+          qty_received?: number
+          tenant_id?: string
+          unit_cost_cents?: number
+          updated_at?: string
+          variant_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_order_lines_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_order_lines_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "purchase_order_lines_tenant_id_po_id_fkey"
+            columns: ["tenant_id", "po_id"]
+            isOneToOne: false
+            referencedRelation: "purchase_orders"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "purchase_order_lines_tenant_id_variant_id_fkey"
+            columns: ["tenant_id", "variant_id"]
+            isOneToOne: false
+            referencedRelation: "product_variants"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "purchase_order_lines_tenant_id_variant_id_fkey"
+            columns: ["tenant_id", "variant_id"]
+            isOneToOne: false
+            referencedRelation: "v_inventory"
+            referencedColumns: ["tenant_id", "variant_id"]
+          },
+        ]
+      }
+      purchase_orders: {
+        Row: {
+          ai_intake_run_id: string | null
+          created_at: string
+          expected_at: string | null
+          id: string
+          location_id: string | null
+          notes: string | null
+          status: string
+          supplier_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          ai_intake_run_id?: string | null
+          created_at?: string
+          expected_at?: string | null
+          id?: string
+          location_id?: string | null
+          notes?: string | null
+          status?: string
+          supplier_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          ai_intake_run_id?: string | null
+          created_at?: string
+          expected_at?: string | null
+          id?: string
+          location_id?: string | null
+          notes?: string | null
+          status?: string
+          supplier_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "purchase_orders_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "purchase_orders_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "purchase_orders_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "purchase_orders_tenant_id_supplier_id_fkey"
+            columns: ["tenant_id", "supplier_id"]
+            isOneToOne: false
+            referencedRelation: "suppliers"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -5257,6 +5938,54 @@ export type Database = {
         }
         Relationships: []
       }
+      suppliers: {
+        Row: {
+          active: boolean
+          contact: Json
+          created_at: string
+          id: string
+          name: string
+          notes: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          contact?: Json
+          created_at?: string
+          id?: string
+          name: string
+          notes?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          contact?: Json
+          created_at?: string
+          id?: string
+          name?: string
+          notes?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "suppliers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "suppliers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       tasks: {
         Row: {
           assignee_user_id: string | null
@@ -5742,6 +6471,58 @@ export type Database = {
           updated_at?: string
         }
         Relationships: []
+      }
+      terminal_readers: {
+        Row: {
+          created_at: string
+          id: string
+          label: string
+          location_id: string | null
+          stripe_reader_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          label: string
+          location_id?: string | null
+          stripe_reader_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          label?: string
+          location_id?: string | null
+          stripe_reader_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "terminal_readers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "terminal_readers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "terminal_readers_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
       }
       thread_messages: {
         Row: {
@@ -6439,6 +7220,42 @@ export type Database = {
           },
         ]
       }
+      v_inventory: {
+        Row: {
+          available: number | null
+          barcode: string | null
+          category: string | null
+          location_id: string | null
+          location_name: string | null
+          low: boolean | null
+          on_hand: number | null
+          options: Json | null
+          price_cents: number | null
+          product_id: string | null
+          product_name: string | null
+          reorder_point: number | null
+          reserved: number | null
+          sku: string | null
+          tenant_id: string | null
+          variant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_variants_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       v_invoice_activity: {
         Row: {
           amount_cents: number | null
@@ -6811,6 +7628,16 @@ export type Database = {
         }
         Returns: string
       }
+      adjust_inventory: {
+        Args: {
+          p_delta: number
+          p_location_id: string
+          p_note?: string
+          p_reason: string
+          p_variant_id: string
+        }
+        Returns: string
+      }
       apply_credit: {
         Args: { p_amount_cents?: number; p_invoice_id: string }
         Returns: string
@@ -7065,6 +7892,14 @@ export type Database = {
           p_enabled: boolean
           p_membership_id: string
           p_payment_method_id?: string
+        }
+        Returns: undefined
+      }
+      set_reorder_point: {
+        Args: {
+          p_location_id: string
+          p_reorder_point: number
+          p_variant_id: string
         }
         Returns: undefined
       }

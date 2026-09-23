@@ -5,6 +5,7 @@ import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { Badge } from "@koryo/ui/components/ui/badge";
 import { FulfilmentActions } from "@/components/billing/fulfilment-actions";
 import { ModuleLocked } from "@/components/billing/module-locked";
+import { RetailTabs } from "@/components/retail/retail-tabs";
 import { requireSurfacePage } from "@/server/context";
 
 export const metadata = { title: "Gear fulfilment" };
@@ -20,8 +21,9 @@ export default async function FulfilmentPage({ searchParams }: { searchParams: P
   const { data: rows } = await q;
   return (
     <>
-      <PageHeader title="Gear fulfilment" description="Enrollment kits to hand out, with the sizes chosen at sign-up."
+      <PageHeader title="Retail" description="Enrollment kits to hand out, with the sizes chosen at sign-up."
         actions={<Link href={all ? "/desk/retail/fulfilment" : "/desk/retail/fulfilment?show=all"} className="text-sm">{all ? "Show open only" : "Show delivered too"}</Link>} />
+      <RetailTabs current="/desk/retail/fulfilment" />
       {!rows?.length ? <EmptyState title={all ? "No enrollment kits yet" : "Nothing to hand out"} description="Kits appear here when a student enrolls in a plan with gear included." /> : (
         <ul className="divide-y divide-default rounded-xl border border-default bg-surface" aria-label="Fulfilments">
           {rows.map((f) => (

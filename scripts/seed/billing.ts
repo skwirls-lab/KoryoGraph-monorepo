@@ -66,12 +66,26 @@ export async function seedBillingCatalog(ctx: SeedContext): Promise<void> {
       on conflict (id) do nothing`;
   }
 
+  // Opening stock at the main location (ledger-first: a 'receive' movement per item), reorder at 3.
+  const loc = sid("location:ridgeline:main");
+  for (const p of PRODUCTS) {
+    for (const size of p.sizes) {
+      const variant = sid(`variant:ridgeline:${p.key}:${size}`);
+      const qty = p.key === "sparring-set" ? 4 : 10;
+      await sql`insert into public.inventory_movements (id, tenant_id, variant_id, location_id, delta, reason, note)
+        values (${sid(`movement:ridgeline:opening:${p.key}:${size}`)}, ${t}, ${variant}, ${loc}, ${qty}, 'receive', 'Opening stock')
+        on conflict (id) do nothing`;
+      await sql`update public.inventory_levels set reorder_point = 3 where variant_id = ${variant} and location_id = ${loc}`;
+    }
+  }
+  await sql`insert into public.suppliers (id, tenant_id, name, contact) values (${sid("supplier:ridgeline:century")}, ${t}, 'Dojo Supply Co.', ${sql.json({ person: "Sam Ortiz", email: "orders@dojosupply.example", phone: "(555) 010-7000" })}) on conflict (id) do nothing`;
+
   await sql`insert into public.discounts (id, tenant_id, code, name, kind, value, applies_to)
     values (${sid("discount:ridgeline:welcome10")}, ${t}, 'WELCOME10', 'Welcome 10% off first month', 'pct', 10, 'membership') on conflict (id) do nothing`;
   await sql`insert into public.dunning_policies (id, tenant_id, name, steps, is_default)
     values (${sid("dunning:ridgeline:default")}, ${t}, 'Standard', ${sql.json([{ day: 1, actions: ["retry", "email"] }, { day: 3, actions: ["retry", "email", "sms"] }, { day: 7, actions: ["retry", "email", "sms", "suspend"] }])}, true)
     on conflict (id) do nothing`;
-  ctx.log(`billing catalogue: ${PLANS.length} plans, ${PRODUCTS.length} products (ridgeline)`);
+  ctx.log(`billing catalogue: ${PLANS.length} plans, ${PRODUCTS.length} products with opening stock (ridgeline)`);
 }
 
 /** Demo profile: give the plans access to the demo school's programs (the minimal profile has none). */
