@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M2.07
+M2.08
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -67,8 +67,8 @@ port 3000          → in use by another container on the host → dev server us
 | M2.04 | done | fb399cf | card-payment variant of enroll.spec is @stripe (HANDOFF) |
 | M2.05 | done | de0391c | autopay charges need Stripe keys (HANDOFF); job records the skip honestly |
 | M2.06 | done | 19eef37 | card retry path is @stripe (HANDOFF) |
-| M2.07 | doing |  |  |
-| M2.08 | todo |  |  |
+| M2.07 | done | 66e4d9b | @stripe pay-invoice spec needs keys + stripe listen (HANDOFF) |
+| M2.08 | doing |  |  |
 | M2.09 | todo |  |  |
 | M2.10 | todo |  |  |
 | M2.11 | todo |  |  |
