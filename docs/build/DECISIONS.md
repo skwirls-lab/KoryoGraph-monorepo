@@ -519,3 +519,23 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
 - Charts use recharts with the chart palette re-stepped to pass the dataviz checks (lightness band, chroma,
   CVD, contrast) on light and dark surfaces: teal `#0d9488` and amber `#d97706` replaced the lighter green and
   amber. Multi-series charts always have a legend and the table below them.
+
+## ADR-0035 — Growth agents: rule-based lead score, approval-first narratives, opt-in billing recovery
+- **Date / task:** 2026-09-25 · M4.10
+- **Lead score (A10)** is a transparent, unit-tested formula (`scoreLead`: trial booked/attended, offer stage,
+  referral/web source, message, touches, staleness, age) rather than a model output, so staff can see why a
+  lead ranks where it does and the number never changes from a re-roll. The model only suggests the next
+  step, stored in `leads.ai_next_action` beside (never over) the staff-owned `next_action`; the board shows the
+  suggestion only when staff haven't set one. Leads are rescored when changed since `scored_at` (compared in
+  the job: PostgREST can't compare two columns).
+- **Parent narratives (A9)** are always drafts: the weekly job drafts one per minor who trained, got a
+  sign-off or was promoted in the last 7 days; nothing reaches `home_updates` (read by the household via RLS)
+  until someone with `ai.approve` approves — edits included — in the queue (batch approve up to 200). The
+  model writes placeholders (`{{student}}`, `{{classes}}`, `{{skills}}`, `{{promotion}}`) that the job fills with
+  the week's real facts, so a draft can't invent attendance or ranks.
+- **Billing recovery (A8)** is off by default (`tenants.settings.ai.billing_recovery`: off / approve / auto).
+  In approve mode each dunning notice becomes a tone-adjusted draft in Approvals instead of the template; auto
+  sends without review only after the school has approved at least one such draft. Any AI failure (no
+  fixture, budget, provider) falls back to the standard template, so a family is never left un-notified.
+- The approvals page now filters by kind in the query and counts from all pending items: a weekly batch of
+  narratives must not hide other kinds past the 200-row page.

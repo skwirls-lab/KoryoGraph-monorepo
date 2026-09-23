@@ -1,0 +1,9 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "tone": "gentle",
+    "sms": "Hi {{first_name}}, a heads-up: your {{amount}} payment didn't go through. You can update it here: {{link}}",
+    "emailSubject": "Your payment didn't go through",
+    "emailBody": "Hi {{first_name}},\n\nThank you for being part of our school for so long. Your latest payment of {{amount}} didn't go through — this happens, often with an expired or replaced card.\n\nYou can pay or update your card here: {{link}}\n\nIf anything's changed for your family, just reply and we'll work it out together."
+  }
+}

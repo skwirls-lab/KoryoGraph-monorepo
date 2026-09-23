@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 import type { Json } from "@koryo/db/types";
 import { fail, ok, type ActionResult } from "@/lib/action-result";
-import { MESSAGE_KINDS, messagePayloadSchema, type ApprovalKind } from "@/lib/approvals";
+import { MESSAGE_KINDS, messagePayloadSchema, narrativePayloadSchema, type ApprovalKind } from "@/lib/approvals";
 import { executeApproval, type ExecutionResult } from "../approvals/execute";
 import { getCtx, type Ctx } from "../context";
 import { authorize } from "../lib/authorize";
@@ -18,6 +18,10 @@ async function decideOne(ctx: Ctx, v: z.infer<typeof decideSchema>): Promise<Act
   if (v.payload !== undefined && MESSAGE_KINDS.includes(current.kind as ApprovalKind)) {
     const p = messagePayloadSchema.safeParse(v.payload);
     if (!p.success) return fail(p.error.issues[0]?.message ?? "Check the message");
+  }
+  if (v.payload !== undefined && current.kind === "parent_narrative") {
+    const p = narrativePayloadSchema.safeParse(v.payload);
+    if (!p.success) return fail(p.error.issues[0]?.message ?? "Check the update");
   }
   const { data: item, error } = await ctx.supabase.rpc("decide_approval", {
     p_id: v.id, p_decision: v.decision, p_payload: (v.payload ?? null) as Json, p_feedback: v.feedback ?? undefined,
@@ -46,7 +50,7 @@ export async function bulkApprove(input: { ids: string[] }): Promise<ActionResul
   const ctx = await getCtx();
   const denied = authorize(ctx, need);
   if (denied) return denied;
-  const ids = z.array(z.uuid()).min(1).max(100).safeParse(input.ids);
+  const ids = z.array(z.uuid()).min(1).max(200).safeParse(input.ids);
   if (!ids.success) return fail("Choose items to approve");
   let approved = 0;
   let failed = 0;

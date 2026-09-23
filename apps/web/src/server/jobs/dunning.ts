@@ -2,7 +2,9 @@ import { addDaysStr, DEFAULT_DUNNING, dueDunningSteps, type DunningStep } from "
 import { formatMoney } from "@koryo/ui/components/app/money-text";
 import { stripeFromEnv } from "@koryo/payments";
 import { todayIn } from "@/lib/people";
+import { AiError, billingRecovery } from "@koryo/ai";
 import { chargeInvoiceWithCard } from "../billing/charge";
+import { aiForJob } from "./ai";
 import type { Job, JobStats } from "./types";
 
 interface DunningState {
@@ -23,13 +25,16 @@ interface DunningState {
  */
 export const dunning: Job = async ({ db, now, tenantId, log }) => {
   const nowIso = now.toISOString();
-  let tq = db.from("tenant_entitlements").select("tenant_id, tenants(id, timezone, currency, stripe_account_id, stripe_onboarding_complete)").eq("module_key", "billing").lte("starts_at", nowIso).or(`ends_at.is.null,ends_at.gt.${nowIso}`);
+  let tq = db.from("tenant_entitlements").select("tenant_id, tenants(id, name, timezone, currency, stripe_account_id, stripe_onboarding_complete, settings)").eq("module_key", "billing").lte("starts_at", nowIso).or(`ends_at.is.null,ends_at.gt.${nowIso}`);
   if (tenantId) tq = tq.eq("tenant_id", tenantId);
   const { data: ents, error } = await tq;
   if (error) throw new Error(`entitlements: ${error.message}`);
   const stripe = stripeFromEnv();
   const appUrl = (process.env.NEXT_PUBLIC_APP_URL ?? "http://localhost:3100").replace(/\/$/, "");
-  const stats: JobStats = { invoices: 0, steps: 0, notices: 0, retries: 0, recovered: 0, retry_skipped: 0, suspended: 0 };
+  const stats: JobStats = { invoices: 0, steps: 0, notices: 0, retries: 0, recovered: 0, retry_skipped: 0, suspended: 0, ai_drafts: 0, ai_sent: 0 };
+  const { data: intel } = await db.from("tenant_entitlements").select("tenant_id").eq("module_key", "intelligence").lte("starts_at", nowIso).or(`ends_at.is.null,ends_at.gt.${nowIso}`);
+  const intelligence = new Set((intel ?? []).map((x) => x.tenant_id));
+  const ai = aiForJob(db);
   const bump = (k: string, n = 1) => (stats[k] = Number(stats[k] ?? 0) + n);
 
   for (const e of ents ?? []) {
@@ -37,6 +42,9 @@ export const dunning: Job = async ({ db, now, tenantId, log }) => {
     if (!t) continue;
     const today = todayIn(t.timezone, now);
     const { data: policy } = await db.from("dunning_policies").select("steps").eq("tenant_id", t.id).eq("is_default", true).maybeSingle();
+    // A8: AI-drafted follow-ups (Settings → AI): off | approve (drafts wait in Approvals) | auto (sent once the school has approved one).
+    const aiMode = intelligence.has(t.id) ? ((t.settings as { ai?: { billing_recovery?: string } } | null)?.ai?.billing_recovery ?? "off") : "off";
+    const { count: approvedBefore } = aiMode === "auto" ? await db.from("approval_items").select("id", { count: "exact", head: true }).eq("tenant_id", t.id).eq("kind", "billing_recovery").eq("status", "approved") : { count: 0 };
     const steps = ((policy?.steps as unknown as DunningStep[] | undefined)?.length ? policy?.steps : DEFAULT_DUNNING) as DunningStep[];
 
     const { data: invoices } = await db
@@ -64,6 +72,46 @@ export const dunning: Job = async ({ db, now, tenantId, log }) => {
         const step = steps[idx];
         if (!step) continue;
         const results: string[] = [];
+        const channels = step.actions.filter((a): a is "email" | "sms" => a === "email" || a === "sms");
+        const person = inv.households?.primary_payer_person_id ?? inv.person_id;
+        const data = { amount: formatMoney(inv.balance_cents, t.currency), invoice_number: String(inv.number), link: `${appUrl}/home/wallet?invoice=${inv.id}`, error: lastError };
+        const template = async () => {
+          const n = await db.rpc("dunning_notify", { p_tenant_id: t.id, p_template_key: `payment_failed_${Math.min(idx + 1, 3)}`, p_person_ids: [person as string], p_data: data, p_invoice_id: inv.id, p_channels: channels });
+          bump("notices", n.data ?? 0);
+          return n.data ?? 0;
+        };
+        if (channels.length && !person) results.push(`${channels.join("+")}: no recipient`);
+        else if (channels.length && aiMode !== "off") {
+          try {
+            const { data: m } = inv.membership_id ? await db.from("memberships").select("starts_at").eq("id", inv.membership_id).maybeSingle() : { data: null };
+            const { count: cards } = await db.from("payment_methods").select("id", { count: "exact", head: true }).eq("household_id", inv.household_id).eq("status", "active");
+            const tenureMonths = m ? Math.max(0, Math.floor((Date.parse(today) - Date.parse(m.starts_at)) / (30.44 * 86_400_000))) : 0;
+            const r = await ai.runTask(billingRecovery, { school: t.name ?? "the school", stage: Math.min(idx + 1, 3), daysOverdue: Math.max(0, Math.round((Date.parse(today) - Date.parse(failedOn)) / 86_400_000)), tenureMonths, previousFailures: state.attempts ?? idx + 1, cardOnFile: (cards ?? 0) > 0 }, { tenantId: t.id });
+            const fill = (x: string) => x.replaceAll("{{amount}}", data.amount).replaceAll("{{link}}", data.link);
+            const messages = channels.map((c) => (c === "sms" ? { channel: "sms", body: fill(r.output.sms) } : { channel: "email", subject: fill(r.output.emailSubject), body: fill(r.output.emailBody) }));
+            if (aiMode === "auto" && (approvedBefore ?? 0) > 0) {
+              const body = [channels.includes("sms") ? fill(r.output.sms) : "", fill(r.output.emailBody)].join("\n---email---\n");
+              const n = await db.rpc("queue_prerendered", { p_tenant_id: t.id, p_person_ids: [person as string], p_channels: channels, p_subject: fill(r.output.emailSubject), p_body: body, p_related_type: "invoice", p_related_id: inv.id });
+              bump("ai_sent", n.data ?? 0);
+              results.push(`AI follow-up sent automatically (${r.output.tone}${r.fixture ? ", dev fixture" : ""})`);
+            } else {
+              await db.from("approval_items").insert({
+                tenant_id: t.id, kind: "billing_recovery", title: `Payment follow-up · invoice #${inv.number}`, person_id: person, ai_run_id: r.runId, entity_type: "invoice", entity_id: inv.id,
+                preview: `${data.amount} overdue since ${failedOn} · step ${idx + 1} (${r.output.tone})${r.fixture ? " · dev fixture" : ""}. Last error: ${lastError}`,
+                payload: { person_id: person, messages },
+              });
+              bump("ai_drafts");
+              results.push(`AI draft (${r.output.tone}) waiting in Approvals`);
+            }
+          } catch (err) {
+            if (!(err instanceof AiError)) throw err;
+            const n = await template();
+            results.push(`AI draft unavailable (${err.code.replace("_", " ")}) — standard notice queued (${n})`);
+          }
+        } else if (channels.length) {
+          const n = await template();
+          results.push(`${channels.join("+")} queued (${n})`);
+        }
         for (const action of step.actions) {
           if (action === "retry") {
             if (!stripe || !t.stripe_account_id || !t.stripe_onboarding_complete) {
@@ -86,22 +134,6 @@ export const dunning: Job = async ({ db, now, tenantId, log }) => {
               results.push(`retry error: ${message}`);
               lastError = message;
             }
-          } else if (action === "email" || action === "sms") {
-            const person = inv.households?.primary_payer_person_id ?? inv.person_id;
-            if (!person) {
-              results.push(`${action}: no recipient`);
-              continue;
-            }
-            const n = await db.rpc("dunning_notify", {
-              p_tenant_id: t.id,
-              p_template_key: `payment_failed_${Math.min(idx + 1, 3)}`,
-              p_person_ids: [person],
-              p_data: { amount: formatMoney(inv.balance_cents, t.currency), invoice_number: String(inv.number), link: `${appUrl}/home/wallet?invoice=${inv.id}`, error: lastError },
-              p_invoice_id: inv.id,
-              p_channels: [action],
-            });
-            bump("notices", n.data ?? 0);
-            results.push(`${action} queued (${n.data ?? 0})`);
           } else if (action === "suspend" && inv.membership_id) {
             const { data: s } = await db.from("memberships").update({ status: "suspended" }).eq("id", inv.membership_id).in("status", ["active", "past_due"]).select("id");
             if (s?.length) bump("suspended");

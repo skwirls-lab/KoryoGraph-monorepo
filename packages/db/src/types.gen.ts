@@ -3749,6 +3749,99 @@ export type Database = {
           },
         ]
       }
+      home_updates: {
+        Row: {
+          approval_item_id: string | null
+          body: string
+          created_at: string
+          id: string
+          person_id: string
+          published_at: string
+          tenant_id: string
+          updated_at: string
+          week_of: string
+        }
+        Insert: {
+          approval_item_id?: string | null
+          body: string
+          created_at?: string
+          id?: string
+          person_id: string
+          published_at?: string
+          tenant_id: string
+          updated_at?: string
+          week_of: string
+        }
+        Update: {
+          approval_item_id?: string | null
+          body?: string
+          created_at?: string
+          id?: string
+          person_id?: string
+          published_at?: string
+          tenant_id?: string
+          updated_at?: string
+          week_of?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "home_updates_approval_item_id_fkey"
+            columns: ["approval_item_id"]
+            isOneToOne: false
+            referencedRelation: "approval_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "home_updates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "home_updates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "home_updates_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "home_updates_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "home_updates_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "home_updates_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "home_updates_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       household_members: {
         Row: {
           can_pickup: boolean
@@ -4882,6 +4975,7 @@ export type Database = {
       }
       leads: {
         Row: {
+          ai_next_action: string | null
           ai_run_id: string | null
           converted_household_id: string | null
           created_at: string
@@ -4894,6 +4988,7 @@ export type Database = {
           person_id: string
           program_interest: string[]
           score: number | null
+          scored_at: string | null
           source: string | null
           stage_changed_at: string
           stage_id: string
@@ -4904,6 +4999,7 @@ export type Database = {
           value_cents: number | null
         }
         Insert: {
+          ai_next_action?: string | null
           ai_run_id?: string | null
           converted_household_id?: string | null
           created_at?: string
@@ -4916,6 +5012,7 @@ export type Database = {
           person_id: string
           program_interest?: string[]
           score?: number | null
+          scored_at?: string | null
           source?: string | null
           stage_changed_at?: string
           stage_id: string
@@ -4926,6 +5023,7 @@ export type Database = {
           value_cents?: number | null
         }
         Update: {
+          ai_next_action?: string | null
           ai_run_id?: string | null
           converted_household_id?: string | null
           created_at?: string
@@ -4938,6 +5036,7 @@ export type Database = {
           person_id?: string
           program_interest?: string[]
           score?: number | null
+          scored_at?: string | null
           source?: string | null
           stage_changed_at?: string
           stage_id?: string
@@ -12706,6 +12805,18 @@ export type Database = {
           p_required_for: Json
         }
         Returns: string
+      }
+      queue_prerendered: {
+        Args: {
+          p_body: string
+          p_channels: string[]
+          p_person_ids: string[]
+          p_related_id: string
+          p_related_type: string
+          p_subject: string
+          p_tenant_id: string
+        }
+        Returns: number
       }
       receive_intake: { Args: { p_id: string }; Returns: Json }
       record_approval_execution: {

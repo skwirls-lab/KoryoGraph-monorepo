@@ -1,0 +1,9 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "tone": "firm",
+    "sms": "Hi {{first_name}}, a reminder that {{amount}} is still outstanding on your membership. Pay or update your card: {{link}}",
+    "emailSubject": "Reminder: payment still outstanding",
+    "emailBody": "Hi {{first_name}},\n\nWe still haven't been able to collect {{amount}} for your membership. Please pay or update your card here: {{link}}\n\nIf you'd like to talk about a different plan or timing, reply to this email — we're happy to help."
+  }
+}

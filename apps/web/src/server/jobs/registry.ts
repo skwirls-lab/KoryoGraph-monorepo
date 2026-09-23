@@ -6,8 +6,10 @@ import { dataExport } from "./data-export";
 import { driftScore } from "./drift-score";
 import { dunning } from "./dunning";
 import { kbScheduleDigest } from "./kb-schedule-digest";
+import { leadScoring } from "./lead-scoring";
 import { materializeSessions } from "./materialize-sessions";
 import { outboxDispatch } from "./outbox-dispatch";
+import { parentNarratives } from "./parent-narratives";
 import { signaturePdfs } from "./signature-pdfs";
 import { transcribeJob } from "./transcribe";
 import type { Job } from "./types";
@@ -22,8 +24,10 @@ export const JOBS: Record<string, Job> = {
   drift_score: driftScore,
   dunning,
   kb_schedule_digest: kbScheduleDigest,
+  lead_scoring: leadScoring,
   materialize_sessions: materializeSessions,
   outbox_dispatch: outboxDispatch,
+  parent_narratives: parentNarratives,
   signature_pdfs: signaturePdfs,
   transcribe: transcribeJob,
 };

@@ -23,6 +23,9 @@ export interface BoardLead {
   source: string | null;
   interest: string[];
   nextAction: string | null;
+  /** 0–100 from lead scoring (null until scored) and the AI's suggested next step. */
+  score: number | null;
+  aiNextAction: string | null;
   nextActionDue: string | null;
   overdue: boolean;
   trial: string | null;
@@ -38,10 +41,14 @@ function Card({ lead, stages, onMove }: { lead: BoardLead; stages: BoardStage[];
       <div className="flex items-start gap-1.5">
         <button type="button" className="mt-0.5 cursor-grab text-fg-muted" aria-label={`Drag ${lead.name}`} {...attributes} {...listeners}><GripVertical className="size-4" /></button>
         <div className="min-w-0 flex-1">
-          <Link href={`/desk/crm/leads/${lead.id}`} className="font-medium">{lead.name}</Link>
+          <div className="flex items-baseline justify-between gap-2">
+            <Link href={`/desk/crm/leads/${lead.id}`} className="font-medium">{lead.name}</Link>
+            {lead.score != null ? <span className="shrink-0 rounded-full border border-default px-1.5 text-xs tabular text-fg-secondary" title="Lead score (0–100)" aria-label={`Score ${lead.score}`}>{lead.score}</span> : null}
+          </div>
           <div className="text-xs text-fg-muted">{[lead.source, ...lead.interest].filter(Boolean).join(" · ")}</div>
           {lead.trial ? <div className="text-xs text-fg-secondary">Trial: {lead.trial}</div> : null}
           {lead.nextAction ? <div className={`text-xs ${lead.overdue ? "text-danger" : "text-fg-secondary"}`}>Next: {lead.nextAction}{lead.nextActionDue ? ` · ${lead.nextActionDue}` : ""}</div> : null}
+          {lead.aiNextAction && !lead.nextAction ? <div className="text-xs text-fg-secondary"><span className="text-fg-muted">Suggested:</span> {lead.aiNextAction}</div> : null}
           {lead.lostReason ? <div className="text-xs text-fg-muted">Lost: {lead.lostReason}</div> : null}
         </div>
       </div>

@@ -2,6 +2,7 @@ import type { AiTask } from "../types";
 import { actionBoard, transcribe } from "./action-board";
 import { copilotStep, homeAssistant } from "./copilot";
 import { driftOutreach } from "./drift";
+import { billingRecovery, leadNextAction, parentNarrative } from "./growth";
 import { packingSlip } from "./intake";
 import { lessonBuilder } from "./lessons";
 import { nlReport } from "./nl-report";
@@ -18,6 +19,9 @@ export const TASKS: Record<string, AiTask<never, unknown>> = {
   lesson_builder: lessonBuilder as unknown as AiTask<never, unknown>,
   packing_slip: packingSlip as unknown as AiTask<never, unknown>,
   nl_report: nlReport as unknown as AiTask<never, unknown>,
+  billing_recovery: billingRecovery as unknown as AiTask<never, unknown>,
+  parent_narrative: parentNarrative as unknown as AiTask<never, unknown>,
+  lead_next_action: leadNextAction as unknown as AiTask<never, unknown>,
 };
 export { ping };
 export * from "./copilot";
@@ -26,3 +30,4 @@ export * from "./action-board";
 export * from "./lessons";
 export * from "./intake";
 export * from "./nl-report";
+export * from "./growth";

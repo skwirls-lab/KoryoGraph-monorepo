@@ -9,7 +9,7 @@ import { Button } from "@koryo/ui/components/ui/button";
 import { Input } from "@koryo/ui/components/ui/input";
 import { Label } from "@koryo/ui/components/ui/label";
 import { selectClass } from "@/components/forms/select-field";
-import { APPROVAL_KINDS, MESSAGE_KINDS, type ApprovalKind, type MessagePayload } from "@/lib/approvals";
+import { APPROVAL_KINDS, MESSAGE_KINDS, type ApprovalKind, type MessagePayload, type NarrativePayload } from "@/lib/approvals";
 import { bulkApprove, decideApproval } from "@/server/actions/approvals";
 
 export interface QueueItem {
@@ -39,6 +39,15 @@ function MessageEditor({ id, value, onChange }: { id: string; value: MessagePayl
           {m.channel === "sms" ? <div className="text-right text-xs text-fg-muted">{m.body.length} characters</div> : null}
         </div>
       ))}
+    </div>
+  );
+}
+
+function NarrativeEditor({ id, value, onChange }: { id: string; value: NarrativePayload; onChange: (v: NarrativePayload) => void }) {
+  return (
+    <div className="space-y-1">
+      <Label htmlFor={`${id}-n`}>Shown to the family on Home (week of {value.week_of})</Label>
+      <textarea id={`${id}-n`} className={`${selectClass} h-32 py-2`} value={value.body} onChange={(e) => onChange({ ...value, body: e.target.value })} />
     </div>
   );
 }
@@ -123,6 +132,7 @@ export function ApprovalQueue({ items, canApprove }: { items: QueueItem[]; canAp
                 {it.personId ? <p className="text-sm">About <Link href={`/desk/people/${it.personId}`}>{it.personName ?? "this student"}</Link></p> : null}
                 {it.preview ? <p className="whitespace-pre-line text-sm text-fg-secondary">{it.preview}</p> : null}
                 {isMessage ? <MessageEditor id={it.id} value={draft} onChange={(v) => setDrafts((d) => ({ ...d, [it.id]: v }))} />
+                  : it.kind === "parent_narrative" ? <NarrativeEditor id={it.id} value={(drafts[it.id] ?? it.payload) as NarrativePayload} onChange={(v) => setDrafts((d) => ({ ...d, [it.id]: v }))} />
                   : <pre className="max-h-60 overflow-auto rounded-lg bg-elevated p-3 text-xs" tabIndex={0} aria-label="Details">{JSON.stringify(it.payload, null, 2)}</pre>}
                 {canApprove ? (
                   rejecting === it.id ? (
@@ -134,7 +144,7 @@ export function ApprovalQueue({ items, canApprove }: { items: QueueItem[]; canAp
                     </form>
                   ) : (
                     <div className="flex gap-2">
-                      <Button disabled={pending} onClick={() => approve(it)}>{isMessage ? "Approve and send" : "Approve"}</Button>
+                      <Button disabled={pending} onClick={() => approve(it)}>{isMessage ? "Approve and send" : it.kind === "parent_narrative" ? "Approve and publish" : "Approve"}</Button>
                       <Button variant="outline" disabled={pending} onClick={() => setRejecting(it.id)}>Reject…</Button>
                     </div>
                   )

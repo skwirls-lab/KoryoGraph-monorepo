@@ -1,0 +1,6 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "body": "{{student}} was at {{classes}} classes this week — great consistency. They're building good habits and steady technique. And big news: {{student}} was promoted to {{promotion}}. Congratulations! Keep encouraging them at home — it makes a difference."
+  }
+}

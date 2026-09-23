@@ -4,7 +4,7 @@ import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { Badge } from "@koryo/ui/components/ui/badge";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@koryo/ui/components/ui/table";
 import { TIERS } from "@koryo/ai";
-import { BudgetForm, TestConnection } from "@/components/ai/ai-settings-controls";
+import { BillingRecoveryMode, BudgetForm, TestConnection } from "@/components/ai/ai-settings-controls";
 import { aiFor } from "@/server/ai";
 import { requireSurfacePage } from "@/server/context";
 
@@ -20,11 +20,13 @@ export default async function AiSettingsPage() {
   const ctx = await requireSurfacePage("desk");
   if (!ctx.permissions.has("settings.manage")) forbidden();
   const status = aiFor(ctx).status();
-  const [{ data: budget }, { data: usage }, { data: runs }] = await Promise.all([
+  const [{ data: budget }, { data: usage }, { data: runs }, { data: tenant }] = await Promise.all([
     ctx.supabase.rpc("ai_budget_status"),
     ctx.supabase.from("v_ai_usage").select("*").eq("period", new Intl.DateTimeFormat("en-CA", { timeZone: ctx.tz }).format(new Date()).slice(0, 7)),
     ctx.supabase.from("ai_runs").select("id, task_id, tier, model, transport, status, error, cost_cents, latency_ms, created_at").order("created_at", { ascending: false }).limit(15),
+    ctx.supabase.from("tenants").select("settings").eq("id", ctx.tenantId as string).single(),
   ]);
+  const recovery = ((tenant?.settings ?? {}) as { ai?: { billing_recovery?: string } }).ai?.billing_recovery ?? "off";
   const b = budget?.[0];
   const used = Number(b?.used_cents ?? 0);
   const limit = b?.limit_cents ?? 0;
@@ -56,6 +58,11 @@ export default async function AiSettingsPage() {
           <h2 id="budget-h" className="mb-3 text-base font-semibold">Budget</h2>
           <p className="mb-3 text-sm">Used this month: <strong>${(used / 100).toFixed(2)}</strong> of ${(limit / 100).toFixed(2)}{limit ? ` (${Math.round((used / limit) * 100)}%)` : ""}. Calls that would exceed the budget are refused.</p>
           <BudgetForm monthly={(limit / 100).toFixed(2)} />
+        </section>
+        <section className={card} aria-labelledby="agents-h">
+          <h2 id="agents-h" className="mb-3 text-base font-semibold">Agents</h2>
+          <BillingRecoveryMode mode={recovery} />
+          <p className="mt-2 text-xs text-fg-muted">When a payment fails, the reminder can be written for that family&apos;s situation. Weekly family updates and lead suggestions always wait for approval or stay internal.</p>
         </section>
         <section className={card} aria-labelledby="tiers-h">
           <h2 id="tiers-h" className="mb-3 text-base font-semibold">Model tiers</h2>

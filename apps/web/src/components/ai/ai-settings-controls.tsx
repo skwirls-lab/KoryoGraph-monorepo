@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { Button } from "@koryo/ui/components/ui/button";
 import { Input } from "@koryo/ui/components/ui/input";
 import { Label } from "@koryo/ui/components/ui/label";
-import { setAiBudget, testAiConnection } from "@/server/actions/ai-settings";
+import { setAiBudget, setBillingRecoveryMode, testAiConnection } from "@/server/actions/ai-settings";
 
 export function TestConnection() {
   const [result, setResult] = useState<{ tone: "ok" | "warn" | "error"; text: string } | null>(null);
@@ -41,5 +41,26 @@ export function BudgetForm({ monthly }: { monthly: string }) {
       <Button type="submit" size="sm" disabled={pending}>Save</Button>
       {error ? <p role="alert" className="w-full text-sm text-danger">{error}</p> : null}
     </form>
+  );
+}
+
+export function BillingRecoveryMode({ mode }: { mode: string }) {
+  const [v, setV] = useState(mode);
+  const [pending, start] = useTransition();
+  const router = useRouter();
+  return (
+    <div className="space-y-1">
+      <Label htmlFor="ai-billing-recovery">Failed-payment follow-ups</Label>
+      <select id="ai-billing-recovery" className="block h-9 rounded-md border border-default bg-surface px-2 text-sm" value={v} disabled={pending} onChange={(e) => {
+        const next = e.target.value;
+        const prev = v;
+        setV(next);
+        start(async () => { const r = await setBillingRecoveryMode({ mode: next }); if (r.ok) { toast.success("Saved"); router.refresh(); } else { setV(prev); toast.error(r.error); } });
+      }}>
+        <option value="off">Off — standard reminder templates</option>
+        <option value="approve">Draft, staff approve each one</option>
+        <option value="auto">Draft and send (after the first approval)</option>
+      </select>
+    </div>
   );
 }

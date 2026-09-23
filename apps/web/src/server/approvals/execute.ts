@@ -1,7 +1,7 @@
 import "server-only";
 import { textToHtml } from "@koryo/comms";
 import type { Json } from "@koryo/db/types";
-import { messagePayloadSchema, type ApprovalKind } from "@/lib/approvals";
+import { messagePayloadSchema, narrativePayloadSchema, type ApprovalKind } from "@/lib/approvals";
 import { intakePayloadSchema } from "@/lib/intake";
 import { executeBoard } from "../action-board";
 import type { Ctx } from "../context";
@@ -47,6 +47,13 @@ const EXECUTORS: Partial<Record<ApprovalKind, Executor>> = {
   billing_recovery: sendMessages,
   copilot_write: sendMessages,
   action_board: (ctx, item) => executeBoard(ctx.supabase, item.id, item.payload),
+  parent_narrative: async (ctx, item) => {
+    const p = narrativePayloadSchema.safeParse(item.payload);
+    if (!p.success) return { ok: false, error: "The update changed shape; open it again." };
+    const { error } = await ctx.supabase.from("home_updates").upsert({ tenant_id: ctx.tenantId as string, person_id: p.data.person_id, week_of: p.data.week_of, body: p.data.body, approval_item_id: item.id, published_at: new Date().toISOString() }, { onConflict: "person_id,week_of" });
+    if (error) return { ok: false, error: error.code === "42501" ? "Publishing needs the ai.approve permission." : "Couldn't publish the update." };
+    return { ok: true, summary: "Published on Home" };
+  },
   doc_intake: async (ctx, item) => {
     if (!intakePayloadSchema.safeParse(item.payload).success) return { ok: false, error: "The intake changed shape; open it again." };
     const { data, error } = await ctx.supabase.rpc("receive_intake", { p_id: item.id });

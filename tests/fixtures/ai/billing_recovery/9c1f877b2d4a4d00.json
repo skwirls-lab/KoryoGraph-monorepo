@@ -1,0 +1,9 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "tone": "final",
+    "sms": "Hi {{first_name}}, {{amount}} is still unpaid and your membership will be paused soon. Please pay here: {{link}} or reply to talk.",
+    "emailSubject": "Final notice: your membership will be paused",
+    "emailBody": "Hi {{first_name}},\n\nThank you for being part of our school for so long. We've tried a few times to collect {{amount}} and haven't been able to. To keep training uninterrupted, please pay here: {{link}}\n\nIf we don't hear from you, the membership will be paused (not cancelled) until it's settled. If something's going on, reply — we'd much rather find a way that works for you."
+  }
+}

@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { actionBoard, copilotStep, driftOutreach, homeAssistant, inputHash, lessonBuilder, nlReport, packingSlip, transcribe } from "@koryo/ai";
+import { actionBoard, billingRecovery, copilotStep, driftOutreach, homeAssistant, inputHash, leadNextAction, lessonBuilder, nlReport, packingSlip, parentNarrative, transcribe } from "@koryo/ai";
 import { AB, AB_TRANSCRIPT } from "../../tests/fixtures/action-board";
 import { sid } from "../lib/ids";
 
@@ -171,4 +171,52 @@ for (const combo of COMBOS) {
   nl("trial funnel by source", { title: "Trial funnel by lead source",
     sql: "select source, sum(leads) as leads, sum(trials_booked) as trials_booked, sum(trials_attended) as trials_attended, sum(won) as enrolled from v_trial_funnel group by source order by leads desc",
     chart: { type: "bar", x: "source", y: ["leads", "trials_booked", "trials_attended", "enrolled"], series: null }, explanation: "All-time leads per source and how far they got." });
+}
+
+// Growth agents (M4.10). Facts are placeholders filled with the real invoice / week / lead.
+{
+  const tones = { 1: "gentle", 2: "firm", 3: "final" } as const;
+  for (const stage of [1, 2, 3] as const) {
+    for (const established of [false, true]) {
+      const thanks = established ? "Thank you for being part of our school for so long. " : "";
+      const out = {
+        1: { sms: "Hi {{first_name}}, a heads-up: your {{amount}} payment didn't go through. You can update it here: {{link}}", emailSubject: "Your payment didn't go through",
+          emailBody: `Hi {{first_name}},\n\n${thanks}Your latest payment of {{amount}} didn't go through — this happens, often with an expired or replaced card.\n\nYou can pay or update your card here: {{link}}\n\nIf anything's changed for your family, just reply and we'll work it out together.` },
+        2: { sms: "Hi {{first_name}}, a reminder that {{amount}} is still outstanding on your membership. Pay or update your card: {{link}}", emailSubject: "Reminder: payment still outstanding",
+          emailBody: `Hi {{first_name}},\n\n${thanks}We still haven't been able to collect {{amount}} for your membership. Please pay or update your card here: {{link}}\n\nIf you'd like to talk about a different plan or timing, reply to this email — we're happy to help.` },
+        3: { sms: "Hi {{first_name}}, {{amount}} is still unpaid and your membership will be paused soon. Please pay here: {{link}} or reply to talk.", emailSubject: "Final notice: your membership will be paused",
+          emailBody: `Hi {{first_name}},\n\n${thanks}We've tried a few times to collect {{amount}} and haven't been able to. To keep training uninterrupted, please pay here: {{link}}\n\nIf we don't hear from you, the membership will be paused (not cancelled) until it's settled. If something's going on, reply — we'd much rather find a way that works for you.` },
+      }[stage];
+      write("billing_recovery", billingRecovery.fixtureKey!({ school: "", stage, daysOverdue: 0, tenureMonths: established ? 12 : 0, previousFailures: 0, cardOnFile: false }), { output: { tone: tones[stage], ...out } });
+    }
+  }
+  for (const classes of [0, 1, 3]) {
+    for (const skills of [false, true]) {
+      for (const promoted of [false, true]) {
+        const parts = [
+          classes === 0 ? "{{student}} didn't make it to class this week — we missed them and look forward to seeing them back on the mat." : classes === 1 ? "{{student}} trained with us this week and put in solid effort." : "{{student}} was at {{classes}} classes this week — great consistency.",
+          skills ? "They were signed off on {{skills}}, which is real progress toward their next rank." : classes > 0 ? "They're building good habits and steady technique." : "",
+          promoted ? "And big news: {{student}} was promoted to {{promotion}}. Congratulations!" : "",
+          "Keep encouraging them at home — it makes a difference.",
+        ].filter(Boolean);
+        write("parent_narrative", parentNarrative.fixtureKey!({ school: "", student: "", classes, skills: skills ? ["x"] : [], promotion: promoted ? "x" : null, instructorNotes: [] }), { output: { body: parts.join(" ") } });
+      }
+    }
+  }
+  const NEXT: Record<string, [string, string]> = {
+    new: ["Call today to welcome them and book a trial class", "Send a friendly check-in text with two trial times"],
+    contacted: ["Follow up with two specific trial class times", "Try a different channel: text if you called, call if you emailed"],
+    trial_scheduled: ["Send a reminder the day before the trial class", "Confirm the trial is still on and offer a new time"],
+    trial_attended: ["Call to ask how the trial went and present the offer", "Send the offer with a start date this week"],
+    offer: ["Ask if they have questions and help them enroll", "Check in on the offer; ask what's holding them back"],
+  };
+  for (const [stage, [fresh, stale]] of Object.entries(NEXT)) {
+    for (const [trialBooked, trialAttended] of [[false, false], [true, false], [true, true]] as const) {
+      for (const isStale of [false, true]) {
+        const nextAction = trialAttended && ["new", "contacted", "trial_scheduled"].includes(stage) ? "They attended a trial: call to present the enrollment offer"
+          : trialBooked && !trialAttended && ["new", "contacted"].includes(stage) ? "Confirm their booked trial class and send directions" : isStale ? stale : fresh;
+        write("lead_next_action", leadNextAction.fixtureKey!({ school: "", stage, trialBooked, trialAttended, hasMessage: false, lastTouchDays: isStale ? 15 : 0, score: 0 }), { output: { nextAction } });
+      }
+    }
+  }
 }

@@ -13,11 +13,12 @@ export default async function MemberHome() {
   const ctx = await requireSurfacePage("home");
   const students = await householdStudents(ctx);
   const ids = students.map((s) => s.id);
-  const [{ data: progress }, { data: upcoming }, { data: unsigned }, { data: threads }] = await Promise.all([
+  const [{ data: progress }, { data: upcoming }, { data: unsigned }, { data: threads }, { data: updates }] = await Promise.all([
     ids.length ? ctx.supabase.from("v_enrollment_progress").select("person_id, current_rank_name, current_belt_color, stripes, stripes_max, status").in("person_id", ids).eq("status", "active") : Promise.resolve({ data: [] }),
     ids.length ? ctx.supabase.from("v_upcoming_for_person").select("person_id, name, starts_at, booking_status").in("person_id", ids).neq("status", "cancelled").order("starts_at").limit(50) : Promise.resolve({ data: [] }),
     ids.length ? ctx.supabase.from("v_required_documents").select("person_id").in("person_id", ids).is("signature_id", null) : Promise.resolve({ data: [] }),
     ctx.supabase.from("message_threads").select("id").gt("unread_household", 0),
+    ids.length ? ctx.supabase.from("home_updates").select("person_id, week_of, body").in("person_id", ids).order("week_of", { ascending: false }).limit(20) : Promise.resolve({ data: [] }),
   ]);
   const { data: invites } = ids.length
     ? await ctx.supabase.from("testing_registrations").select("id, testing_event_id, people(first_name, preferred_name), ranks!testing_registrations_tenant_id_to_rank_id_fkey(name), testing_events(name)").in("person_id", ids).eq("status", "invited")
@@ -46,6 +47,7 @@ export default async function MemberHome() {
             {students.map((s) => {
               const ranks = (progress ?? []).filter((p) => p.person_id === s.id);
               const next = (upcoming ?? []).find((u) => u.person_id === s.id);
+              const update = (updates ?? []).find((u) => u.person_id === s.id);
               return (
                 <li key={s.id} className="space-y-2 rounded-xl border border-default bg-surface p-4" aria-label={displayName(s)}>
                   <div className="text-lg font-semibold">{displayName(s)}</div>
@@ -55,6 +57,12 @@ export default async function MemberHome() {
                   <p className="text-sm text-fg-secondary">
                     {next ? <>Next class: <strong className="text-fg">{next.name}</strong>, {formatDate(next.starts_at as string, ctx.tz, "weekday")} at {formatDate(next.starts_at as string, ctx.tz, "time")}{next.booking_status ? ` · ${next.booking_status}` : ""}</> : "No upcoming classes in the next three weeks."}
                   </p>
+                  {update ? (
+                    <section aria-label={`This week for ${displayName(s)}`} className="rounded-lg border border-default p-3 text-sm">
+                      <h3 className="mb-1 text-xs font-medium uppercase tracking-wide text-fg-muted">This week · {formatDate(`${update.week_of}T12:00:00Z`, "UTC", "short")}</h3>
+                      <p className="whitespace-pre-line">{update.body}</p>
+                    </section>
+                  ) : null}
                   <div className="flex gap-4 text-sm"><Link href="/home/progress">Progress</Link><Link href="/home/schedule">Schedule</Link></div>
                 </li>
               );

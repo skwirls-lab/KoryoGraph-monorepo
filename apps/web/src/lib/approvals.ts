@@ -18,3 +18,11 @@ export const messagePayloadSchema = z.object({
   })).min(1).max(2),
 });
 export type MessagePayload = z.infer<typeof messagePayloadSchema>;
+
+/** A weekly family update (A9): published to Home as written (staff may edit it first). */
+export const narrativePayloadSchema = z.object({
+  person_id: z.uuid(),
+  week_of: z.string().regex(/^\d{4}-\d{2}-\d{2}$/),
+  body: z.string().trim().min(10, { error: "The update is too short" }).max(2000),
+});
+export type NarrativePayload = z.infer<typeof narrativePayloadSchema>;
