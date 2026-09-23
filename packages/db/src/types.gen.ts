@@ -8153,6 +8153,7 @@ export type Database = {
           household_id: string | null
           membership_id: string | null
           mrr_cents: number | null
+          paused_on: string | null
           person_id: string | null
           plan_name: string | null
           starts_at: string | null

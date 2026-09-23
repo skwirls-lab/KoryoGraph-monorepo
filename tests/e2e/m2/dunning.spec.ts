@@ -73,7 +73,7 @@ test.describe("@m2 dunning", () => {
     expect(await notices()).toHaveLength(5);
 
     // The Desk worklist shows it; the outbox shows the notices honestly as unsent without a provider.
-    await page.goto("/desk/billing");
+    await page.goto("/desk/billing/failed");
     const item = page.getByRole("list", { name: "Failed payments" }).getByRole("listitem", { name: new RegExp(householdName) });
     await expect(item).toContainText("step 3");
     await expect(item).toContainText("suspended");
@@ -87,7 +87,7 @@ test.describe("@m2 dunning", () => {
     expect(await membershipStatus()).toBe("active");
     const [after] = await sql<{ dunning_state: { resolved_at?: string } }[]>`select dunning_state from public.invoices where id = ${invoice}`;
     expect(after?.dunning_state.resolved_at).toBeTruthy();
-    await page.goto("/desk/billing");
+    await page.goto("/desk/billing/failed");
     await expect(page.getByRole("listitem", { name: new RegExp(householdName) })).toHaveCount(0);
   });
 
@@ -100,7 +100,7 @@ test.describe("@m2 dunning", () => {
       await sql`update public.memberships set status = 'suspended' where id = ${membership}`;
       await page.goto(`/desk/households/${household}`);
       await addCardViaElements(page, "4242424242424242");
-      await page.goto("/desk/billing");
+      await page.goto("/desk/billing/failed");
       await page.getByRole("listitem", { name: new RegExp(householdName) }).getByRole("button", { name: "Retry card" }).click();
       await expect(page.getByText("Payment succeeded")).toBeVisible({ timeout: 30_000 });
       expect(await membershipStatus()).toBe("active");

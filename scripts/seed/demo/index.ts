@@ -1,4 +1,5 @@
 import { linkDemoPlanPrograms } from "../billing";
+import { recomputeMoney, seedMoney } from "./money";
 import { sid } from "../../lib/ids";
 import type { SeedContext } from "../context";
 import { seedCurriculum } from "./curriculum";
@@ -28,6 +29,8 @@ export async function seedDemo(ctx: SeedContext): Promise<void> {
     ctx.log(`schedule: ${training.sessions} sessions, ${training.attendance} check-ins, ${training.promotions} promotions`);
     await seedExtras(ctx, rng, now, people);
     ctx.log("documents, PINs, conversations, outbox, certifications");
+    const money = await seedMoney(ctx, rng, now, people);
+    ctx.log(`money: ${money.memberships} memberships, ${money.invoices} invoices, ${money.payments} payments (${money.failed} failed, ${money.inDunning} in dunning), ${money.posSales} POS sales, ${money.skus} SKUs`);
   } finally {
     for (const t of tables) await sql`alter table ${sql(t)} enable trigger user`;
   }
@@ -38,5 +41,6 @@ export async function seedDemo(ctx: SeedContext): Promise<void> {
       where a.person_id = e.person_id and e.program_id = any (s.program_ids) and s.starts_at >= coalesce(e.last_promoted_at, e.started_at::timestamptz))
     where e.tenant_id = ${sid("tenant:ridgeline")}`;
   await linkDemoPlanPrograms(ctx);
+  await recomputeMoney(ctx);
   await sql`update public.tenants set onboarding = jsonb_set(onboarding, '{steps}', '{"location": true, "programs": true, "schedule": true, "students": true, "payments": false, "staff": true, "branding": true}'::jsonb) where slug = 'ridgeline'`;
 }

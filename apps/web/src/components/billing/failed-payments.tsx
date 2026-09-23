@@ -35,6 +35,7 @@ export async function FailedPayments({ ctx, limit = 10 }: { ctx: Ctx; limit?: nu
           ))}
         </ul>
       )}
+      {count && count > limit ? <p className="mt-2 text-sm"><Link href="/desk/billing/failed">View all {count}</Link></p> : null}
       {blocker && rows?.length ? <p className="mt-2 text-xs text-fg-muted">Card retries need Stripe. {blocker}</p> : null}
     </section>
   );

@@ -322,3 +322,18 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   made by the server and then recorded. Exchanges are a return plus a new sale.
 - **Drawer:** expected = opening float + cash taken − change − cash refunds; closing records counted cash
   and variance. A fully refunded invoice now reads `refunded` even when its total became zero.
+
+## ADR-0023 — Demo money seed and one MRR definition
+- **Date / task:** 2026-09-23 · M2.11
+- **Decision:** The demo profile's money is generated with the same engine the product uses: a membership
+  per student from their status and dates (six plans), first invoices via `firstInvoiceLines`, monthly
+  invoices with household family-discount ranking and hold proration, card autopay failures at ~4% of
+  payments (older ones recovered by a retry, the last ~10 days still in dunning stages 1–3 with past-due/
+  suspended memberships), refunds as numbered credit notes with the invoice credited, goodwill credits,
+  40 SKUs with barcodes, ~440 POS sales with cash drawers (float + net cash = expected, small variances)
+  and returns, enrollment kits delivered from stock, and restocks whenever an item would drop below 4.
+  Everything is deterministic (seeded RNG, derived ids); derived columns (invoice paid/balance/status,
+  household balances, stock levels) are recomputed after the trigger-less load and checked by the seed
+  invariants, which also compare dashboard MRR and AR with the engine over the raw rows.
+- **MRR** everywhere (dashboard, `v_mrr`, `v_mrr_monthly`) = recurring/contract memberships that are
+  active, past due or suspended; memberships on hold are paused and don't count; trials never do.
