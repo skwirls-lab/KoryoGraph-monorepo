@@ -402,3 +402,18 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
 - **Tasks** get a Desk queue (`/desk/tasks`: mine / unassigned / all / done); assignees without
   `people.write` can complete their own (RLS policy), others need `people.write`.
 - Staff invitations (F2.4) remain in M5.02 (onboarding), per the plan.
+
+## ADR-0028 — Growth report definitions
+- **Date / task:** 2026-09-24 · M3.07
+- **Trial funnel** (`v_trial_funnel`) groups leads by the school-local month they arrived and their source.
+  A lead counts as "trial booked" / "attended" when it has the evidence (a trial booking, a
+  `trial_booked`/`trial_attended` activity) or sits in a later stage (Offer or Won imply both), since leads
+  can be moved along the board by hand.
+- **Retention cohorts** (`v_retention_cohorts`) use memberships that represent ongoing membership
+  (recurring, contract, paid-in-full; not trials, drop-ins or class packs). Cohort = month of a person's first
+  such membership; month *k* counts people holding one on the last day of that month (today for the current
+  month). A cancelled membership ends at `cancel_at`, else `ends_at`, else when it was last updated.
+- **Churn list** shows each cancelled/expired membership with reason and tenure, flagging people who are
+  still members through another membership; the reason summary counts only those who actually left.
+- All growth views are `security_invoker`: a reader sees only what their own permissions allow (the tests
+  check a parent sees nothing, and sees no one else's money behind member-visible events).

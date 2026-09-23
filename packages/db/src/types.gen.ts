@@ -191,6 +191,13 @@ export type Database = {
             foreignKeyName: "afterschool_enrollments_tenant_id_membership_id_fkey"
             columns: ["tenant_id", "membership_id"]
             isOneToOne: false
+            referencedRelation: "v_churn_list"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
             referencedRelation: "v_deferred_revenue"
             referencedColumns: ["tenant_id", "membership_id"]
           },
@@ -200,6 +207,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_membership_mrr"
             referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_membership_spans"
+            referencedColumns: ["tenant_id", "id"]
           },
           {
             foreignKeyName: "afterschool_enrollments_tenant_id_membership_id_fkey"
@@ -2557,6 +2571,13 @@ export type Database = {
             referencedColumns: ["tenant_id", "id"]
           },
           {
+            foreignKeyName: "event_days_tenant_id_event_id_fkey"
+            columns: ["tenant_id", "event_id"]
+            isOneToOne: false
+            referencedRelation: "v_event_revenue"
+            referencedColumns: ["tenant_id", "event_id"]
+          },
+          {
             foreignKeyName: "event_days_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
@@ -2632,6 +2653,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_guest_waivers_tenant_id_event_id_fkey"
+            columns: ["tenant_id", "event_id"]
+            isOneToOne: false
+            referencedRelation: "v_event_revenue"
+            referencedColumns: ["tenant_id", "event_id"]
           },
           {
             foreignKeyName: "event_guest_waivers_tenant_id_fkey"
@@ -2726,6 +2754,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "events"
             referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_event_id_fkey"
+            columns: ["tenant_id", "event_id"]
+            isOneToOne: false
+            referencedRelation: "v_event_revenue"
+            referencedColumns: ["tenant_id", "event_id"]
           },
           {
             foreignKeyName: "event_registrations_tenant_id_fkey"
@@ -3126,6 +3161,13 @@ export type Database = {
             foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
             columns: ["tenant_id", "membership_id"]
             isOneToOne: false
+            referencedRelation: "v_churn_list"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
             referencedRelation: "v_deferred_revenue"
             referencedColumns: ["tenant_id", "membership_id"]
           },
@@ -3135,6 +3177,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_membership_mrr"
             referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_membership_spans"
+            referencedColumns: ["tenant_id", "id"]
           },
           {
             foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
@@ -3830,6 +3879,13 @@ export type Database = {
             foreignKeyName: "invoices_tenant_id_membership_id_fkey"
             columns: ["tenant_id", "membership_id"]
             isOneToOne: false
+            referencedRelation: "v_churn_list"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
             referencedRelation: "v_deferred_revenue"
             referencedColumns: ["tenant_id", "membership_id"]
           },
@@ -3839,6 +3895,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_membership_mrr"
             referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_membership_spans"
+            referencedColumns: ["tenant_id", "id"]
           },
           {
             foreignKeyName: "invoices_tenant_id_membership_id_fkey"
@@ -9730,6 +9793,87 @@ export type Database = {
           },
         ]
       }
+      v_churn_list: {
+        Row: {
+          ended_on: string | null
+          household_id: string | null
+          membership_id: string | null
+          person_id: string | null
+          person_name: string | null
+          plan_name: string | null
+          reason: string | null
+          starts_at: string | null
+          status: string | null
+          still_member: boolean | null
+          tenant_id: string | null
+          tenure_months: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       v_class_roster: {
         Row: {
           allergies: string[] | null
@@ -10012,6 +10156,13 @@ export type Database = {
             foreignKeyName: "invoices_tenant_id_membership_id_fkey"
             columns: ["tenant_id", "membership_id"]
             isOneToOne: false
+            referencedRelation: "v_churn_list"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
             referencedRelation: "v_deferred_revenue"
             referencedColumns: ["tenant_id", "membership_id"]
           },
@@ -10021,6 +10172,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_membership_mrr"
             referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_membership_spans"
+            referencedColumns: ["tenant_id", "id"]
           },
           {
             foreignKeyName: "invoices_tenant_id_membership_id_fkey"
@@ -10118,6 +10276,43 @@ export type Database = {
           },
         ]
       }
+      v_event_revenue: {
+        Row: {
+          event_id: string | null
+          invoiced_cents: number | null
+          kind: string | null
+          name: string | null
+          outstanding_cents: number | null
+          paid_cents: number | null
+          registrations: number | null
+          starts_at: string | null
+          status: string | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       v_gear_fulfilments: {
         Row: {
           created_at: string | null
@@ -10182,6 +10377,13 @@ export type Database = {
             foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
             columns: ["tenant_id", "membership_id"]
             isOneToOne: false
+            referencedRelation: "v_churn_list"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
             referencedRelation: "v_deferred_revenue"
             referencedColumns: ["tenant_id", "membership_id"]
           },
@@ -10191,6 +10393,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_membership_mrr"
             referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_membership_spans"
+            referencedColumns: ["tenant_id", "id"]
           },
           {
             foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
@@ -10503,6 +10712,92 @@ export type Database = {
           },
         ]
       }
+      v_membership_spans: {
+        Row: {
+          cancel_reason: string | null
+          ended_on: string | null
+          household_id: string | null
+          id: string | null
+          person_id: string | null
+          plan_id: string | null
+          plan_name: string | null
+          starts_at: string | null
+          status: string | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_plan_id_fkey"
+            columns: ["tenant_id", "plan_id"]
+            isOneToOne: false
+            referencedRelation: "membership_plans"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       v_mrr: {
         Row: {
           household_id: string | null
@@ -10764,6 +11059,38 @@ export type Database = {
           },
         ]
       }
+      v_retention_cohorts: {
+        Row: {
+          cohort: string | null
+          cohort_size: number | null
+          month_index: number | null
+          retained: number | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "memberships_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       v_revenue_lines: {
         Row: {
           category: string | null
@@ -10897,6 +11224,74 @@ export type Database = {
           },
           {
             foreignKeyName: "staff_certifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
+      v_staff_sessions: {
+        Row: {
+          hours: number | null
+          period: string | null
+          sessions: number | null
+          staff_name: string | null
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
+      v_trial_funnel: {
+        Row: {
+          leads: number | null
+          lost: number | null
+          period: string | null
+          source: string | null
+          tenant_id: string | null
+          trials_attended: number | null
+          trials_booked: number | null
+          won: number | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "leads_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "leads_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "v_owner_dashboard"
