@@ -218,8 +218,9 @@ export async function seedTraining(ctx: SeedContext, rng: Rng, now: Date, progra
     .filter((x) => x.startsAt > now).sort((a, b) => a.startsAt.getTime() - b.startsAt.getTime())[0];
   if (nextYouth) {
     const pool = students.filter((s) => s.status === "active" && s.age >= 7 && s.age <= 12 && rankPos(byEnrollment.get(s.id)) <= 3);
-    const cooperFirst = pool.filter((s) => s.name === "Maya Cooper" || s.name === "Leo Cooper");
-    const chosen = [...cooperFirst, ...rng.sample(pool.filter((s) => !cooperFirst.includes(s)), 22)].slice(0, 22);
+    // The Cooper kids are booked first whatever their band (the §6 demo follows them through the evening).
+    const cooperFirst = students.filter((s) => s.name === "Maya Cooper" || s.name === "Leo Cooper");
+    const chosen = [...cooperFirst, ...rng.sample(pool.filter((s) => !cooperFirst.some((c) => c.id === s.id)), 22)].slice(0, 22);
     await insertChunks(ctx.sql, "bookings", chosen.map((s, idx) => ({
       id: sid(`booking:${nextYouth.id}:${s.id}`), tenant_id: tid(), session_id: nextYouth.id, person_id: s.id,
       status: idx < 20 ? "booked" : "waitlisted", waitlist_position: idx < 20 ? null : idx - 19, source: idx % 2 ? "home" : "desk",

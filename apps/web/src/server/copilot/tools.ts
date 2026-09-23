@@ -14,6 +14,29 @@ const need = (ctx: Ctx, perm: string) => {
   if (!ctx.permissions.has(perm)) throw new Error(`You don't have access to that (${perm}).`);
 };
 
+/** Families with an overdue balance whose students haven't checked in for `days` (all computed from the data). */
+async function pastDueFamilies(ctx: Ctx, absentDays: number | null): Promise<{ household_id: string; household: string; cents: number; person_id: string | null; last_class: string | null }[]> {
+  const db = ctx.supabase;
+  const { data } = await db.from("v_ar_aging").select("household_id, household_name, balance_cents").gt("days_overdue", 0).limit(5000);
+  const byHh = new Map<string, { name: string; cents: number }>();
+  for (const r of data ?? []) if (r.household_id) byHh.set(r.household_id, { name: r.household_name ?? "", cents: (byHh.get(r.household_id)?.cents ?? 0) + (r.balance_cents ?? 0) });
+  if (!byHh.size) return [];
+  const { data: members } = await db.from("household_members").select("household_id, person_id").in("household_id", [...byHh.keys()]).eq("relationship", "student");
+  const students = (members ?? []).map((m) => m.person_id);
+  const { data: att } = students.length ? await db.from("attendance").select("person_id, checked_in_at").in("person_id", students).gte("checked_in_at", new Date(Date.now() - 400 * 86_400_000).toISOString()).order("checked_in_at", { ascending: false }).limit(20000) : { data: [] };
+  const last = new Map<string, string>();
+  for (const a of att ?? []) if (!last.has(a.person_id)) last.set(a.person_id, a.checked_in_at);
+  const cutoff = absentDays ? Date.now() - absentDays * 86_400_000 : null;
+  const out: { household_id: string; household: string; cents: number; person_id: string | null; last_class: string | null }[] = [];
+  for (const [hid, v] of byHh) {
+    const kids = (members ?? []).filter((m) => m.household_id === hid).map((m) => m.person_id);
+    const latest = kids.map((k) => last.get(k)).filter((x): x is string => Boolean(x)).sort().at(-1) ?? null;
+    if (cutoff !== null && latest && Date.parse(latest) >= cutoff) continue;
+    out.push({ household_id: hid, household: v.name, cents: v.cents, person_id: kids[0] ?? null, last_class: latest ? latest.slice(0, 10) : null });
+  }
+  return out.sort((a, b) => b.cents - a.cents);
+}
+
 export async function executeTool(ctx: Ctx, call: CopilotToolCall): Promise<ToolResult> {
   const db = ctx.supabase;
   const money = (c: number) => formatMoney(c, ctx.currency);
@@ -77,6 +100,17 @@ export async function executeTool(ctx: Ctx, call: CopilotToolCall): Promise<Tool
             top: [...byHh.entries()].sort((a, b) => b[1].cents - a[1].cents).slice(0, 8).map(([id, v]) => ({ household_id: id, household: v.name, owed: money(v.cents) })),
           };
         }
+        case "past_due_absent": {
+          need(ctx, "billing.read");
+          const fams = await pastDueFamilies(ctx, 21);
+          const total = fams.reduce((a, f) => a + f.cents, 0);
+          return {
+            report: "past_due_absent", households: fams.length, total: money(total),
+            // A ready-made list line per family (from the data), for the answer to quote as-is.
+            list: fams.slice(0, 10).map((f) => `- ${f.household}: ${money(f.cents)} owed, last class ${f.last_class ?? "none on record"}`).join("\n") || "- none",
+            families: fams.slice(0, 25).map((f) => ({ household_id: f.household_id, household: f.household, owed: money(f.cents), last_class: f.last_class ?? "none" })),
+          };
+        }
         case "active_students": {
           const { data } = await db.from("v_owner_dashboard").select("active_students, trials, leads").eq("tenant_id", ctx.tenantId ?? "").maybeSingle();
           return { report: "active_students", active_students: data?.active_students ?? 0, trials: data?.trials ?? 0, leads: data?.leads ?? 0 };
@@ -116,11 +150,26 @@ export async function executeTool(ctx: Ctx, call: CopilotToolCall): Promise<Tool
       if (error || !data) return { created: false, error: "couldn't create the draft" };
       return { created: true, approval_id: data.id, note: "Draft waiting in Approvals; nothing was sent." };
     }
+    case "propose_messages": {
+      need(ctx, "ai.use");
+      need(ctx, "billing.read");
+      const fams = (await pastDueFamilies(ctx, call.args.report === "past_due_absent" ? 21 : null)).filter((f) => f.person_id).slice(0, 25);
+      let created = 0;
+      for (const f of fams) {
+        const { error } = await db.from("approval_items").insert({
+          tenant_id: ctx.tenantId as string, kind: "copilot_write", title: `Message the ${f.household}`, preview: `${call.args.reason} (${money(f.cents)} owed, last class ${f.last_class ?? "none"})`,
+          person_id: f.person_id, requested_by: ctx.userId,
+          payload: { person_id: f.person_id, messages: [{ channel: call.args.channel, ...(call.args.subject ? { subject: call.args.subject } : {}), body: call.args.body }] },
+        });
+        if (!error) created++;
+      }
+      return { created, families: fams.length, note: "Drafts waiting in Approvals; nothing was sent." };
+    }
   }
   return {};
 }
 
 export const reportHref: Record<string, string> = {
-  past_due: "/desk/reports/ar-aging", active_students: "/desk/reports/roster", attendance_by_week: "/desk/reports/attendance", mrr: "/desk/reports/mrr", trials: "/desk/reports/funnel",
+  past_due: "/desk/reports/ar-aging", past_due_absent: "/desk/reports/ar-aging", active_students: "/desk/reports/roster", attendance_by_week: "/desk/reports/attendance", mrr: "/desk/reports/mrr", trials: "/desk/reports/funnel",
 };
 export const today = (ctx: Ctx) => todayIn(ctx.tz);

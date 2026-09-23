@@ -21,7 +21,7 @@ export interface ChatMessage {
 
 const TOOL_LABEL: Record<string, string> = {
   find_person: "Looked up people", person_summary: "Read a profile", attendance_summary: "Checked attendance", invoices_for_household: "Checked invoices",
-  run_report: "Ran a report", kb_search: "Searched policies", propose_action: "Drafted a message for approval",
+  run_report: "Ran a report", kb_search: "Searched policies", propose_action: "Drafted a message for approval", propose_messages: "Drafted messages for approval",
 };
 
 function Steps({ steps }: { steps: ChatMessage["steps"] }) {

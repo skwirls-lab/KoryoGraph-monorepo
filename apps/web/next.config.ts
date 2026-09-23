@@ -6,6 +6,8 @@ const nextConfig: NextConfig = {
   transpilePackages: ["@koryo/ui"],
   serverExternalPackages: ["ffmpeg-static"],
   poweredByHeader: false,
+  // No dev-overlay badge (it shows up in the demo walkthrough screenshots).
+  devIndicators: false,
   // The Content-Security-Policy (with a per-request nonce, incl. frame-ancestors) is set in src/proxy.ts.
   // Only the public trial form (/s/…, embedded by the widget) may be framed by other sites.
   async headers() {

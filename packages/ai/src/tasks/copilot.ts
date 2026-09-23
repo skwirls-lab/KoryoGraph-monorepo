@@ -2,7 +2,7 @@ import { z } from "zod";
 import type { AiTask } from "../types";
 
 /** Read-only tools the Desk copilot may call (executed as the signed-in staff member, under RLS). */
-export const REPORT_KEYS = ["past_due", "active_students", "attendance_by_week", "mrr", "trials"] as const;
+export const REPORT_KEYS = ["past_due", "past_due_absent", "active_students", "attendance_by_week", "mrr", "trials"] as const;
 
 const toolCall = z.discriminatedUnion("tool", [
   z.object({ type: z.literal("tool"), tool: z.literal("find_person"), args: z.object({ query: z.string().min(1).max(80) }) }),
@@ -13,6 +13,9 @@ const toolCall = z.discriminatedUnion("tool", [
   z.object({ type: z.literal("tool"), tool: z.literal("kb_search"), args: z.object({ query: z.string().min(2).max(200) }) }),
   z.object({ type: z.literal("tool"), tool: z.literal("propose_action"), args: z.object({
     person_id: z.string().uuid(), channel: z.enum(["email", "sms"]), subject: z.string().max(200).optional(), body: z.string().min(2).max(2000), reason: z.string().max(300),
+  }) }),
+  z.object({ type: z.literal("tool"), tool: z.literal("propose_messages"), args: z.object({
+    report: z.enum(["past_due", "past_due_absent"]), channel: z.enum(["email", "sms"]), subject: z.string().max(200).optional(), body: z.string().min(2).max(2000), reason: z.string().max(300),
   }) }),
 ]);
 
@@ -50,7 +53,7 @@ Rules:
 - Cite every record you relied on in "citations" (kind + id + a short label). For reports use kind "report" and id = the report key.
 - You cannot change anything. To contact a family, call propose_action: it only creates a draft for a person to approve; say so in your answer.
 - At most 4 tool calls. If the tools can't answer, say what's missing.
-Tools: find_person{query}; person_summary{person_id}; attendance_summary{person_id, weeks}; invoices_for_household{household_id}; run_report{key: ${REPORT_KEYS.join("|")}, weeks?}; kb_search{query} (school policies/FAQ); propose_action{person_id, channel, subject?, body, reason}.`;
+Tools: find_person{query}; person_summary{person_id}; attendance_summary{person_id, weeks}; invoices_for_household{household_id}; run_report{key: ${REPORT_KEYS.join("|")}, weeks?}; kb_search{query} (school policies/FAQ); propose_action{person_id, channel, subject?, body, reason}; propose_messages{report: past_due|past_due_absent, channel, subject?, body, reason} (one draft per family in that report; use {{first_name}} for the recipient).`;
 
 export const copilotStep: AiTask<CopilotStepInput, CopilotStep> = {
   id: "copilot_step",

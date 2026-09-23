@@ -1,0 +1,13 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "type": "tool",
+    "tool": "propose_messages",
+    "args": {
+      "report": "past_due_absent",
+      "channel": "sms",
+      "body": "Hi {{first_name}}, we've missed you at Ridgeline Taekwondo! Your spot on the mat is waiting. If anything's making class or the balance on your account tricky right now, just reply — we're happy to help.",
+      "reason": "Staff asked the copilot to check in with past-due families who haven't been to class in 3 weeks."
+    }
+  }
+}

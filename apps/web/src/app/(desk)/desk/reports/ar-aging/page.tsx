@@ -23,7 +23,7 @@ export default async function ArAgingReport() {
         <div className="overflow-x-auto rounded-xl border border-default bg-surface">
           <table className="w-full min-w-[36rem] text-sm">
             <caption className="sr-only">Unpaid invoices</caption>
-            <thead className="border-b border-default text-left text-xs text-fg-secondary"><tr><th className="px-4 py-2">Invoice</th><th className="px-4 py-2">Household</th><th className="px-4 py-2">Due</th><th className="px-4 py-2 text-right">Days overdue</th><th className="px-4 py-2 text-right">Balance</th></tr></thead>
+            <thead className="border-b border-default text-left text-xs text-fg-secondary"><tr><th className="px-4 py-2">Invoice</th><th className="px-4 py-2">Household</th><th className="px-4 py-2">Due</th><th className="px-4 py-2 text-right">Days overdue</th><th className="px-4 py-2">Dunning</th><th className="px-4 py-2 text-right">Balance</th></tr></thead>
             <tbody className="divide-y divide-default">
               {rows.map((r) => (
                 <tr key={r.invoice_id}>
@@ -31,6 +31,7 @@ export default async function ArAgingReport() {
                   <td className="px-4 py-2">{r.household_name}</td>
                   <td className="px-4 py-2 tabular">{r.due_at}</td>
                   <td className="px-4 py-2 text-right tabular">{r.days_overdue}</td>
+                  <td className="px-4 py-2 text-fg-secondary">{r.dunning_stage ? `step ${r.dunning_stage}` : "—"}</td>
                   <td className="px-4 py-2 text-right tabular">{money(r.balance_cents ?? 0)}</td>
                 </tr>
               ))}

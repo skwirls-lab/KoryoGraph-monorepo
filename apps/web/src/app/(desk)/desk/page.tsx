@@ -25,6 +25,17 @@ export default async function DeskDashboard() {
     ? (await ctx.supabase.from("v_risk_latest").select("person_id", { count: "exact", head: true }).eq("level", "high")).count ?? 0
     : null;
   const scope = await locationScope(ctx);
+  const canBilling = ctx.modules.has("billing") && ctx.permissions.has("billing.read");
+  const month = new Intl.DateTimeFormat("en-CA", { timeZone: ctx.tz }).format(new Date()).slice(0, 7) + "-01";
+  const [{ data: mrr }, { data: ar }, { data: nextTest }, { data: stock }] = await Promise.all([
+    canBilling ? ctx.supabase.from("v_mrr_monthly").select("mrr_cents").eq("month", month).maybeSingle() : Promise.resolve({ data: null }),
+    canBilling ? ctx.supabase.from("v_ar_aging").select("balance_cents").gt("days_overdue", 0).limit(5000) : Promise.resolve({ data: null }),
+    ctx.permissions.has("testing.manage") ? ctx.supabase.from("testing_events").select("id, name, starts_at").gt("starts_at", new Date().toISOString()).neq("status", "cancelled").order("starts_at").limit(1).maybeSingle() : Promise.resolve({ data: null }),
+    ctx.modules.has("retail") && ctx.permissions.has("inventory.manage") ? ctx.supabase.from("inventory_levels").select("on_hand, reorder_point").not("reorder_point", "is", null).limit(5000) : Promise.resolve({ data: null }),
+  ]);
+  const pastDue = (ar ?? []).reduce((n, r) => n + (r.balance_cents ?? 0), 0);
+  const lowStock = stock ? stock.filter((l) => l.reorder_point !== null && l.on_hand <= l.reorder_point).length : null;
+  const money = (c: number) => `$${Math.round(c / 100).toLocaleString("en-US")}`;
   const { data: rollup } = scope.multi ? await ctx.supabase.rpc("location_rollup") : { data: null };
   const att = delta(d?.attendance_this_week ?? 0, d?.attendance_last_week_to_date ?? 0, d?.attendance_last_week ?? 0);
   return (
@@ -36,6 +47,10 @@ export default async function DeskDashboard() {
         <StatCard label="Attendance this week" value={d?.attendance_this_week ?? 0} delta={att.text} tone={att.tone} href="/desk/reports/attendance" />
         {atRisk !== null ? <StatCard label="At risk" value={atRisk} tone={atRisk > 0 ? "warning" : "neutral"} delta={atRisk > 0 ? "Drift Detector · nightly" : undefined} href="/desk/people?risk=high" /> : null}
         <StatCard label="Classes today" value={d?.classes_today ?? 0} href="/desk/schedule" />
+        {canBilling ? <StatCard label="MRR" value={money(mrr?.mrr_cents ?? 0)} hint="Recurring memberships, this month" href="/desk/reports/mrr" /> : null}
+        {canBilling ? <StatCard label="Past due" value={money(pastDue)} tone={pastDue > 0 ? "warning" : "neutral"} delta={ar?.length ? `${ar.length} invoice${ar.length === 1 ? "" : "s"}` : undefined} href="/desk/reports/ar-aging" /> : null}
+        {ctx.permissions.has("testing.manage") ? <StatCard label="Next test" value={nextTest ? new Date(nextTest.starts_at).toLocaleDateString("en-US", { timeZone: ctx.tz, month: "short", day: "numeric" }) : "None"} hint={nextTest?.name} href={nextTest ? `/desk/testing/${nextTest.id}` : "/desk/testing"} /> : null}
+        {lowStock !== null ? <StatCard label="Low stock" value={lowStock} tone={lowStock > 0 ? "warning" : "neutral"} delta={lowStock > 0 ? "At or below reorder point" : undefined} href="/desk/retail" /> : null}
         <StatCard label="Unsigned documents" value={d?.unsigned_documents ?? 0} tone={(d?.unsigned_documents ?? 0) > 0 ? "warning" : "neutral"} delta={(d?.unsigned_documents ?? 0) > 0 ? "Needs attention" : undefined} href="/desk/compliance" />
         <StatCard label="Unread conversations" value={d?.unread_threads ?? 0} href="/desk/inbox" />
       </section>

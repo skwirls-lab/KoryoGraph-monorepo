@@ -1,0 +1,14 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "type": "answer",
+    "text": "{{obs.0.households}} families have an overdue balance and no student in class for 3 weeks or more — {{obs.0.total}} in total:\n{{obs.0.list}}",
+    "citations": [
+      {
+        "kind": "report",
+        "id": "past_due_absent",
+        "label": "AR aging"
+      }
+    ]
+  }
+}

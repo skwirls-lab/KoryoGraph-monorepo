@@ -225,7 +225,22 @@ export function PosRegister(props: {
             <span className="flex-1">Customer: <strong>{household.name}</strong>{household.creditCents ? ` · ${money(household.creditCents)} credit` : ""}</span>
             {!sale ? <Button size="sm" variant="ghost" aria-label="Remove customer" onClick={() => setHousehold(null)}><X className="size-4" /></Button> : null}
           </div>
-        ) : !sale ? (
+        ) : null}
+        {household && household.sizes.some((s) => s.uniformSize) && !sale ? (
+          <ul className="space-y-1 text-sm" aria-label="Sizes on file">
+            {household.sizes.filter((s) => s.uniformSize).map((s) => (
+              <li key={s.name} className="flex items-center gap-2">
+                <span className="flex-1">{s.name}: uniform {s.uniformSize}{s.beltSize ? `, belt ${s.beltSize}` : ""}</span>
+                <Button size="sm" variant="outline" disabled={pending} onClick={() => start(async () => {
+                  const r = await searchPosItems({ q: `DOBOK-${s.uniformSize}`, locationId });
+                  const hit = r.ok ? r.data.find((i) => i.sku?.toUpperCase() === `DOBOK-${s.uniformSize}`.toUpperCase()) : undefined;
+                  if (hit) add(hit); else toast.error(`No dobok in size ${s.uniformSize} in stock here.`);
+                })}>Add dobok ({s.uniformSize}) for {s.name}</Button>
+              </li>
+            ))}
+          </ul>
+        ) : null}
+        {!household && !sale ? (
           <div className="relative">
             <Label htmlFor="pos-household" className="sr-only">Attach a household</Label>
             <Input id="pos-household" value={hhQuery} placeholder="Attach a household (optional)"

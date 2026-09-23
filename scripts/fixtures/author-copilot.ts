@@ -32,6 +32,15 @@ cp("How many students are past due?", [
   { type: "tool", tool: "run_report", args: { key: "past_due" } },
   { type: "answer", text: "{{obs.0.households}} families are past due — {{obs.0.invoices}} overdue invoices covering {{obs.0.students}} students, {{obs.0.total}} in total. The largest balance is {{obs.0.top.0.household}} ({{obs.0.top.0.owed}}).", citations: [{ kind: "report", id: "past_due", label: "AR aging" }] },
 ]);
+// §6 step 11: a combined question, then a bulk draft (one per family) that only lands in Approvals.
+cp("Which families are past due and haven't attended in 3 weeks?", [
+  { type: "tool", tool: "run_report", args: { key: "past_due_absent" } },
+  { type: "answer", text: "{{obs.0.households}} families have an overdue balance and no student in class for 3 weeks or more — {{obs.0.total}} in total:\n{{obs.0.list}}", citations: [{ kind: "report", id: "past_due_absent", label: "AR aging" }] },
+]);
+cp("Draft a friendly SMS to them", [
+  { type: "tool", tool: "propose_messages", args: { report: "past_due_absent", channel: "sms", body: "Hi {{first_name}}, we've missed you at Ridgeline Taekwondo! Your spot on the mat is waiting. If anything's making class or the balance on your account tricky right now, just reply — we're happy to help.", reason: "Staff asked the copilot to check in with past-due families who haven't been to class in 3 weeks." } },
+  { type: "answer", text: "I drafted a friendly text for each of the {{obs.0.created}} families. They're waiting in Approvals for someone to review — nothing has been sent.", citations: [{ kind: "report", id: "past_due_absent", label: "AR aging" }, { kind: "approval", id: "queue", label: "Approvals" }] },
+]);
 cp("How many active students do we have?", [
   { type: "tool", tool: "run_report", args: { key: "active_students" } },
   { type: "answer", text: "You have {{obs.0.active_students}} active students, {{obs.0.trials}} on a trial and {{obs.0.leads}} leads in the pipeline.", citations: [{ kind: "report", id: "active_students", label: "Membership roster" }] },

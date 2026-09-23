@@ -754,3 +754,31 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
 - Removed `APP_SECRET` and `SENTRY_DSN` from `.env.example`: nothing reads them, and the example claimed
   `APP_SECRET` protected kiosk tokens and API keys, which is handled in the database. Error tracking is
   listed in HANDOFF as not wired.
+
+## ADR-0047 — The Alex demo E2E (§6)
+- **Date / task:** 2026-09-25 · M5.10
+- `tests/e2e/demo/alex-walkthrough.spec.ts` performs the §6 script on the demo seed with three browsers:
+  Desk 1440 wide, a Mat/Kiosk tablet, and a Home phone. It saves 26 screenshots to `docs/demo/screenshots/`
+  and writes `docs/demo/WALKTHROUGH.md`, giving each step PASS / HANDOFF / SKIP.
+- **Result without keys:** 22 PASS and 4 HANDOFF. The HANDOFF steps are paying on Home by card, the card
+  retry, the testing fee by card, and real SMS sending.
+  - The walkthrough never pretends: it asserts the app's honest "not configured" message.
+  - It then shows the real alternative the school would use: a check payment on the dunning invoice, the
+    testing fee in cash at the desk, and the SMS waiting in the Outbox.
+- **What the walkthrough fixed on the way:**
+  - The POS household search used `.neq("external_id", …)`, which also drops NULLs, so only imported
+    households could ever be found.
+  - The dashboard lacked MRR, past due, next test and low stock.
+  - AR aging had no dunning column.
+  - The POS didn't use the student's recorded uniform size; it now offers the size on file.
+  - The copilot couldn't answer "past due *and* absent 3 weeks" or draft to several families. It now has a
+    `past_due_absent` report (with a data-built list) and `propose_messages` (one draft per family, into
+    Approvals).
+  - The demo seed booked the Cooper kids into "tonight's" class only if their rank fitted the class's band.
+    They're now always booked, without changing the random sequence.
+- **Time-of-day dependence:** the kiosk offers only today's classes, so step 5 records SKIP (with the reason)
+  if the gate runs on a day Maya has no class. "Tonight's" session is the seeded booked one, even if that's
+  tomorrow.
+- **Testing numbers:** the seed's auto-roster reads 14 eligible / 17 almost, not the script's 6 almost
+  (ADR-0029).
+- `devIndicators: false` keeps the Next dev badge out of the screenshots.

@@ -32,6 +32,9 @@ export async function seedDemo(ctx: SeedContext): Promise<void> {
     ctx.log(`people: ${people.students.length} students, ${people.householdIds.length} households, ${people.guardianIds.length} guardians`);
     const training = await seedTraining(ctx, rng, now, programs, people.students);
     ctx.log(`schedule: ${training.sessions} sessions, ${training.attendance} check-ins, ${training.promotions} promotions`);
+    // Sizes on file for the Cooper kids (§6 step 8: the POS suggests the right uniform).
+    await sql`update public.people set uniform_size = '1', belt_size = '1' where id = ${sid("person:ridgeline:maya-cooper")}`;
+    await sql`update public.people set uniform_size = '2', belt_size = '2' where id = ${sid("person:ridgeline:leo-cooper")}`;
     // The Drift Detector story (§6 step 12): Riley hurt a knee sparring about four weeks ago and hasn't been
     // back since — after two months of already coming less often (the "decaying" profile).
     const riley = sid("person:ridgeline:riley-adams");

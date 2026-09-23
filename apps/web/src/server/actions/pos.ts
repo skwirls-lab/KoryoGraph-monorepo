@@ -309,6 +309,8 @@ export interface PosHousehold {
   name: string;
   cards: { id: string; brand: string | null; last4: string | null; kind: string; is_default: boolean }[];
   creditCents: number;
+  /** Students' sizes on file (uniform / belt), so the right size goes in the bag. */
+  sizes: { name: string; uniformSize: string | null; beltSize: string | null }[];
 }
 
 /** Attach a customer: households by name, with their saved cards and available account credit. */
@@ -318,7 +320,9 @@ export async function searchPosHouseholds(q: string): Promise<ActionResult<{ id:
   if (denied) return denied;
   const term = q.trim().replace(/[%_]/g, "");
   if (term.length < 2) return ok([]);
-  const { data } = await ctx.supabase.from("households").select("id, name").ilike("name", `%${term}%`).is("archived_at", null).neq("external_id", "pos:walk-in").order("name").limit(8);
+  const { data } = await ctx.supabase.from("households").select("id, name").ilike("name", `%${term}%`).is("archived_at", null)
+    // Hide the internal walk-in household; `neq` alone would also drop every household without an external id.
+    .or("external_id.is.null,external_id.neq.pos:walk-in").order("name").limit(8);
   return ok(data ?? []);
 }
 
@@ -327,11 +331,13 @@ export async function posHouseholdInfo(householdId: string): Promise<ActionResul
   const denied = authorize(ctx, need);
   if (denied) return denied;
   if (!uuid.safeParse(householdId).success) return fail("Invalid household.");
-  const [{ data: h }, { data: cards }, { data: credits }] = await Promise.all([
+  const [{ data: h }, { data: cards }, { data: credits }, { data: members }] = await Promise.all([
     ctx.supabase.from("households").select("id, name").eq("id", householdId).maybeSingle(),
     ctx.supabase.from("payment_methods").select("id, brand, last4, kind, is_default").eq("household_id", householdId).eq("status", "active"),
     ctx.supabase.from("credits").select("remaining_cents").eq("household_id", householdId).gt("remaining_cents", 0),
+    ctx.supabase.from("household_members").select("relationship, people(first_name, preferred_name, uniform_size, belt_size)").eq("household_id", householdId).eq("relationship", "student"),
   ]);
   if (!h) return fail("Household not found.");
-  return ok({ ...h, cards: cards ?? [], creditCents: (credits ?? []).reduce((s, c) => s + c.remaining_cents, 0) });
+  const sizes = (members ?? []).flatMap((m) => (m.people ? [{ name: m.people.preferred_name || m.people.first_name, uniformSize: m.people.uniform_size, beltSize: m.people.belt_size }] : []));
+  return ok({ ...h, cards: cards ?? [], creditCents: (credits ?? []).reduce((s, c) => s + c.remaining_cents, 0), sizes });
 }
