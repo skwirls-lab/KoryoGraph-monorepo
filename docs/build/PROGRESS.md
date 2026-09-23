@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M3.06 staff ops
+M3.07 growth reports
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -78,7 +78,7 @@ port 3000          → in use by another container on the host → dev server us
 | M3.03 | done | 7104c71 |  |
 | M3.04 | done | eb28b7c | events/camps/parties; DB 5 tests, e2e events.spec 2 tests green |
 | M3.05 | done | f43df68 | after-school; DB 4 tests, e2e afterschool.spec green |
-| M3.06 | todo |  |  |
+| M3.06 | done | 120c7ae | staff ops; DB 5 tests, e2e staff.spec green; staff invites stay in M5.02 |
 | M3.07 | todo |  |  |
 | M3.08 | todo |  |  |
 | M3.09 | todo |  |  |
