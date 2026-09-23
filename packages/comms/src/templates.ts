@@ -82,6 +82,42 @@ export const SYSTEM_TEMPLATES: Record<string, SystemTemplate> = {
       },
     },
   },
+  payment_failed_1: {
+    key: "payment_failed_1",
+    description: "Dunning step 1: a payment didn't go through",
+    variables: ["first_name", "school_name", "amount", "invoice_number", "link", "error"],
+    channels: {
+      email: {
+        subject: "Your payment to {{school_name}} didn't go through",
+        body: "Hi {{first_name}},\n\nWe tried to collect {{amount}} for invoice #{{invoice_number}}, but the payment didn't go through ({{error}}). We'll try again in a couple of days.\n\nYou can update your card or pay now here:\n{{link}}\n\n— {{school_name}}",
+      },
+      sms: { body: "{{school_name}}: your payment of {{amount}} didn't go through. Update your card or pay: {{link}}" },
+    },
+  },
+  payment_failed_2: {
+    key: "payment_failed_2",
+    description: "Dunning step 2: second notice",
+    variables: ["first_name", "school_name", "amount", "invoice_number", "link", "error"],
+    channels: {
+      email: {
+        subject: "Second notice: {{amount}} is still due",
+        body: "Hi {{first_name}},\n\nInvoice #{{invoice_number}} for {{amount}} is still unpaid — our latest attempt didn't go through ({{error}}).\n\nPlease update your card or pay here:\n{{link}}\n\nIf something's changed, just reply and we'll sort it out.\n\n— {{school_name}}",
+      },
+      sms: { body: "{{school_name}}: {{amount}} is still due (invoice #{{invoice_number}}). Update your card or pay: {{link}}" },
+    },
+  },
+  payment_failed_3: {
+    key: "payment_failed_3",
+    description: "Dunning final step: membership paused",
+    variables: ["first_name", "school_name", "amount", "invoice_number", "link", "error"],
+    channels: {
+      email: {
+        subject: "Membership paused: {{amount}} unpaid",
+        body: "Hi {{first_name}},\n\nWe still couldn't collect {{amount}} for invoice #{{invoice_number}}, so the membership is paused until it's paid. Paying restores it straight away:\n{{link}}\n\nPlease get in touch if you need help.\n\n— {{school_name}}",
+      },
+      sms: { body: "{{school_name}}: the membership is paused until {{amount}} is paid. Pay or update your card: {{link}}" },
+    },
+  },
   thread_message: {
     key: "thread_message",
     description: "New message in a conversation",

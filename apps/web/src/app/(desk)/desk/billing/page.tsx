@@ -5,6 +5,7 @@ import { formatMoney } from "@koryo/ui/components/app/money-text";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { StatCard } from "@koryo/ui/components/app/stat-card";
 import { Badge } from "@koryo/ui/components/ui/badge";
+import { FailedPayments } from "@/components/billing/failed-payments";
 import { ModuleLocked } from "@/components/billing/module-locked";
 import { todayIn } from "@/lib/people";
 import { requireSurfacePage } from "@/server/context";
@@ -94,6 +95,7 @@ export default async function BillingDashboard() {
           )}
         </section>
       </div>
+      <div className="mt-4"><FailedPayments ctx={ctx} /></div>
       <section className="mt-4 rounded-xl border border-default bg-surface p-4 sm:p-5" aria-labelledby="runs-h">
         <h2 id="runs-h" className="mb-3 text-base font-semibold">Recent billing runs</h2>
         {!runs?.length ? <p className="text-sm text-fg-muted">The daily billing run hasn&apos;t run yet.</p> : (

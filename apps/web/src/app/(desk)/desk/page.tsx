@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { FailedPayments } from "@/components/billing/failed-payments";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { StatCard } from "@koryo/ui/components/app/stat-card";
 import { requireSurfacePage } from "@/server/context";
@@ -27,8 +28,12 @@ export default async function DeskDashboard() {
         <StatCard label="Unsigned documents" value={d?.unsigned_documents ?? 0} tone={(d?.unsigned_documents ?? 0) > 0 ? "warning" : "neutral"} delta={(d?.unsigned_documents ?? 0) > 0 ? "Needs attention" : undefined} href="/desk/compliance" />
         <StatCard label="Unread conversations" value={d?.unread_threads ?? 0} href="/desk/inbox" />
       </section>
-      <section className="mt-6 grid gap-4 md:grid-cols-2" aria-label="Coming in later milestones">
-        <div className="rounded-xl border border-dashed border-default p-4 text-sm text-fg-secondary">Revenue, MRR and past-due balances appear here when the Billing module is built (M2).</div>
+      <section className="mt-6 grid gap-4 md:grid-cols-2" aria-label="More">
+        {ctx.modules.has("billing") && ctx.permissions.has("billing.read") ? (
+          <FailedPayments ctx={ctx} limit={5} />
+        ) : (
+          <div className="rounded-xl border border-dashed border-default p-4 text-sm text-fg-secondary">Revenue and past-due balances appear here with the Billing module.</div>
+        )}
         <div className="rounded-xl border border-dashed border-default p-4 text-sm text-fg-secondary">Upcoming belt tests appear here once testing events are built (M3). At-risk students arrive with Intelligence (M4).</div>
       </section>
     </>

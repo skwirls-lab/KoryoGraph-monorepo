@@ -1,5 +1,6 @@
 import { billingRun } from "./billing-run";
 import { dataExport } from "./data-export";
+import { dunning } from "./dunning";
 import { materializeSessions } from "./materialize-sessions";
 import { outboxDispatch } from "./outbox-dispatch";
 import { signaturePdfs } from "./signature-pdfs";
@@ -9,6 +10,7 @@ import type { Job } from "./types";
 export const JOBS: Record<string, Job> = {
   billing_run: billingRun,
   data_export: dataExport,
+  dunning,
   materialize_sessions: materializeSessions,
   outbox_dispatch: outboxDispatch,
   signature_pdfs: signaturePdfs,

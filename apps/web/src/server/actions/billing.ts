@@ -10,6 +10,7 @@ import { z } from "zod";
 import { fail, issuesToFieldErrors, ok, type ActionResult } from "@/lib/action-result";
 import { parseMoney } from "@/lib/curriculum";
 import { enrollmentQuoteSchema, enrollmentSchema, planSchema, type EnrollmentInput, type EnrollmentQuoteInput, type PlanInput } from "@/lib/validation/billing";
+import { chargeInvoiceWithCard } from "../billing/charge";
 import { quoteEnrollment, type EnrollmentQuote } from "../billing/enrollment";
 import { notify } from "../comms";
 import { getCtx } from "../context";
@@ -380,4 +381,26 @@ export async function emailReceipt(invoiceId: string): Promise<ActionResult<{ st
   revalidatePath(`/desk/billing/invoices/${inv.id}`);
   if (!summary.recipients) return fail("No one in this household has an email address we can use.");
   return ok({ status });
+}
+
+/** Desk "Failed payments": retry the balance on the household's card now (after the family updates it). */
+export async function retryInvoicePayment(input: { invoiceId: string; attemptKey: string }): Promise<ActionResult<{ status: string }>> {
+  const ctx = await getCtx();
+  const denied = authorize(ctx, { permission: "billing.charge", module: "billing" });
+  if (denied) return denied;
+  const parsed = z.object({ invoiceId: z.uuid(), attemptKey: z.uuid() }).safeParse(input);
+  if (!parsed.success) return fail("Invalid request.");
+  const ready = await readyStripe(ctx);
+  if ("error" in ready) return fail(ready.error);
+  try {
+    const r = await chargeInvoiceWithCard(ctx.supabase, ready.stripe, { tenantId: ctx.tenantId as string, account: ready.account, currency: ctx.currency }, parsed.data.invoiceId, {
+      attemptKey: `desk-retry:${parsed.data.attemptKey}`, as: "staff",
+    });
+    revalidateInvoice(parsed.data.invoiceId);
+    revalidatePath("/desk");
+    if (r.status === "succeeded" || r.status === "pending") return ok({ status: r.status });
+    return fail(r.error ?? "The card was declined.");
+  } catch (err) {
+    return fail(stripeErrorMessage(err));
+  }
 }

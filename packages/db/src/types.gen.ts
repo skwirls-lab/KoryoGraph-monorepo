@@ -1965,6 +1965,13 @@ export type Database = {
             referencedRelation: "v_ar_aging"
             referencedColumns: ["tenant_id", "invoice_id"]
           },
+          {
+            foreignKeyName: "invoice_lines_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_dunning"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
         ]
       }
       invoices: {
@@ -3141,6 +3148,13 @@ export type Database = {
             referencedColumns: ["tenant_id", "invoice_id"]
           },
           {
+            foreignKeyName: "payment_allocations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_dunning"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
             foreignKeyName: "payment_allocations_tenant_id_payment_id_fkey"
             columns: ["tenant_id", "payment_id"]
             isOneToOne: false
@@ -3328,6 +3342,13 @@ export type Database = {
             columns: ["tenant_id", "invoice_id"]
             isOneToOne: false
             referencedRelation: "v_ar_aging"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "payments_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_dunning"
             referencedColumns: ["tenant_id", "invoice_id"]
           },
           {
@@ -6057,6 +6078,68 @@ export type Database = {
           },
         ]
       }
+      v_dunning: {
+        Row: {
+          balance_cents: number | null
+          due_at: string | null
+          failed_on: string | null
+          household_id: string | null
+          household_name: string | null
+          invoice_id: string | null
+          last_error: string | null
+          membership_id: string | null
+          membership_status: string | null
+          next_step_on: string | null
+          number: number | null
+          stage: number | null
+          status: string | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "invoices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "invoices_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+        ]
+      }
       v_enrollment_progress: {
         Row: {
           classes_since_promotion: number | null
@@ -6679,6 +6762,17 @@ export type Database = {
       create_tenant: {
         Args: { p_name: string; p_slug: string; p_timezone: string }
         Returns: string
+      }
+      dunning_notify: {
+        Args: {
+          p_channels: string[]
+          p_data: Json
+          p_invoice_id: string
+          p_person_ids: string[]
+          p_template_key: string
+          p_tenant_id: string
+        }
+        Returns: number
       }
       enroll_membership: { Args: { p: Json }; Returns: Json }
       export_table_names: {

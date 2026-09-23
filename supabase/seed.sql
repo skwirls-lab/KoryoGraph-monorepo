@@ -67,5 +67,6 @@ insert into public.jobs (name, schedule, description) values
   ('outbox_dispatch', '*/5 * * * *', 'Deliver queued system messages and quiet-hours deferrals'),
   ('signature_pdfs', '*/5 * * * *', 'Render PDFs for signatures made via links or at the desk'),
   ('data_export', '* * * * *', 'Build requested full-tenant data exports'),
-  ('billing_run', '0 6 * * *', 'Invoice memberships due today, update membership states and attempt autopay')
+  ('billing_run', '0 6 * * *', 'Invoice memberships due today, update membership states and attempt autopay'),
+  ('dunning', '30 6 * * *', 'Retry failed payments, send payment-failed notices and suspend at the final step')
 on conflict (name) do update set schedule = excluded.schedule, description = excluded.description;

@@ -1,8 +1,9 @@
 import { advancePeriod, addDaysStr, computeInvoice, familyDiscountPct, freezeProration, toUtc, type Interval } from "@koryo/billing";
 import { rpc } from "@koryo/db";
 import type { Json } from "@koryo/db/types";
-import { chargeCard, feeBpsFromEnv, stripeFromEnv } from "@koryo/payments";
+import { stripeFromEnv } from "@koryo/payments";
 import { todayIn } from "@/lib/people";
+import { chargeInvoiceWithCard } from "../billing/charge";
 import type { Job, JobStats } from "./types";
 
 const LIVE = ["active", "trial", "past_due", "on_hold"];
@@ -123,31 +124,21 @@ export const billingRun: Job = async ({ db, now, tenantId, log }) => {
       } else if (stripe && t.stripe_account_id) {
         for (const c of toCharge) {
           attempted++;
-          const [{ data: pm }, { data: h }] = await Promise.all([
-            db.from("payment_methods").select("stripe_payment_method_id, status").eq("id", c.m.payment_method_id ?? "").maybeSingle(),
-            db.from("households").select("stripe_customer_id").eq("id", c.m.household_id).maybeSingle(),
-          ]);
-          if (!pm || pm.status !== "active" || !h?.stripe_customer_id) {
-            bump("charges_failed");
-            await db.from("invoices").update({ dunning_state: { attempts: 1, failed_on: today, stage: 0, last_error: "No usable card on file" } }).eq("id", c.invoiceId);
-            continue;
-          }
+          const failed = (message: string) => db.from("invoices").update({ dunning_state: { attempts: 1, failed_on: today, stage: 0, last_error: message } }).eq("id", c.invoiceId);
           try {
-            const pi = await chargeCard(stripe, t.stripe_account_id, {
-              tenantId: tid, householdId: c.m.household_id, customerId: h.stripe_customer_id, amountCents: c.total, currency: t.currency,
-              paymentMethodId: pm.stripe_payment_method_id, offSession: true, invoiceId: c.invoiceId, attemptKey: `run:${today}`, description: "Membership", feeBps: feeBpsFromEnv(),
+            const r = await chargeInvoiceWithCard(db, stripe, { tenantId: tid, account: t.stripe_account_id, currency: t.currency }, c.invoiceId, {
+              attemptKey: `run:${today}`, paymentMethodId: c.m.payment_method_id, as: "service", description: "Membership",
             });
-            await rpc(db, "record_payment_intent_for", { p_tenant_id: tid, p_pi: pi as unknown as Json });
-            if (pi.status === "succeeded" || pi.status === "processing") bump("charges_succeeded");
+            if (r.status === "succeeded" || r.status === "pending") bump("charges_succeeded");
             else {
               bump("charges_failed");
-              await db.from("invoices").update({ dunning_state: { attempts: 1, failed_on: today, stage: 0, last_error: pi.last_payment_error?.message ?? "declined" } }).eq("id", c.invoiceId);
+              await failed(r.error ?? "declined");
             }
           } catch (err) {
             bump("charges_failed");
             const message = err instanceof Error ? err.message : String(err);
             errors.push(`charge for invoice ${c.invoiceId}: ${message}`);
-            await db.from("invoices").update({ dunning_state: { attempts: 1, failed_on: today, stage: 0, last_error: message } }).eq("id", c.invoiceId);
+            await failed(message);
           }
         }
       }
