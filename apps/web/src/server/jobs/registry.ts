@@ -9,6 +9,7 @@ import { kbScheduleDigest } from "./kb-schedule-digest";
 import { materializeSessions } from "./materialize-sessions";
 import { outboxDispatch } from "./outbox-dispatch";
 import { signaturePdfs } from "./signature-pdfs";
+import { transcribeJob } from "./transcribe";
 import type { Job } from "./types";
 
 /** Every job the platform runs. Names match rows in public.jobs (seed.sql). */
@@ -24,4 +25,5 @@ export const JOBS: Record<string, Job> = {
   materialize_sessions: materializeSessions,
   outbox_dispatch: outboxDispatch,
   signature_pdfs: signaturePdfs,
+  transcribe: transcribeJob,
 };

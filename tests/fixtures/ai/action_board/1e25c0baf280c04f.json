@@ -1,0 +1,93 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "attendance": [
+      {
+        "personId": "54bce467-6f99-5210-b160-0e8c7b71f84e",
+        "evidence": "named as here tonight",
+        "confidence": 0.95
+      },
+      {
+        "personId": "ecfbf283-0a0d-5930-a3f4-fd9d4ebdc585",
+        "evidence": "named as here tonight",
+        "confidence": 0.95
+      },
+      {
+        "personId": "a75df1d5-0471-57f1-9a91-93b0a9d1081d",
+        "evidence": "named as here tonight",
+        "confidence": 0.95
+      },
+      {
+        "personId": "d2bacde1-65ed-5340-8f1a-37cbb1775abf",
+        "evidence": "named as here tonight",
+        "confidence": 0.95
+      },
+      {
+        "personId": "e2a81cd3-910d-581f-b371-abcd2713d4cc",
+        "evidence": "named as here tonight",
+        "confidence": 0.95
+      },
+      {
+        "personId": "7b2072a1-9e06-5cc0-a029-fb62abe10505",
+        "evidence": "named as here tonight",
+        "confidence": 0.95
+      },
+      {
+        "personId": "aa4cec46-180c-58c8-aa51-4dce35688e22",
+        "evidence": "named as here tonight",
+        "confidence": 0.95
+      },
+      {
+        "personId": "4594445e-d71f-54fb-ba38-16a5dc8e06ef",
+        "evidence": "named as here tonight",
+        "confidence": 0.95
+      },
+      {
+        "personId": "c1c37859-ee37-51b6-b79b-58625fc315cd",
+        "evidence": "named as here tonight",
+        "confidence": 0.95
+      },
+      {
+        "personId": "9eda1c76-7ca6-5d71-a403-7762664bffae",
+        "evidence": "“I think Jo was in the back row but I'm not sure”",
+        "confidence": 0.45
+      }
+    ],
+    "skillNotes": [
+      {
+        "personId": "54bce467-6f99-5210-b160-0e8c7b71f84e",
+        "skillId": "e36365cf-62ef-576a-bbe9-6aeae86d58d5",
+        "note": "Nailed the low block",
+        "signOff": true,
+        "confidence": 0.92
+      },
+      {
+        "personId": "ecfbf283-0a0d-5930-a3f4-fd9d4ebdc585",
+        "skillId": "3d19867e-baac-5332-aba3-ff291d72d040",
+        "note": "Front kick is ready",
+        "signOff": true,
+        "confidence": 0.9
+      },
+      {
+        "personId": "a75df1d5-0471-57f1-9a91-93b0a9d1081d",
+        "skillId": "868883d2-e0dc-5cb4-a87b-51cb6bdd8574",
+        "note": "Performed Taegeuk 1 cleanly",
+        "signOff": true,
+        "confidence": 0.88
+      }
+    ],
+    "injuries": [
+      {
+        "personId": "d2bacde1-65ed-5340-8f1a-37cbb1775abf",
+        "note": "Rolled her ankle a little during sparring; keep an eye on it next class.",
+        "confidence": 0.9
+      }
+    ],
+    "followUps": [
+      {
+        "title": "Call Eli's parents about moving up to the advanced class",
+        "personId": "e2a81cd3-910d-581f-b371-abcd2713d4cc"
+      }
+    ]
+  }
+}

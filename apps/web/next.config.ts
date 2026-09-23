@@ -4,6 +4,7 @@ import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
   transpilePackages: ["@koryo/ui"],
+  serverExternalPackages: ["ffmpeg-static"],
   poweredByHeader: false,
   // Only the public trial form (/s/…, embedded by the widget) may be framed by other sites.
   async headers() {

@@ -25,7 +25,7 @@ async function decideOne(ctx: Ctx, v: z.infer<typeof decideSchema>): Promise<Act
   if (error || !item) return fail(error?.code === "42501" ? "You don't have permission to approve." : error?.message ? error.message.charAt(0).toUpperCase() + error.message.slice(1) + "." : "Couldn't record the decision.");
   if (v.decision === "rejected") return ok({ result: null });
   const result = await executeApproval(ctx, item);
-  await ctx.supabase.rpc("record_approval_execution", { p_id: item.id, p_result: result as unknown as Json });
+  if (item.kind !== "action_board" || !result.ok) await ctx.supabase.rpc("record_approval_execution", { p_id: item.id, p_result: result as unknown as Json });
   return ok({ result });
 }
 

@@ -1709,6 +1709,107 @@ export type Database = {
           },
         ]
       }
+      class_recordings: {
+        Row: {
+          approval_item_id: string | null
+          created_at: string
+          created_by: string | null
+          error: string | null
+          id: string
+          mime: string | null
+          session_id: string
+          size_bytes: number | null
+          source: string
+          status: string
+          storage_path: string | null
+          tenant_id: string
+          transcript: string | null
+          updated_at: string
+        }
+        Insert: {
+          approval_item_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          id?: string
+          mime?: string | null
+          session_id: string
+          size_bytes?: number | null
+          source?: string
+          status?: string
+          storage_path?: string | null
+          tenant_id: string
+          transcript?: string | null
+          updated_at?: string
+        }
+        Update: {
+          approval_item_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          id?: string
+          mime?: string | null
+          session_id?: string
+          size_bytes?: number | null
+          source?: string
+          status?: string
+          storage_path?: string | null
+          tenant_id?: string
+          transcript?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_recordings_approval_item_id_fkey"
+            columns: ["approval_item_id"]
+            isOneToOne: false
+            referencedRelation: "approval_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_recordings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_recordings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "class_recordings_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "class_recordings_tenant_id_session_id_fkey"
+            columns: ["tenant_id", "session_id"]
+            isOneToOne: false
+            referencedRelation: "class_sessions"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "class_recordings_tenant_id_session_id_fkey"
+            columns: ["tenant_id", "session_id"]
+            isOneToOne: false
+            referencedRelation: "v_session_stats"
+            referencedColumns: ["tenant_id", "session_id"]
+          },
+          {
+            foreignKeyName: "class_recordings_tenant_id_session_id_fkey"
+            columns: ["tenant_id", "session_id"]
+            isOneToOne: false
+            referencedRelation: "v_upcoming_for_person"
+            referencedColumns: ["tenant_id", "session_id"]
+          },
+        ]
+      }
       class_sessions: {
         Row: {
           action_board_status: string | null
@@ -12346,6 +12447,7 @@ export type Database = {
         }
         Returns: string
       }
+      execute_action_board: { Args: { p_id: string }; Returns: Json }
       export_table_names: {
         Args: never
         Returns: {
@@ -12567,6 +12669,13 @@ export type Database = {
           p_stripe_refund_id?: string
         }
         Returns: string
+      }
+      recording_consent_gaps: {
+        Args: { p_session_id: string }
+        Returns: {
+          name: string
+          person_id: string
+        }[]
       }
       register_for_event: {
         Args: {

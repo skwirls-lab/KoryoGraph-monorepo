@@ -1,0 +1,6 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "transcript": "Great class tonight, everyone worked hard. Here tonight: Ari, Bea, Cal, Dee, Eli, Fay, Gus, Hal and Ivy. I think Jo was in the back row but I'm not sure.\nAri nailed the low block — sign it off. Bea's front kick is ready, sign that off too. Cal performed Taegeuk 1 cleanly, that's a pass.\nDee rolled her ankle a bit during sparring; keep an eye on it next class.\nCan someone call Eli's parents about moving up to the advanced class?"
+  }
+}

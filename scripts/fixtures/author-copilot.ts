@@ -1,7 +1,9 @@
 // Hand-authors the copilot and Home assistant fixtures (no OpenRouter key available). `npx tsx scripts/fixtures/author-copilot.ts`
-import { mkdirSync, writeFileSync } from "node:fs";
+import { createHash } from "node:crypto";
+import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { copilotStep, driftOutreach, homeAssistant, inputHash } from "@koryo/ai";
+import { actionBoard, copilotStep, driftOutreach, homeAssistant, inputHash, transcribe } from "@koryo/ai";
+import { AB, AB_TRANSCRIPT } from "../../tests/fixtures/action-board";
 import { sid } from "../lib/ids";
 
 const dir = join(process.cwd(), "tests/fixtures/ai");
@@ -80,4 +82,24 @@ for (const combo of COMBOS) {
       emailBody: "Hi {{first_name}},\n\nWe've noticed you haven't made it to class as often lately and just wanted to check in. If your schedule has changed, we're happy to help you find a class time that works, or to put your membership on hold for a few weeks.\n\nReply any time — we'd love to see you back on the mat.\n\nRidgeline Taekwondo",
     } });
   }
+}
+
+// Action board (M4.06): the transcript of the spec's class, and the tone WAV that "transcribes" to it.
+{
+  const wav = readFileSync(join(process.cwd(), "tests/fixtures/audio/class-short.wav"));
+  const sha256 = createHash("sha256").update(wav).digest("hex");
+  write("transcribe", transcribe.fixtureKey!({ audioBase64: "", format: "mp3", sha256 }), { output: { transcript: AB_TRANSCRIPT } });
+  const [ari, bea, cal, dee, eli, ...rest] = AB.students;
+  const jo = AB.students.find((s) => s.first === "Jo");
+  write("action_board", actionBoard.fixtureKey!({ className: "", transcript: AB_TRANSCRIPT, roster: [], skills: [] }), { output: {
+    attendance: [...[ari, bea, cal, dee, eli, ...rest.filter((s) => s.first !== "Jo")].map((s) => ({ personId: s!.id, evidence: `named as here tonight`, confidence: 0.95 })),
+      { personId: jo!.id, evidence: "“I think Jo was in the back row but I'm not sure”", confidence: 0.45 }],
+    skillNotes: [
+      { personId: ari!.id, skillId: AB.skills.lowBlock, note: "Nailed the low block", signOff: true, confidence: 0.92 },
+      { personId: bea!.id, skillId: AB.skills.frontKick, note: "Front kick is ready", signOff: true, confidence: 0.9 },
+      { personId: cal!.id, skillId: AB.skills.taegeuk1, note: "Performed Taegeuk 1 cleanly", signOff: true, confidence: 0.88 },
+    ],
+    injuries: [{ personId: dee!.id, note: "Rolled her ankle a little during sparring; keep an eye on it next class.", confidence: 0.9 }],
+    followUps: [{ title: "Call Eli's parents about moving up to the advanced class", personId: eli!.id }],
+  } });
 }

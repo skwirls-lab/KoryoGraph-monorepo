@@ -483,3 +483,20 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   message text, citations and titles.
 - Fixtures for 6 copilot prompts and 2 Home questions are hand-authored (`scripts/fixtures/author-copilot.ts`);
   any other question in fixture mode gets an honest "not one of the recorded dev examples" reply.
+
+## ADR-0033 — Action Board: consent backstop in SQL, ffmpeg-static, atomic execution
+- **Date / task:** 2026-09-25 · M4.06
+- Recording a class requires AI-processing consent for every minor on the roster. The Mat UI lists who's
+  missing and switches to typed notes; a `before insert` trigger on `class_recordings` refuses audio
+  recordings regardless of the UI.
+- Browser recordings (WebM/Opus) are converted to 16 kHz mono MP3 with `ffmpeg-static` (a pinned binary
+  dependency; the host has no system ffmpeg) because audio-capable chat models take WAV/MP3.
+- The model's board is checked against the class's real roster and skills: rows about unknown people or skill
+  ids are dropped and counted, sign-offs need a real enrollment, and rows under 0.7 confidence start
+  unticked so they need an explicit tick.
+- Approving a board runs `execute_action_board` — one transaction, at most once, from the approved payload.
+  It needs ai.approve + attendance.write, and it's the board (not a general permission) that lets an
+  instructor create the follow-up task and notes. A failure is shown plainly ("Approved, but it couldn't be
+  saved: …") instead of half-writing.
+- The test/demo class audio is a 1-second tone whose recorded fixture transcript is the scripted class notes
+  (dev fixture); live transcription replaces it when a key exists.

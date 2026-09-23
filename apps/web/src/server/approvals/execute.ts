@@ -2,6 +2,7 @@ import "server-only";
 import { textToHtml } from "@koryo/comms";
 import type { Json } from "@koryo/db/types";
 import { messagePayloadSchema, type ApprovalKind } from "@/lib/approvals";
+import { executeBoard } from "../action-board";
 import type { Ctx } from "../context";
 
 export interface ApprovedItem { id: string; kind: string; payload: unknown; person_id: string | null }
@@ -44,6 +45,7 @@ const EXECUTORS: Partial<Record<ApprovalKind, Executor>> = {
   drift_outreach: sendMessages,
   billing_recovery: sendMessages,
   copilot_write: sendMessages,
+  action_board: (ctx, item) => executeBoard(ctx.supabase, item.id, item.payload),
 };
 
 export function registerExecutor(kind: ApprovalKind, fn: Executor): void {
