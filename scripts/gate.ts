@@ -43,7 +43,9 @@ interface Step {
 const e2eDirs = MILESTONES.slice(0, level + 1)
   .map((m) => `tests/e2e/${m}`)
   .filter((d) => existsSync(path.join(repoRoot, d)));
-if (level >= MILESTONES.indexOf("m5") && existsSync(path.join(repoRoot, "tests/e2e/demo"))) e2eDirs.push("tests/e2e/demo");
+// The §6 walkthrough runs on its own, on a fresh demo reset, after the other specs (it changes a lot of the
+// demo data, so it must not share the database with specs running in parallel).
+const demoWalkthrough = level >= MILESTONES.indexOf("m5") && existsSync(path.join(repoRoot, "tests/e2e/demo"));
 
 const invert = [...blocked.map((id) => `@blocked:${id}`), ...skippedForKeys.map((k) => k.tag)];
 const grepInvert = invert.length ? ` --grep-invert "${invert.join("|")}"` : "";
@@ -69,6 +71,13 @@ steps.push({
   cmd: `npx playwright test ${e2eDirs.join(" ")}${grepInvert}`,
   env: level >= MILESTONES.indexOf("m4") ? { AI_TRANSPORT: "fixture" } : undefined,
 });
+if (demoWalkthrough) {
+  steps.push({
+    name: "§6 demo walkthrough (fresh demo reset)",
+    cmd: "npx supabase db reset && npx tsx scripts/seed/index.ts --profile demo && npx playwright test tests/e2e/demo --workers=1",
+    env: { AI_TRANSPORT: "fixture" },
+  });
+}
 if (level >= MILESTONES.indexOf("m5")) {
   steps.push({
     name: "production build: client bundle has no secrets",

@@ -5,7 +5,7 @@ by the test at that step. AI results come from recorded dev fixtures (no OpenRou
 and are labelled "dev fixture" in the app. **HANDOFF** marks a step whose live part needs a key this run didn't
 have — see [docs/HANDOFF.md](../HANDOFF.md).
 
-Run: 2026-09-23 08:06 UTC · Stripe not configured
+Run: 2026-09-23 08:14 UTC · Stripe not configured
 
 ## 01. Desk dashboard: live counts — PASS
 
