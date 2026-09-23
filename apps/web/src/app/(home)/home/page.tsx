@@ -19,10 +19,18 @@ export default async function MemberHome() {
     ids.length ? ctx.supabase.from("v_required_documents").select("person_id").in("person_id", ids).is("signature_id", null) : Promise.resolve({ data: [] }),
     ctx.supabase.from("message_threads").select("id").gt("unread_household", 0),
   ]);
+  const { data: invites } = ids.length
+    ? await ctx.supabase.from("testing_registrations").select("id, testing_event_id, people(first_name, preferred_name), ranks!testing_registrations_tenant_id_to_rank_id_fkey(name), testing_events(name)").in("person_id", ids).eq("status", "invited")
+    : { data: [] };
   return (
     <>
       <PageHeader title="Home" description={ctx.tenantName ?? undefined} />
       <div className="space-y-4">
+        {(invites ?? []).map((i) => (
+          <Link key={i.id} href={`/home/testing/${i.testing_event_id}`} className="block rounded-xl border border-primary/50 bg-primary/10 p-4 text-fg no-underline">
+            <strong>{i.people?.preferred_name || i.people?.first_name} is invited to test for {i.ranks?.name}</strong> — {i.testing_events?.name}. Tap to register.
+          </Link>
+        ))}
         {unsigned?.length ? (
           <Link href="/home/documents" className="block rounded-xl border border-warning/60 bg-warning/10 p-4 text-fg no-underline">
             <strong>{unsigned.length} form{unsigned.length === 1 ? "" : "s"} to sign</strong> — tap to review.

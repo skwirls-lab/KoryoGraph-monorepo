@@ -527,32 +527,47 @@ export type Database = {
       certificate_templates: {
         Row: {
           background_path: string | null
+          body: string
           created_at: string
           id: string
+          is_default: boolean
           layout: Json
           name: string
           signature_path: string | null
+          signer_name: string | null
+          signer_title: string | null
           tenant_id: string
+          title: string
           updated_at: string
         }
         Insert: {
           background_path?: string | null
+          body?: string
           created_at?: string
           id?: string
+          is_default?: boolean
           layout?: Json
           name: string
           signature_path?: string | null
+          signer_name?: string | null
+          signer_title?: string | null
           tenant_id: string
+          title?: string
           updated_at?: string
         }
         Update: {
           background_path?: string | null
+          body?: string
           created_at?: string
           id?: string
+          is_default?: boolean
           layout?: Json
           name?: string
           signature_path?: string | null
+          signer_name?: string | null
+          signer_title?: string | null
           tenant_id?: string
+          title?: string
           updated_at?: string
         }
         Relationships: [
@@ -3941,6 +3956,8 @@ export type Database = {
           injury_flags: string[]
           kukkiwon_id: string | null
           last_name: string
+          name_native: string | null
+          nationality: string | null
           phone: string | null
           phone_sms_consent: boolean
           photo_path: string | null
@@ -3952,6 +3969,7 @@ export type Database = {
           status_changed_at: string
           status_reason: string | null
           tags: string[]
+          tcon_id: string | null
           tenant_id: string
           type_flags: string[]
           uniform_size: string | null
@@ -3977,6 +3995,8 @@ export type Database = {
           injury_flags?: string[]
           kukkiwon_id?: string | null
           last_name?: string
+          name_native?: string | null
+          nationality?: string | null
           phone?: string | null
           phone_sms_consent?: boolean
           photo_path?: string | null
@@ -3988,6 +4008,7 @@ export type Database = {
           status_changed_at?: string
           status_reason?: string | null
           tags?: string[]
+          tcon_id?: string | null
           tenant_id: string
           type_flags?: string[]
           uniform_size?: string | null
@@ -4013,6 +4034,8 @@ export type Database = {
           injury_flags?: string[]
           kukkiwon_id?: string | null
           last_name?: string
+          name_native?: string | null
+          nationality?: string | null
           phone?: string | null
           phone_sms_consent?: boolean
           photo_path?: string | null
@@ -4024,6 +4047,7 @@ export type Database = {
           status_changed_at?: string
           status_reason?: string | null
           tags?: string[]
+          tcon_id?: string | null
           tenant_id?: string
           type_flags?: string[]
           uniform_size?: string | null
@@ -7129,6 +7153,330 @@ export type Database = {
           },
         ]
       }
+      testing_events: {
+        Row: {
+          capacity: number | null
+          created_at: string
+          created_by: string | null
+          ends_at: string | null
+          fee_cents: number
+          id: string
+          judges: string[]
+          location_id: string | null
+          name: string
+          notes: string | null
+          program_ids: string[]
+          registration_deadline: string | null
+          starts_at: string
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          capacity?: number | null
+          created_at?: string
+          created_by?: string | null
+          ends_at?: string | null
+          fee_cents?: number
+          id?: string
+          judges?: string[]
+          location_id?: string | null
+          name: string
+          notes?: string | null
+          program_ids?: string[]
+          registration_deadline?: string | null
+          starts_at: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          capacity?: number | null
+          created_at?: string
+          created_by?: string | null
+          ends_at?: string | null
+          fee_cents?: number
+          id?: string
+          judges?: string[]
+          location_id?: string | null
+          name?: string
+          notes?: string | null
+          program_ids?: string[]
+          registration_deadline?: string | null
+          starts_at?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "testing_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "testing_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "testing_events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "testing_events_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      testing_registrations: {
+        Row: {
+          created_at: string
+          eligibility_snapshot: Json
+          enrollment_id: string
+          id: string
+          invited_at: string | null
+          invoice_id: string | null
+          override_reason: string | null
+          person_id: string
+          promotion_id: string | null
+          registered_at: string | null
+          result_notes: string | null
+          status: string
+          tenant_id: string
+          testing_event_id: string
+          to_rank_id: string | null
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          eligibility_snapshot?: Json
+          enrollment_id: string
+          id?: string
+          invited_at?: string | null
+          invoice_id?: string | null
+          override_reason?: string | null
+          person_id: string
+          promotion_id?: string | null
+          registered_at?: string | null
+          result_notes?: string | null
+          status?: string
+          tenant_id: string
+          testing_event_id: string
+          to_rank_id?: string | null
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          eligibility_snapshot?: Json
+          enrollment_id?: string
+          id?: string
+          invited_at?: string | null
+          invoice_id?: string | null
+          override_reason?: string | null
+          person_id?: string
+          promotion_id?: string | null
+          registered_at?: string | null
+          result_notes?: string | null
+          status?: string
+          tenant_id?: string
+          testing_event_id?: string
+          to_rank_id?: string | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "testing_registrations_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "enrollments"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "v_enrollment_progress"
+            referencedColumns: ["tenant_id", "enrollment_id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_ar_aging"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_dunning"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_revenue_lines"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_promotion_id_fkey"
+            columns: ["tenant_id", "promotion_id"]
+            isOneToOne: false
+            referencedRelation: "promotions"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_testing_event_id_fkey"
+            columns: ["tenant_id", "testing_event_id"]
+            isOneToOne: false
+            referencedRelation: "testing_events"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "testing_registrations_tenant_id_to_rank_id_fkey"
+            columns: ["tenant_id", "to_rank_id"]
+            isOneToOne: false
+            referencedRelation: "ranks"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      testing_scores: {
+        Row: {
+          comments: string | null
+          created_at: string
+          id: string
+          judge_user_id: string
+          registration_id: string
+          result: string | null
+          scores: Json
+          tenant_id: string
+          total: number | null
+          updated_at: string
+        }
+        Insert: {
+          comments?: string | null
+          created_at?: string
+          id?: string
+          judge_user_id: string
+          registration_id: string
+          result?: string | null
+          scores?: Json
+          tenant_id: string
+          total?: number | null
+          updated_at?: string
+        }
+        Update: {
+          comments?: string | null
+          created_at?: string
+          id?: string
+          judge_user_id?: string
+          registration_id?: string
+          result?: string | null
+          scores?: Json
+          tenant_id?: string
+          total?: number | null
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "testing_scores_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "testing_scores_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "testing_scores_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "testing_scores_tenant_id_registration_id_fkey"
+            columns: ["tenant_id", "registration_id"]
+            isOneToOne: false
+            referencedRelation: "testing_registrations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       thread_messages: {
         Row: {
           attachments: Json
@@ -8681,6 +9029,13 @@ export type Database = {
           waitlist_position: number
         }[]
       }
+      bulk_promote: {
+        Args: { p_event_id: string; p_registration_ids: string[] }
+        Returns: {
+          promotion_id: string
+          registration_id: string
+        }[]
+      }
       cancel_booking: {
         Args: { p_booking_id: string }
         Returns: {
@@ -8891,6 +9246,10 @@ export type Database = {
           p_reason: string
           p_stripe_refund_id?: string
         }
+        Returns: string
+      }
+      register_for_testing: {
+        Args: { p_registration_id: string }
         Returns: string
       }
       reorder_ranks: {

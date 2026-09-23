@@ -17,11 +17,11 @@ export interface SignaturePdfInput {
 }
 
 /** Standard 14 fonts only speak WinAnsi; replace what they can't encode rather than failing. */
-function safe(text: string): string {
+export function safe(text: string): string {
   return text.replace(/[‘’]/g, "'").replace(/[“”]/g, '"').replace(/[–—]/g, "-").replace(/…/g, "...").replace(/[^\x20-\x7E\xA0-\xFF]/g, "?");
 }
 
-function wrap(text: string, font: PDFFont, size: number, width: number): string[] {
+export function wrap(text: string, font: PDFFont, size: number, width: number): string[] {
   const words = safe(text).split(/\s+/);
   const lines: string[] = [];
   let line = "";

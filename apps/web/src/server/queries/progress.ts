@@ -1,6 +1,7 @@
 import "server-only";
 import { evaluate, type EligibilityResult } from "@koryo/eligibility";
 import type { Ctx } from "../context";
+import { fetchAll } from "../lib/fetch-all";
 
 export interface EnrollmentProgress {
   enrollmentId: string;
@@ -41,14 +42,17 @@ export async function getProgress(ctx: Ctx, f: { personIds?: string[]; enrollmen
   const programIds = [...new Set(rows.map((r) => r.program_id as string))];
   const nextRankIds = rows.map((r) => r.next_rank_id).filter((x): x is string => Boolean(x));
 
+  // Per-enrollment tables can exceed PostgREST's 1,000-row page for a big roster: read them all.
   const [programs, ranks, rankSkills, signoffs, promotions, stripes, approvals] = await Promise.all([
     ctx.supabase.from("programs").select("id, name").in("id", programIds),
     ctx.supabase.from("ranks").select("id, name, belt_color, position, program_id").in("program_id", programIds).order("position"),
-    nextRankIds.length ? ctx.supabase.from("rank_skills").select("rank_id, skill_id, skills(name)").in("rank_id", nextRankIds).eq("required", true) : Promise.resolve({ data: [] }),
-    ctx.supabase.from("skill_signoffs").select("enrollment_id, skill_id, signed_off_at, score, notes, source, skills(name)").in("enrollment_id", enrollmentIds),
-    ctx.supabase.from("promotions").select("enrollment_id, promoted_at, reason, to_rank:ranks!promotions_tenant_id_to_rank_id_fkey(name), from_rank:ranks!promotions_tenant_id_from_rank_id_fkey(name)").in("enrollment_id", enrollmentIds),
-    ctx.supabase.from("stripe_awards").select("enrollment_id, awarded_at, note").in("enrollment_id", enrollmentIds),
-    ctx.supabase.from("promotion_approvals").select("enrollment_id, rank_id, approved_at, note").in("enrollment_id", enrollmentIds),
+    nextRankIds.length
+      ? fetchAll((a, b) => ctx.supabase.from("rank_skills").select("rank_id, skill_id, skills(name)").in("rank_id", nextRankIds).eq("required", true).order("id").range(a, b)).then((data) => ({ data }))
+      : Promise.resolve({ data: [] }),
+    fetchAll((a, b) => ctx.supabase.from("skill_signoffs").select("enrollment_id, skill_id, signed_off_at, score, notes, source, skills(name)").in("enrollment_id", enrollmentIds).order("id").range(a, b)).then((data) => ({ data })),
+    fetchAll((a, b) => ctx.supabase.from("promotions").select("enrollment_id, promoted_at, reason, to_rank:ranks!promotions_tenant_id_to_rank_id_fkey(name), from_rank:ranks!promotions_tenant_id_from_rank_id_fkey(name)").in("enrollment_id", enrollmentIds).order("id").range(a, b)).then((data) => ({ data })),
+    fetchAll((a, b) => ctx.supabase.from("stripe_awards").select("enrollment_id, awarded_at, note").in("enrollment_id", enrollmentIds).order("id").range(a, b)).then((data) => ({ data })),
+    fetchAll((a, b) => ctx.supabase.from("promotion_approvals").select("enrollment_id, rank_id, approved_at, note").in("enrollment_id", enrollmentIds).order("id").range(a, b)).then((data) => ({ data })),
   ]);
 
   const programName = new Map((programs.data ?? []).map((p) => [p.id, p.name]));

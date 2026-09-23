@@ -28,6 +28,7 @@ export const DESK_NAV: NavItem[] = [
   { href: "/desk/schedule", label: "Schedule", icon: "calendar", permission: "desk.access" },
   { href: "/desk/programs", label: "Programs", icon: "award", permission: "desk.access" },
   { href: "/desk/curriculum", label: "Curriculum", icon: "book", permission: "desk.access" },
+  { href: "/desk/testing", label: "Testing", icon: "check-square", permission: "testing.manage" },
   { href: "/desk/billing", label: "Billing", icon: "credit-card", permission: "billing.read", module: "billing" },
   { href: "/desk/retail", label: "Retail", icon: "shopping-bag", permission: "retail.sell", module: "retail" },
   { href: "/desk/inbox", label: "Inbox", icon: "inbox", permission: "comms.send" },
@@ -41,6 +42,7 @@ export const MAT_NAV: NavItem[] = [
   { href: "/mat", label: "Today", icon: "calendar", permission: "mat.access" },
   { href: "/mat/students", label: "Students", icon: "users", permission: "mat.access" },
   { href: "/mat/schedule", label: "Schedule", icon: "clipboard", permission: "mat.access" },
+  { href: "/mat/testing", label: "Testing", icon: "check-square", permission: "testing.manage" },
 ];
 
 export const HOME_NAV: NavItem[] = [

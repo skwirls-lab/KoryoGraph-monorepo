@@ -118,6 +118,28 @@ export const SYSTEM_TEMPLATES: Record<string, SystemTemplate> = {
       sms: { body: "{{school_name}}: the membership is paused until {{amount}} is paid. Pay or update your card: {{link}}" },
     },
   },
+  test_invitation: {
+    key: "test_invitation",
+    description: "Invite a student to a belt test",
+    variables: ["first_name", "student_name", "event_name", "event_date", "rank_name", "fee", "deadline", "link", "school_name"],
+    channels: {
+      email: {
+        subject: "{{student_name}} is invited to test for {{rank_name}}",
+        body: "Hi {{first_name}},\n\n{{student_name}} is ready to test for {{rank_name}} at {{event_name}} on {{event_date}}. Register by {{deadline}} (testing fee {{fee}}):\n\n{{link}}\n\n— {{school_name}}",
+      },
+      sms: { body: "{{school_name}}: {{student_name}} is invited to test for {{rank_name}} on {{event_date}}. Register: {{link}}" },
+      inapp: { body: "{{student_name}} is invited to test for {{rank_name}} on {{event_date}}." },
+    },
+  },
+  promotion_congrats: {
+    key: "promotion_congrats",
+    description: "Congratulate a family on a promotion",
+    variables: ["first_name", "student_name", "rank_name", "event_name", "school_name"],
+    channels: {
+      email: { subject: "Congratulations — {{student_name}} earned {{rank_name}}!", body: "Hi {{first_name}},\n\nCongratulations! {{student_name}} passed {{event_name}} and is now {{rank_name}}. Their certificate is ready at the front desk.\n\n— {{school_name}}" },
+      inapp: { body: "{{student_name}} earned {{rank_name}}!" },
+    },
+  },
   thread_message: {
     key: "thread_message",
     description: "New message in a conversation",
