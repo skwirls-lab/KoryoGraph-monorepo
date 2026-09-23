@@ -355,7 +355,8 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
 - **Broadcasts** queue one message per recipient (guardians for minors, deduplicated) who has consent and an
   address for the channel; the preview counts exactly those, and shows who was excluded and why.
 
-## ADR-0025 — Events: a day row for every event; guest links store only a hash (M3.04)
+## ADR-0025 — Events: a day row for every event; guest links store only a hash
+- **Date / task:** 2026-09-24 · M3.04
 - **Decision:** every event gets `event_days` rows (one for a single-day event). Camp families choose days;
   capacity is counted per day (`register_for_event` locks the event row and counts non-cancelled
   registrations containing each chosen day), and check-in/out is always per day, so parties, seminars and

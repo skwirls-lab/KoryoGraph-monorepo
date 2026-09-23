@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M3.04
+M3.05 after-school
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -76,7 +76,7 @@ port 3000          → in use by another container on the host → dev server us
 | M3.01 | done | def8a3d |  |
 | M3.02 | done | 232e210 |  |
 | M3.03 | done | 7104c71 |  |
-| M3.04 | doing |  |  |
+| M3.04 | done | eb28b7c | events/camps/parties; DB 5 tests, e2e events.spec 2 tests green |
 | M3.05 | todo |  |  |
 | M3.06 | todo |  |  |
 | M3.07 | todo |  |  |
