@@ -682,3 +682,18 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
 - Chrome's Lighthouse no longer has a PWA category (removed in v12). The spec checks the installability
   criteria directly: a valid manifest with PNG icons, a service worker controlling the page, and working
   offline behaviour.
+
+## ADR-0043 — Multi-location: restrictive RLS on location-scoped tables; switcher is a view filter
+- **Date / task:** 2026-09-25 · M5.06
+- `tenant_users.location_ids` (null or empty = every location) is enforced by a restrictive RLS policy on all
+  17 tables with a `location_id` column. Attendance and bookings follow their session's visibility. Rows
+  without a location stay visible, e.g. school-wide holidays and tax rates. Because this is RLS, the limit
+  holds for every query path — pages, reports, the API, exports.
+  - Owners can't be restricted.
+  - `set_staff_locations` requires staff.manage and a valid location.
+- **Switcher:** the header switcher (Multi-location module, two or more locations) only chooses what the
+  pages show. It's a per-browser cookie, not a permission; the schedule and attendance report default to it.
+  "All locations" is the rollup: the dashboard's "By location" table (`location_rollup`, security invoker)
+  has a total row, and a restricted user's rollup contains only their locations.
+- Ridgeline's demo plan doesn't include Multi-location. The spec comps the module for its run and removes it
+  afterwards.

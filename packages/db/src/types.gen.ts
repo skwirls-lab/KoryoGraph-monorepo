@@ -11185,6 +11185,7 @@ export type Database = {
         Row: {
           attendances: number | null
           class_name: string | null
+          location_id: string | null
           sessions: number | null
           tenant_id: string | null
           week_start: string | null
@@ -11210,6 +11211,13 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "v_owner_dashboard"
             referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "class_sessions_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
           },
         ]
       }
@@ -13244,6 +13252,16 @@ export type Database = {
           template_name: string
         }[]
       }
+      location_rollup: {
+        Args: never
+        Returns: {
+          active_students: number
+          attendance_this_week: number
+          classes_today: number
+          location_id: string
+          location_name: string
+        }[]
+      }
       log_ai_run: { Args: { p: Json }; Returns: string }
       mark_notifications_read: { Args: { p_ids?: string[] }; Returns: number }
       mark_payment_method_detached: {
@@ -13465,6 +13483,10 @@ export type Database = {
           p_reorder_point: number
           p_variant_id: string
         }
+        Returns: undefined
+      }
+      set_staff_locations: {
+        Args: { p_location_ids: string[]; p_user_id: string }
         Returns: undefined
       }
       set_staff_pin: {

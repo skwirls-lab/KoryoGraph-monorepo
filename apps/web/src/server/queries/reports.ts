@@ -10,12 +10,14 @@ export async function rosterReport(ctx: Ctx, status?: string) {
   return data ?? [];
 }
 
-export async function attendanceReport(ctx: Ctx, weeks: number) {
+export async function attendanceReport(ctx: Ctx, weeks: number, locationId: string | null = null) {
   const today = localDate(new Date(), ctx.tz);
   const d0 = new Date(`${today}T12:00:00Z`);
   const thisMonday = addDays(today, -((d0.getUTCDay() + 6) % 7));
   const from = addDays(thisMonday, -7 * weeks);
-  const { data, error } = await ctx.supabase.from("v_attendance_by_class").select("week_start, class_name, sessions, attendances").gte("week_start", from).lte("week_start", today).order("week_start").range(0, 9999);
+  let q = ctx.supabase.from("v_attendance_by_class").select("week_start, class_name, sessions, attendances").gte("week_start", from).lte("week_start", today);
+  if (locationId) q = q.eq("location_id", locationId);
+  const { data, error } = await q.order("week_start").range(0, 9999);
   if (error) throw new Error(`attendance: ${error.message}`);
   const rows = data ?? [];
   const byWeek = new Map<string, number>();

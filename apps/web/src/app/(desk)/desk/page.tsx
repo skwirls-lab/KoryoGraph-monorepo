@@ -7,6 +7,7 @@ import { OpenTasks } from "@/components/tasks/open-tasks";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
 import { StatCard } from "@koryo/ui/components/app/stat-card";
 import { requireSurfacePage } from "@/server/context";
+import { locationScope } from "@/server/queries/locations";
 
 export const metadata = { title: "Dashboard" };
 
@@ -23,6 +24,8 @@ export default async function DeskDashboard() {
   const atRisk = ctx.modules.has("intelligence") && ctx.permissions.has("people.read")
     ? (await ctx.supabase.from("v_risk_latest").select("person_id", { count: "exact", head: true }).eq("level", "high")).count ?? 0
     : null;
+  const scope = await locationScope(ctx);
+  const { data: rollup } = scope.multi ? await ctx.supabase.rpc("location_rollup") : { data: null };
   const att = delta(d?.attendance_this_week ?? 0, d?.attendance_last_week_to_date ?? 0, d?.attendance_last_week ?? 0);
   return (
     <>
@@ -36,6 +39,19 @@ export default async function DeskDashboard() {
         <StatCard label="Unsigned documents" value={d?.unsigned_documents ?? 0} tone={(d?.unsigned_documents ?? 0) > 0 ? "warning" : "neutral"} delta={(d?.unsigned_documents ?? 0) > 0 ? "Needs attention" : undefined} href="/desk/compliance" />
         <StatCard label="Unread conversations" value={d?.unread_threads ?? 0} href="/desk/inbox" />
       </section>
+      {rollup && rollup.length > 1 ? (
+        <section aria-labelledby="by-loc-h" className="mt-6 rounded-xl border border-default bg-surface p-4 sm:p-5">
+          <h2 id="by-loc-h" className="mb-3 text-base font-semibold">By location</h2>
+          <table className="w-full text-sm">
+            <caption className="sr-only">Key numbers by location</caption>
+            <thead><tr className="text-left text-fg-muted"><th className="py-1 font-medium">Location</th><th className="py-1 text-right font-medium">Active students</th><th className="py-1 text-right font-medium">Classes today</th><th className="py-1 text-right font-medium">Check-ins this week</th></tr></thead>
+            <tbody className="divide-y divide-default">
+              {rollup.map((r) => <tr key={r.location_id} className={r.location_id === scope.selected ? "font-semibold" : undefined}><th scope="row" className="py-1.5 text-left font-normal">{r.location_name}</th><td className="text-right tabular">{r.active_students}</td><td className="text-right tabular">{r.classes_today}</td><td className="text-right tabular">{r.attendance_this_week}</td></tr>)}
+              <tr className="font-semibold"><th scope="row" className="py-1.5 text-left">All locations</th><td className="text-right tabular">{rollup.reduce((n, r) => n + r.active_students, 0)}</td><td className="text-right tabular">{rollup.reduce((n, r) => n + r.classes_today, 0)}</td><td className="text-right tabular">{rollup.reduce((n, r) => n + r.attendance_this_week, 0)}</td></tr>
+            </tbody>
+          </table>
+        </section>
+      ) : null}
       <section className="mt-6 grid gap-4 md:grid-cols-2" aria-label="More">
         {ctx.modules.has("billing") && ctx.permissions.has("billing.read") ? (
           <FailedPayments ctx={ctx} limit={5} />

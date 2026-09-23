@@ -24,6 +24,8 @@ export interface DeskShellProps {
   approvals?: number;
   /** The school's logo (signed URL) when it has one. */
   logoUrl?: string | null;
+  /** Extra header controls (e.g. the location switcher). */
+  headerExtra?: ReactNode;
   children: ReactNode;
 }
 
@@ -62,7 +64,7 @@ function NavList({ nav, pathname, onNavigate }: { nav: ResolvedNavItem[]; pathna
   );
 }
 
-export function DeskShell({ nav, tenant, tenants, user, approvals = 0, logoUrl = null, children }: DeskShellProps) {
+export function DeskShell({ nav, tenant, tenants, user, approvals = 0, logoUrl = null, headerExtra, children }: DeskShellProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [paletteOpen, setPaletteOpen] = useState(false);
@@ -114,6 +116,7 @@ export function DeskShell({ nav, tenant, tenants, user, approvals = 0, logoUrl =
           <div className="min-w-0 flex-1">
             <TenantSwitcher current={tenant} tenants={tenants} />
           </div>
+          {headerExtra}
           <Button variant="outline" size="sm" className="gap-2 text-fg-secondary" onClick={() => setPaletteOpen(true)} aria-label="Search (Ctrl+K)">
             <Search aria-hidden className="size-4" />
             <span className="hidden md:inline">Search</span>

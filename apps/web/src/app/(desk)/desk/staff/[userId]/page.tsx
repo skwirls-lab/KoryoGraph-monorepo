@@ -1,3 +1,4 @@
+import { StaffLocations } from "@/components/locations/location-controls";
 import Link from "next/link";
 import { forbidden, notFound } from "next/navigation";
 import { formatMoney } from "@koryo/ui/components/app/money-text";
@@ -16,7 +17,7 @@ export default async function StaffMemberPage({ params }: { params: Promise<{ us
   if (!ctx.permissions.has("staff.manage")) forbidden();
   const { userId } = await params;
   if (!/^[0-9a-f-]{36}$/i.test(userId)) notFound();
-  const { data: tu } = await ctx.supabase.from("tenant_users").select("user_id, status, roles(name), profiles(full_name, email)").eq("user_id", userId).maybeSingle();
+  const { data: tu } = await ctx.supabase.from("tenant_users").select("user_id, status, location_ids, roles(name, key), profiles(full_name, email)").eq("user_id", userId).maybeSingle();
   if (!tu) notFound();
   const today = new Intl.DateTimeFormat("en-CA", { timeZone: ctx.tz }).format(new Date());
   const [{ data: profile }, { data: certs }, { data: entries }, { data: pin }, { data: programs }, { data: commissions }] = await Promise.all([
@@ -28,6 +29,7 @@ export default async function StaffMemberPage({ params }: { params: Promise<{ us
     ctx.supabase.from("commissions").select("id, ref_type, base_cents, rate_pct, amount_cents, period, created_at").eq("user_id", userId).order("created_at", { ascending: false }).limit(10),
   ]);
   const name = tu.profiles?.full_name || tu.profiles?.email || "Staff";
+  const { data: locations } = ctx.modules.has("multi_location") ? await ctx.supabase.from("locations").select("id, name").is("archived_at", null).order("is_default", { ascending: false }).order("name") : { data: null };
   const rates = (profile?.pay_rates ?? {}) as { hourly_cents?: number; per_class_cents?: number; commission_pct?: number };
   const dollars = (c?: number) => (c ? (c / 100).toFixed(2) : "");
   const fmt = (iso: string) => new Date(iso).toLocaleString("en-US", { timeZone: ctx.tz, dateStyle: "medium", timeStyle: "short" });
@@ -68,6 +70,12 @@ export default async function StaffMemberPage({ params }: { params: Promise<{ us
             <p className="mb-2 text-sm text-fg-secondary">{pin ? (pin.locked_until && new Date(pin.locked_until) > new Date() ? "PIN locked after too many attempts — setting a new one unlocks it." : "PIN set.") : "No PIN yet — they can't clock in at the kiosk."}</p>
             <PinForm userId={userId} hasPin={Boolean(pin)} />
           </section>
+          {locations && locations.length > 1 && tu.roles?.key !== "owner" ? (
+            <section className={card} aria-labelledby="loc-h">
+              <h2 id="loc-h" className="mb-3 text-base font-semibold">Locations</h2>
+              <StaffLocations userId={userId} locations={locations} current={tu.location_ids ?? []} />
+            </section>
+          ) : null}
         </div>
         <section className={card} aria-labelledby="time-h">
           <h2 id="time-h" className="mb-3 text-base font-semibold">Time entries</h2>

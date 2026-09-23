@@ -7,13 +7,16 @@ import { Button } from "@koryo/ui/components/ui/button";
 import { TemplateDialog } from "@/components/schedule/template-dialog";
 import { WeekView } from "@/components/schedule/week-view";
 import { requireSurfacePage } from "@/server/context";
+import { locationScope } from "@/server/queries/locations";
 import { scheduleOptions, weekSessions, weekStart } from "@/server/queries/schedule";
 
 export const metadata = { title: "Schedule" };
 
 export default async function SchedulePage({ searchParams }: { searchParams: Promise<{ week?: string; location?: string; program?: string }> }) {
   const ctx = await requireSurfacePage("desk");
-  const sp = await searchParams;
+  const [raw, scope] = await Promise.all([searchParams, locationScope(ctx)]);
+  // The header's location switcher is the default; the page's own filter overrides it.
+  const sp = { ...raw, location: raw.location ?? scope.selected ?? undefined };
   const today = localDate(new Date(), ctx.tz);
   const week = weekStart(sp.week && /^\d{4}-\d{2}-\d{2}$/.test(sp.week) ? sp.week : today);
   const [options, sessions] = await Promise.all([scheduleOptions(ctx), weekSessions(ctx, week, { location: sp.location, program: sp.program })]);

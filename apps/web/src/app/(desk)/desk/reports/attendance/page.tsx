@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
+import { locationScope } from "@/server/queries/locations";
 import { Button } from "@koryo/ui/components/ui/button";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@koryo/ui/components/ui/table";
 import { WeeklyBarChart } from "@/components/reports/weekly-bar-chart";
@@ -13,7 +14,9 @@ export default async function AttendanceReport({ searchParams }: { searchParams:
   const ctx = await requireSurfacePage("desk");
   if (!ctx.permissions.has("reports.read")) forbidden();
   const weeks = Math.min(52, Math.max(4, Number((await searchParams).weeks ?? 12) || 12));
-  const { rows, weekly } = await attendanceReport(ctx, weeks);
+  const scope = await locationScope(ctx);
+  const { rows, weekly } = await attendanceReport(ctx, weeks, scope.selected);
+  const where = scope.multi ? ` · ${scope.locations.find((l) => l.id === scope.selected)?.name ?? "all locations (rollup)"}` : "";
   const byClass = new Map<string, { sessions: number; attendances: number }>();
   for (const r of rows) {
     const c = byClass.get(r.class_name ?? "") ?? { sessions: 0, attendances: 0 };
@@ -23,7 +26,7 @@ export default async function AttendanceReport({ searchParams }: { searchParams:
   }
   return (
     <>
-      <PageHeader eyebrow={<Link href="/desk/reports">Reports</Link>} title="Attendance" description={`Last ${weeks} weeks`}
+      <PageHeader eyebrow={<Link href="/desk/reports">Reports</Link>} title="Attendance" description={`Last ${weeks} weeks${where}`}
         actions={
           <>
             {[8, 12, 26].map((w) => <Button key={w} asChild size="sm" variant={w === weeks ? "secondary" : "ghost"}><Link href={`/desk/reports/attendance?weeks=${w}`}>{w} weeks</Link></Button>)}
