@@ -73,6 +73,7 @@ function Column({ stage, leads, stages, onMove }: { stage: BoardStage; leads: Bo
       <ul className="min-h-24 space-y-2" aria-label={`${stage.name} leads`}>
         {leads.map((l) => <Card key={l.id} lead={l} stages={stages} onMove={onMove} />)}
       </ul>
+      {!leads.length ? <p className="px-1 pb-1 text-xs text-fg-muted">No leads here — drag one in.</p> : null}
     </section>
   );
 }

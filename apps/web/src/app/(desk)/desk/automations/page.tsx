@@ -1,3 +1,4 @@
+import { EmptyState } from "@koryo/ui/components/app/empty-state";
 import Link from "next/link";
 import { forbidden } from "next/navigation";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
@@ -19,7 +20,8 @@ export default async function AutomationsPage() {
     <>
       <PageHeader title="Automations" description="Messages and tasks that run themselves. Turn on the ones you want."
         actions={canEdit ? <Button asChild size="sm"><Link href="/desk/automations/new" className="no-underline">New automation</Link></Button> : null} />
-      <ul className="divide-y divide-default rounded-xl border border-default bg-surface" aria-label="Automations">
+      {!rows?.length ? <EmptyState title="No automations yet" description="Automations send reminders and create tasks for you — birthday wishes, trial follow-ups, testing reminders." action={canEdit ? <Button asChild><Link href="/desk/automations/new">New automation</Link></Button> : undefined} /> : null}
+      <ul className="divide-y divide-default rounded-xl border border-default bg-surface empty:hidden" aria-label="Automations">
         {(rows ?? []).map((a) => {
           const t = a.trigger as { kind: TriggerKind; params?: { days?: number } };
           return (

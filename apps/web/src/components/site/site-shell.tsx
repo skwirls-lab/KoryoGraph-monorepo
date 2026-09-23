@@ -15,7 +15,6 @@ export async function SiteShell({ children }: { children: ReactNode }) {
   const ctx = await getOptionalCtx();
   return (
     <div className="flex min-h-dvh flex-col bg-background">
-      <a href="#main" className="sr-only focus:not-sr-only focus:absolute focus:left-4 focus:top-4 focus:z-50 focus:rounded focus:bg-surface focus:px-3 focus:py-2">Skip to content</a>
       <header className="border-b border-default bg-surface">
         <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-6 gap-y-2 px-4 py-3">
           <Link href="/" className="font-display text-lg font-bold text-fg no-underline" aria-label="KoryoGraph home">Koryo<span className="text-brand-text">Graph</span></Link>

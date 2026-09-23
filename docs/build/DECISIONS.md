@@ -697,3 +697,22 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   has a total row, and a restricted user's rollup contains only their locations.
 - Ridgeline's demo plan doesn't include Multi-location. The spec comps the module for its run and removes it
   afterwards.
+
+## ADR-0044 — Accessibility & performance pass
+- **Date / task:** 2026-09-25 · M5.07
+- **Accessibility:** `a11y.spec` runs axe (zero serious/critical) on 16 routes across public, Desk, Mat and
+  Home, plus keyboard traversal:
+  - the global skip link, then the Desk nav by Tab + Enter;
+  - a dialog that opens from the keyboard, traps focus, and returns focus on Escape;
+  - the POS register, with the scan field focused on load and Enter adding the item.
+  The pass also found that the public site shell duplicated the root layout's skip link; removed.
+- **States:** every surface has a `loading.tsx` skeleton and an `error.tsx` boundary (plain words, retry,
+  and the error digest to quote), plus `global-error.tsx`. The list-page audit added empty states to
+  Automations, the MRR report and empty pipeline columns. The other `.map` pages list fixed items or are
+  detail pages.
+- **Performance:** `tests/seed/perf.test.ts` times the ten heaviest Desk read paths as the demo owner (RLS on,
+  median of 3) and fails above budget. Measured on the build host:
+  - dashboard 2 ms; people list 46 ms; rank progress 7 ms; at-risk 3 ms; AR aging 4 ms;
+  - revenue 7 ms; MRR 7 ms; attendance 9 ms; retention 22 ms; roster 4 ms.
+  Budgets are about 5–10× these numbers. None needed fixing, and no production server timing exists yet
+  (HANDOFF: check again against a hosted database, where latency dominates).

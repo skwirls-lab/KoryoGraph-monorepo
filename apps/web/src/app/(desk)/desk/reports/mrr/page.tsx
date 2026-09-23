@@ -1,3 +1,4 @@
+import { EmptyState } from "@koryo/ui/components/app/empty-state";
 import { forbidden } from "next/navigation";
 import { formatMoney } from "@koryo/ui/components/app/money-text";
 import { StatCard } from "@koryo/ui/components/app/stat-card";
@@ -24,7 +25,8 @@ export default async function MrrReport() {
         <StatCard label="ARR" value={money((last?.mrr_cents ?? 0) * 12)} />
         <StatCard label="Churned MRR, 12 months" value={money(churned)} tone={churned ? "negative" : "neutral"} />
       </div>
-      <div className="overflow-x-auto rounded-xl border border-default bg-surface">
+      {!rows.length ? <EmptyState title="No membership revenue yet" description="Monthly recurring revenue appears here once members are on recurring plans." /> : null}
+      <div className={`overflow-x-auto rounded-xl border border-default bg-surface ${rows.length ? "" : "hidden"}`}>
         <table className="w-full min-w-[40rem] text-sm">
           <caption className="sr-only">MRR by month</caption>
           <thead className="border-b border-default text-left text-xs text-fg-secondary"><tr><th className="px-4 py-2">Month</th><th className="px-4 py-2 text-right">MRR (month end)</th><th className="px-4 py-2 text-right">New</th><th className="px-4 py-2 text-right">Churned</th><th className="px-4 py-2 text-right">Memberships</th><th className="w-40 px-4 py-2"><span className="sr-only">Chart</span></th></tr></thead>
