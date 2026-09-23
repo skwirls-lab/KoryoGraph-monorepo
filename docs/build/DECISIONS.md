@@ -730,3 +730,27 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   the browser. Public and service env are now separate modules, and the service one is `server-only`.
 - The full checklist, results and open items (DNS rebinding for outbound webhooks, MFA, production auth rate
   limits) are in `docs/SECURITY-REVIEW.md`.
+
+## ADR-0046 — Documentation, deploy config and the live smoke test
+- **Date / task:** 2026-09-25 · M5.09
+- New documents: `README.md` (one page), `docs/HANDOFF.md` (spec §7 with concrete values and every open
+  HANDOFF item), `docs/RUNBOOK.md`. `CLAUDE.md` and `DEMO-ACCOUNTS.md` are brought up to date.
+  `tests/unit/docs.test.ts` checks that links resolve and that every `npm run …` mentioned exists.
+- **Crons:** `apps/web/vercel.json` holds one cron per job (17). A test keeps it identical to the job rows
+  and to the code registry. Minute-level crons need Vercel Pro; HANDOFF says so.
+- **Reference data:** `seed.sql` holds the permission catalogue, modules, plans and several job rows, so a
+  hosted project must be pushed with `supabase db push --include-seed`. HANDOFF step 2 says this.
+- **Smoke test:** `scripts/smoke-live.ts` (`npm run smoke:live`) had been declared in package.json but never
+  written; it now exists. Against a deployment it checks:
+  - health (AI live) and the security headers;
+  - sign-in with the tenant claim (the auth hook) and RLS on real data;
+  - the API key;
+  - Stripe test mode: a real $1 charge and refund, plus the webhook endpoint;
+  - `ai:eval`, a Resend email, and cron auth.
+  Missing keys print SKIP, never PASS. Run against the local dev server, it correctly FAILs "AI live" and
+  HSTS.
+- **Deviation:** spec §7 lists a `billing_run` dry run, but that job has no dry-run mode. The smoke test runs
+  the harmless `ai_models_sync` instead.
+- Removed `APP_SECRET` and `SENTRY_DSN` from `.env.example`: nothing reads them, and the example claimed
+  `APP_SECRET` protected kiosk tokens and API keys, which is handled in the database. Error tracking is
+  listed in HANDOFF as not wired.

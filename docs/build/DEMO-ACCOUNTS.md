@@ -63,3 +63,15 @@ All passwords: **`KoryoDemo!2026`**. Fictional people and schools.
 | Platform admin | platform@koryograph.demo |
 
 Local mail (magic links, resets) is captured by Mailpit at http://127.0.0.1:54324.
+
+## Trying the M5 features on the demo
+- **Public site:** `/`, `/features`, `/pricing` (plans/modules from the database), `/contact` (→ `contact_messages`).
+- **New school:** `/signup?plan=studio` → the onboarding wizard (Get started) → Go live.
+- **Import:** Desk → People → Import — try `tests/fixtures/import/spark-sample.csv` (200 students) or
+  `other-vendor.csv` (Suggest with AI); roll back from the import list.
+- **API:** Desk → Settings → API & webhooks → create a key → `curl -H "Authorization: Bearer <key>" localhost:3100/api/v1/people`.
+- **Home as an app:** open `/home` in Chrome → Install; notifications at `/home/notifications`.
+- **Multi-location:** Ridgeline's plan doesn't include it; grant it with
+  `insert into tenant_entitlements (tenant_id, module_key, source) select id, 'multi_location', 'comp' from tenants where slug = 'ridgeline';`
+  and sign in again to see the location switcher.
+

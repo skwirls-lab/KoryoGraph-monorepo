@@ -1,0 +1,73 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "crons": [
+    {
+      "path": "/api/jobs/afterschool_cutoff",
+      "schedule": "*/10 * * * *"
+    },
+    {
+      "path": "/api/jobs/ai_models_sync",
+      "schedule": "0 4 * * *"
+    },
+    {
+      "path": "/api/jobs/automations",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/jobs/billing_run",
+      "schedule": "0 6 * * *"
+    },
+    {
+      "path": "/api/jobs/data_export",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/jobs/drift_score",
+      "schedule": "15 2 * * *"
+    },
+    {
+      "path": "/api/jobs/dunning",
+      "schedule": "30 6 * * *"
+    },
+    {
+      "path": "/api/jobs/kb_schedule_digest",
+      "schedule": "30 3 * * *"
+    },
+    {
+      "path": "/api/jobs/lead_scoring",
+      "schedule": "*/15 * * * *"
+    },
+    {
+      "path": "/api/jobs/materialize_sessions",
+      "schedule": "0 3 * * *"
+    },
+    {
+      "path": "/api/jobs/outbox_dispatch",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/jobs/parent_narratives",
+      "schedule": "0 16 * * 5"
+    },
+    {
+      "path": "/api/jobs/schedule_suggestions",
+      "schedule": "0 6 * * 1"
+    },
+    {
+      "path": "/api/jobs/signature_pdfs",
+      "schedule": "*/5 * * * *"
+    },
+    {
+      "path": "/api/jobs/technique_feedback",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/jobs/transcribe",
+      "schedule": "* * * * *"
+    },
+    {
+      "path": "/api/jobs/webhook_dispatch",
+      "schedule": "* * * * *"
+    }
+  ]
+}
