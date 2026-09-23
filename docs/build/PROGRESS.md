@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M4.06 action board
+M4.07 curriculum builder
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -87,7 +87,7 @@ port 3000          → in use by another container on the host → dev server us
 | M4.03 | done | ce74272 | KB; 'refund policy' → refund policy first |
 | M4.04 | done | ed1806d | copilot + home assistant; fixtures hand-authored |
 | M4.05 | done | b1da63e | drift; 6 high on demo, all fixture drafts; Riley medium (shaped in M4.12) |
-| M4.06 | todo |  |  |
+| M4.06 | done | bb450b1 | action board; 9/3/1 acceptance green |
 | M4.07 | todo |  |  |
 | M4.08 | todo |  |  |
 | M4.09 | todo |  |  |
