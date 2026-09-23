@@ -79,6 +79,10 @@ test.describe("@m1 kiosk", () => {
     await pressPin(page, "4321");
     const pick = page.getByRole("group", { name: "Maya Cooper" }).getByRole("button", { name: new RegExp(className) });
     await expect(pick).toHaveAttribute("aria-pressed", "true");
+    // Only this spec's class: Maya can have other classes today (the demo's "tonight", other specs' classes).
+    for (const other of await page.getByRole("group", { name: "Maya Cooper" }).getByRole("button", { pressed: true }).all()) {
+      if (!new RegExp(className).test((await other.textContent()) ?? "")) await other.click();
+    }
     await page.getByRole("button", { name: "Check in" }).click();
     await expect(page.getByRole("status", { name: "Checked in" })).toContainText("Maya Cooper");
 
