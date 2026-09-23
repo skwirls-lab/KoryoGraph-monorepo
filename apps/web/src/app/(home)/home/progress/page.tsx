@@ -20,7 +20,7 @@ export default async function HomeProgress() {
           {students.map((s) => (
             <section key={s.id} aria-label={displayName(s)} className="space-y-3">
               <h2 className="text-xl font-bold">{displayName(s)}</h2>
-              <ProgressPanel personId={s.id} progress={progress.filter((p) => p.personId === s.id)} timeZone={ctx.tz} programs={[]} canPromote={false} canEnroll={false} readOnly />
+              <ProgressPanel personId={s.id} progress={progress.filter((p) => p.personId === s.id)} timeZone={ctx.tz} programs={[]} canPromote={false} canEnroll={false} readOnly feedbackBase={ctx.modules.has("vision") ? "/home/progress" : undefined} />
             </section>
           ))}
         </div>

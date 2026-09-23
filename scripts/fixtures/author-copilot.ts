@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { actionBoard, billingRecovery, copilotStep, driftOutreach, homeAssistant, inputHash, leadNextAction, lessonBuilder, nlReport, packingSlip, parentNarrative, transcribe } from "@koryo/ai";
+import { actionBoard, billingRecovery, copilotStep, driftOutreach, homeAssistant, inputHash, leadNextAction, lessonBuilder, nlReport, packingSlip, parentNarrative, scheduleSuggestion, SUGGESTION_KINDS, techniqueFeedback, transcribe } from "@koryo/ai";
 import { AB, AB_TRANSCRIPT } from "../../tests/fixtures/action-board";
 import { sid } from "../lib/ids";
 
@@ -218,5 +218,38 @@ for (const combo of COMBOS) {
         write("lead_next_action", leadNextAction.fixtureKey!({ school: "", stage, trialBooked, trialAttended, hasMessage: false, lastTouchDays: isStale ? 15 : 0, score: 0 }), { output: { nextAction } });
       }
     }
+  }
+}
+
+// Technique feedback (M4.11): keyed to tests/fixtures/video/clip-6s.mp4 (a synthetic test clip — see its README).
+{
+  const sha256 = createHash("sha256").update(readFileSync(join(process.cwd(), "tests/fixtures/video/clip-6s.mp4"))).digest("hex");
+  for (const gold of [false, true]) {
+    write("technique_feedback", techniqueFeedback.fixtureKey!({ skill: "", category: "", description: "", rubric: [], frames: [], goldFrames: gold ? ["x"] : [], sha256 }), { output: {
+      scores: [
+        { criterion: "Technique", score: 3, note: "The knee comes up before the kick, but the foot extends a little early — finish the chamber first." },
+        { criterion: "Power & focus", score: 4, note: "Good snap at full extension; eyes stay on the target." },
+        { criterion: "Balance & control", score: 3, note: "The supporting heel lifts at the end; keep it planted and pivot slightly." },
+      ],
+      summary: gold ? "Solid kick with a clear snap. Compared with the reference, the chamber is lower and the recovery a little slower." : "Solid kick with a clear snap. Tidy the chamber and keep the supporting foot planted and it will look sharp.",
+      tips: [
+        "Practise ten slow chambers holding the knee high for two seconds before extending.",
+        "Keep the supporting heel down through the whole kick; pivot on the ball of the foot.",
+        "Re-chamber before setting the foot down, then return to fighting stance.",
+      ],
+    } });
+  }
+}
+
+// Schedule suggestions (M4.11): wording per kind; the numbers are placeholders filled from the real stats.
+{
+  const words: Record<(typeof SUGGESTION_KINDS)[number], { title: string; rationale: string }> = {
+    add_section: { title: "Add a second {{class}} section on {{day}}", rationale: "{{class}} at {{time}} has run at {{utilization}} of capacity for four weeks — a second section keeps it welcoming for new students." },
+    merge: { title: "Fold the {{day}} {{class}} into {{other_class}}", rationale: "{{class}} ({{day}} {{time}}) has averaged only {{utilization}} of capacity; combining it with {{other_class}} frees an instructor slot without turning anyone away." },
+    move: { title: "Try a new time for {{class}}", rationale: "{{class}} on {{day}} at {{time}} is averaging {{utilization}} of capacity; ask its regulars which day or time would work better." },
+    no_show: { title: "Tackle no-shows in {{class}}", rationale: "{{no_show}} of bookings for {{class}} ({{day}} {{time}}) were no-shows; a reminder the evening before usually cuts that in half." },
+  };
+  for (const kind of SUGGESTION_KINDS) {
+    write("schedule_suggestion", scheduleSuggestion.fixtureKey!({ school: "", kind, className: "", weekday: "", time: "", utilization: 0, waitlistPerSession: 0, noShowRate: 0, otherClass: null }), { output: words[kind] });
   }
 }

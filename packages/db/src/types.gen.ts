@@ -651,6 +651,7 @@ export type Database = {
       approval_items: {
         Row: {
           ai_run_id: string | null
+          ai_transport: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -673,6 +674,7 @@ export type Database = {
         }
         Insert: {
           ai_run_id?: string | null
+          ai_transport?: string | null
           created_at?: string
           decided_at?: string | null
           decided_by?: string | null
@@ -695,6 +697,7 @@ export type Database = {
         }
         Update: {
           ai_run_id?: string | null
+          ai_transport?: string | null
           created_at?: string
           decided_at?: string | null
           decided_by?: string | null
@@ -8305,6 +8308,90 @@ export type Database = {
           },
         ]
       }
+      schedule_suggestions: {
+        Row: {
+          ai_run_id: string | null
+          ai_transport: string | null
+          created_at: string
+          id: string
+          kind: string
+          rationale: string
+          stats: Json
+          status: string
+          template_id: string | null
+          tenant_id: string
+          title: string
+          updated_at: string
+          week_of: string
+        }
+        Insert: {
+          ai_run_id?: string | null
+          ai_transport?: string | null
+          created_at?: string
+          id?: string
+          kind: string
+          rationale: string
+          stats?: Json
+          status?: string
+          template_id?: string | null
+          tenant_id: string
+          title: string
+          updated_at?: string
+          week_of: string
+        }
+        Update: {
+          ai_run_id?: string | null
+          ai_transport?: string | null
+          created_at?: string
+          id?: string
+          kind?: string
+          rationale?: string
+          stats?: Json
+          status?: string
+          template_id?: string | null
+          tenant_id?: string
+          title?: string
+          updated_at?: string
+          week_of?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "schedule_suggestions_ai_run_id_fkey"
+            columns: ["ai_run_id"]
+            isOneToOne: false
+            referencedRelation: "ai_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_suggestions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "schedule_suggestions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "schedule_suggestions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "schedule_suggestions_tenant_id_template_id_fkey"
+            columns: ["tenant_id", "template_id"]
+            isOneToOne: false
+            referencedRelation: "class_templates"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       segments: {
         Row: {
           created_at: string
@@ -8797,6 +8884,8 @@ export type Database = {
           category: string
           created_at: string
           description: string
+          gold_keyframe_paths: string[]
+          gold_video_path: string | null
           id: string
           name: string
           program_id: string | null
@@ -8811,6 +8900,8 @@ export type Database = {
           category?: string
           created_at?: string
           description?: string
+          gold_keyframe_paths?: string[]
+          gold_video_path?: string | null
           id?: string
           name: string
           program_id?: string | null
@@ -8825,6 +8916,8 @@ export type Database = {
           category?: string
           created_at?: string
           description?: string
+          gold_keyframe_paths?: string[]
+          gold_video_path?: string | null
           id?: string
           name?: string
           program_id?: string | null
@@ -9502,6 +9595,149 @@ export type Database = {
             columns: ["tenant_id", "location_id"]
             isOneToOne: false
             referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      technique_submissions: {
+        Row: {
+          ai_run_id: string | null
+          approval_item_id: string | null
+          created_at: string
+          created_by: string | null
+          duration_ms: number | null
+          error: string | null
+          feedback: Json | null
+          id: string
+          keyframe_paths: string[]
+          note: string | null
+          person_id: string
+          released_at: string | null
+          released_to_student: boolean
+          return_reason: string | null
+          reviewed_at: string | null
+          reviewed_by_user_id: string | null
+          skill_id: string
+          status: string
+          tenant_id: string
+          updated_at: string
+          video_path: string
+        }
+        Insert: {
+          ai_run_id?: string | null
+          approval_item_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_ms?: number | null
+          error?: string | null
+          feedback?: Json | null
+          id?: string
+          keyframe_paths?: string[]
+          note?: string | null
+          person_id: string
+          released_at?: string | null
+          released_to_student?: boolean
+          return_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by_user_id?: string | null
+          skill_id: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+          video_path: string
+        }
+        Update: {
+          ai_run_id?: string | null
+          approval_item_id?: string | null
+          created_at?: string
+          created_by?: string | null
+          duration_ms?: number | null
+          error?: string | null
+          feedback?: Json | null
+          id?: string
+          keyframe_paths?: string[]
+          note?: string | null
+          person_id?: string
+          released_at?: string | null
+          released_to_student?: boolean
+          return_reason?: string | null
+          reviewed_at?: string | null
+          reviewed_by_user_id?: string | null
+          skill_id?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+          video_path?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "technique_submissions_ai_run_id_fkey"
+            columns: ["ai_run_id"]
+            isOneToOne: false
+            referencedRelation: "ai_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "technique_submissions_approval_item_id_fkey"
+            columns: ["approval_item_id"]
+            isOneToOne: false
+            referencedRelation: "approval_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "technique_submissions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "technique_submissions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "technique_submissions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "technique_submissions_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "technique_submissions_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "technique_submissions_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "technique_submissions_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "technique_submissions_tenant_id_skill_id_fkey"
+            columns: ["tenant_id", "skill_id"]
+            isOneToOne: false
+            referencedRelation: "skills"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -12550,6 +12786,7 @@ export type Database = {
         }
         Returns: {
           ai_run_id: string | null
+          ai_transport: string | null
           created_at: string
           decided_at: string | null
           decided_by: string | null
@@ -12882,6 +13119,7 @@ export type Database = {
         Args: { p_registration_id: string }
         Returns: string
       }
+      release_technique_feedback: { Args: { p_id: string }; Returns: Json }
       reorder_ranks: {
         Args: { p_program_id: string; p_rank_ids: string[] }
         Returns: undefined
@@ -12897,6 +13135,22 @@ export type Database = {
       }
       run_nl_report: { Args: { p_sql: string }; Returns: Json }
       save_afterschool_program: { Args: { p: Json }; Returns: string }
+      schedule_stats: {
+        Args: { p_tenant_id: string; p_weeks?: number }
+        Returns: {
+          avg_attended: number
+          avg_booked: number
+          avg_waitlisted: number
+          capacity: number
+          name: string
+          no_show_rate: number
+          program_ids: string[]
+          sessions: number
+          start_time: string
+          template_id: string
+          weekday: string
+        }[]
+      }
       segment_preview: {
         Args: { p_channel: string; p_definition: Json }
         Returns: Json
@@ -12970,6 +13224,16 @@ export type Database = {
           used: boolean
           version: number
         }[]
+      }
+      submit_technique: {
+        Args: {
+          p_duration_ms: number
+          p_note?: string
+          p_person_id: string
+          p_skill_id: string
+          p_video_path: string
+        }
+        Returns: string
       }
       submit_trial_request: { Args: { p: Json; p_slug: string }; Returns: Json }
       switch_tenant: { Args: { p_tenant_id: string }; Returns: undefined }

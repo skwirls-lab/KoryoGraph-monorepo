@@ -3,6 +3,7 @@ import { textToHtml } from "@koryo/comms";
 import type { Json } from "@koryo/db/types";
 import { messagePayloadSchema, narrativePayloadSchema, type ApprovalKind } from "@/lib/approvals";
 import { intakePayloadSchema } from "@/lib/intake";
+import { techniquePayloadSchema } from "@/lib/technique";
 import { executeBoard } from "../action-board";
 import type { Ctx } from "../context";
 
@@ -53,6 +54,13 @@ const EXECUTORS: Partial<Record<ApprovalKind, Executor>> = {
     const { error } = await ctx.supabase.from("home_updates").upsert({ tenant_id: ctx.tenantId as string, person_id: p.data.person_id, week_of: p.data.week_of, body: p.data.body, approval_item_id: item.id, published_at: new Date().toISOString() }, { onConflict: "person_id,week_of" });
     if (error) return { ok: false, error: error.code === "42501" ? "Publishing needs the ai.approve permission." : "Couldn't publish the update." };
     return { ok: true, summary: "Published on Home" };
+  },
+  vision_feedback: async (ctx, item) => {
+    if (!techniquePayloadSchema.safeParse(item.payload).success) return { ok: false, error: "The feedback changed shape; open it again." };
+    const { data, error } = await ctx.supabase.rpc("release_technique_feedback", { p_id: item.id });
+    if (error) return { ok: false, error: error.code === "42501" ? "Releasing feedback needs the ai.approve permission." : error.message.charAt(0).toUpperCase() + error.message.slice(1) + "." };
+    const r = data as { summary: string };
+    return { ok: true, summary: r.summary };
   },
   doc_intake: async (ctx, item) => {
     if (!intakePayloadSchema.safeParse(item.payload).success) return { ok: false, error: "The intake changed shape; open it again." };

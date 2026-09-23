@@ -539,3 +539,31 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   fixture, budget, provider) falls back to the standard template, so a family is never left un-notified.
 - The approvals page now filters by kind in the query and counts from all pending items: a weekly batch of
   narratives must not hide other kinds past the 200-row page.
+
+## ADR-0036 — Technique feedback and schedule suggestions; fixture visibility for reviewers
+- **Date / task:** 2026-09-25 · M4.11
+- **Clips upload straight to storage** from the browser (≤ 50 MB, ≤ 60 s) under `<tenant>/technique/<person>/`,
+  which storage RLS limits to the family's own students; the server action then registers the path through
+  `submit_technique` (household, folder, duration and "≤ 3 waiting" checks). Server actions are capped at
+  12 MB, too small for phone video. The job re-measures the clip with ffmpeg and extracts 6 evenly spaced
+  keyframes from a temp file (phone MP4s aren't streamable from a pipe).
+- **Nothing reaches the student before an instructor**: the AI draft lives only in the `vision_feedback`
+  approval item; `release_technique_feedback` copies the (possibly edited) feedback onto the submission
+  atomically. Rejecting ("send back") records the reason for the family. The overall score is computed from
+  the rubric weights, not written by the model, and is recomputed when the instructor edits scores.
+- **Minors' consent**: a before-insert trigger refuses a submission for a minor without a current
+  `ai_processing` consent (also for staff and the service role). The Home consent policy was tightened: a
+  household member may record consent only for a student in a household where they are a guardian, or for
+  themselves if an adult — previously a teen could consent for themselves.
+- **Reference clips**: curriculum writers may upload a skill's "gold standard" clip; its 4 keyframes are
+  extracted once and sent alongside the student's frames.
+- **Schedule suggestions** are chosen from the numbers (`schedule_stats`, last 4 weeks: utilization vs
+  capacity, waitlists, no-shows) by a unit-tested rule (`scheduleCandidates`); the model only words them, with
+  placeholders filled from the real stats, and plain wording is used when AI is unavailable.
+- **Fixture visibility**: `ai_runs` is readable only with `settings.manage`, so instructors and other
+  approvers didn't see the "dev fixture" badge on drafts (action boards, intake, approvals). Reviewed rows
+  now carry `ai_transport`, copied from the run by trigger.
+- **Test clip**: `tests/fixtures/video/clip-6s.mp4` is a synthetic ffmpeg test pattern, not footage of a
+  person; its feedback fixture is hand-authored and always labelled "dev fixture".
+- Toasts lost Sonner's `richColors` (their text failed WCAG contrast) and got a 24 px close target;
+  status colour is carried by the icon.

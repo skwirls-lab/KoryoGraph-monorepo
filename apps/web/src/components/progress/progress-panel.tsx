@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { describeGap } from "@koryo/eligibility";
 import { DateText } from "@koryo/ui/components/app/date-text";
 import { EmptyState } from "@koryo/ui/components/app/empty-state";
@@ -31,9 +32,11 @@ export interface ProgressPanelProps {
   programs: { id: string; name: string; ranks: { id: string; name: string }[] }[];
   /** Home shows a simpler, read-only view. */
   readOnly?: boolean;
+  /** Home with the vision module: link each skill to "get feedback on a practice clip" under this path. */
+  feedbackBase?: string;
 }
 
-export function ProgressPanel({ personId, progress, timeZone, canPromote, canEnroll, programs, readOnly }: ProgressPanelProps) {
+export function ProgressPanel({ personId, progress, timeZone, canPromote, canEnroll, programs, readOnly, feedbackBase }: ProgressPanelProps) {
   const enrolledIds = new Set(progress.map((p) => p.programId));
   const available = programs.filter((p) => !enrolledIds.has(p.id) && p.ranks.length > 0);
   return (
@@ -67,6 +70,7 @@ export function ProgressPanel({ personId, progress, timeZone, canPromote, canEnr
                   {e.skills.map((s) => (
                     <li key={s.id} className="flex items-center justify-between gap-2 text-sm">
                       <span className={s.signed ? "text-success" : undefined}>{s.signed ? "✓ " : "○ "}{s.name}</span>
+                      {feedbackBase ? <Link href={`${feedbackBase}/${s.id}/submit?student=${personId}`} className="text-xs" aria-label={`Get feedback on ${s.name}`}>Get feedback</Link> : null}
                       {!readOnly && canPromote && !s.signed ? <SignOffButton enrollmentId={e.enrollmentId} skillId={s.id} skillName={s.name} personId={personId} /> : null}
                     </li>
                   ))}

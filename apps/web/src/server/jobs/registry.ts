@@ -10,6 +10,8 @@ import { leadScoring } from "./lead-scoring";
 import { materializeSessions } from "./materialize-sessions";
 import { outboxDispatch } from "./outbox-dispatch";
 import { parentNarratives } from "./parent-narratives";
+import { scheduleSuggestionsJob } from "./schedule-suggestions";
+import { techniqueFeedbackJob } from "./technique-feedback";
 import { signaturePdfs } from "./signature-pdfs";
 import { transcribeJob } from "./transcribe";
 import type { Job } from "./types";
@@ -28,6 +30,8 @@ export const JOBS: Record<string, Job> = {
   materialize_sessions: materializeSessions,
   outbox_dispatch: outboxDispatch,
   parent_narratives: parentNarratives,
+  schedule_suggestions: scheduleSuggestionsJob,
+  technique_feedback: techniqueFeedbackJob,
   signature_pdfs: signaturePdfs,
   transcribe: transcribeJob,
 };

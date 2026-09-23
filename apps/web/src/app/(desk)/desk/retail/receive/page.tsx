@@ -14,7 +14,7 @@ export default async function ReceivePage() {
   if (!ctx.permissions.has("inventory.manage")) forbidden();
   const ai = ctx.modules.has("intelligence");
   const [{ data: pending }, { data: recent }, { data: variants }, { data: suppliers }] = await Promise.all([
-    ai ? ctx.supabase.from("approval_items").select("id, title, payload, created_at, ai_runs(transport)").eq("kind", "doc_intake").eq("status", "pending").order("created_at", { ascending: false }) : Promise.resolve({ data: [] }),
+    ai ? ctx.supabase.from("approval_items").select("id, title, payload, created_at, ai_transport").eq("kind", "doc_intake").eq("status", "pending").order("created_at", { ascending: false }) : Promise.resolve({ data: [] }),
     ai ? ctx.supabase.from("approval_items").select("id, title, status, execution_result, decided_at").eq("kind", "doc_intake").neq("status", "pending").order("decided_at", { ascending: false }).limit(5) : Promise.resolve({ data: [] }),
     ctx.supabase.from("product_variants").select("id, sku, options, products(name)").eq("active", true).order("sku"),
     ctx.supabase.from("suppliers").select("id, name").order("name"),
@@ -32,7 +32,7 @@ export default async function ReceivePage() {
           return (
             <section key={it.id} aria-label={it.title} className="rounded-xl border border-default bg-surface p-4">
               <h2 className="mb-3 font-semibold">{it.title}</h2>
-              {p.success ? <IntakeEditor id={it.id} initial={p.data} variants={variantOptions} suppliers={suppliers ?? []} fixture={it.ai_runs?.transport === "fixture"} /> : <p className="text-sm text-danger">This draft can&apos;t be read.</p>}
+              {p.success ? <IntakeEditor id={it.id} initial={p.data} variants={variantOptions} suppliers={suppliers ?? []} fixture={it.ai_transport === "fixture"} /> : <p className="text-sm text-danger">This draft can&apos;t be read.</p>}
             </section>
           );
         })}

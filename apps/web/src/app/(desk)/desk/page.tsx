@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { FailedPayments } from "@/components/billing/failed-payments";
 import { UpcomingEvents } from "@/components/events/upcoming";
+import { ScheduleSuggestions } from "@/components/schedule/suggestions";
 import { StaffCompliance } from "@/components/staff/compliance";
 import { OpenTasks } from "@/components/tasks/open-tasks";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
@@ -44,6 +45,7 @@ export default async function DeskDashboard() {
         <OpenTasks ctx={ctx} />
         <UpcomingEvents ctx={ctx} />
         <StaffCompliance ctx={ctx} limit={5} />
+        <ScheduleSuggestions ctx={ctx} />
       </section>
     </>
   );

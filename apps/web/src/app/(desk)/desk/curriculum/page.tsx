@@ -6,6 +6,7 @@ import { Badge } from "@koryo/ui/components/ui/badge";
 import { Button } from "@koryo/ui/components/ui/button";
 import { ArchiveSkillButton } from "@/components/curriculum/archive-skill-button";
 import { SkillDialog } from "@/components/curriculum/skill-dialog";
+import { GoldClip } from "@/components/technique/gold-clip";
 import { CATEGORY_LABELS, SKILL_CATEGORIES, type RubricRow, type SkillCategory } from "@/lib/curriculum";
 import { requireSurfacePage } from "@/server/context";
 import { listPrograms, listSkills } from "@/server/queries/curriculum";
@@ -76,6 +77,7 @@ export default async function CurriculumPage({ searchParams }: { searchParams: P
               </div>
               {s.description ? <p className="text-sm text-fg-secondary">{s.description}</p> : null}
               {s.video_url ? <a href={s.video_url} target="_blank" rel="noreferrer" className="text-sm">Watch video</a> : null}
+              {canWrite && ctx.modules.has("vision") ? <GoldClip tenantId={ctx.tenantId as string} skillId={s.id} skillName={s.name} hasClip={Boolean(s.gold_video_path)} /> : null}
             </li>
           ))}
         </ul>

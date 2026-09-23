@@ -14,7 +14,7 @@ export default async function BoardPage({ params }: { params: Promise<{ id: stri
   if (!/^[0-9a-f-]{36}$/i.test(id)) notFound();
   const { data: s } = await ctx.supabase.from("class_sessions").select("id, name").eq("id", id).maybeSingle();
   if (!s) notFound();
-  const { data: item } = await ctx.supabase.from("approval_items").select("id, payload, status, feedback, execution_result, decided_at, ai_runs(transport)").eq("kind", "action_board").eq("entity_id", id).order("created_at", { ascending: false }).limit(1).maybeSingle();
+  const { data: item } = await ctx.supabase.from("approval_items").select("id, payload, status, feedback, execution_result, decided_at, ai_transport").eq("kind", "action_board").eq("entity_id", id).order("created_at", { ascending: false }).limit(1).maybeSingle();
   const payload = item ? boardPayloadSchema.safeParse(item.payload) : null;
   const result = item?.execution_result as { ok?: boolean; summary?: string; error?: string } | null;
   if (item && item.status !== "pending") {
@@ -31,7 +31,7 @@ export default async function BoardPage({ params }: { params: Promise<{ id: stri
     <>
       <PageHeader eyebrow={<Link href={`/mat/session/${id}`}>{s.name}</Link>} title="Action board" description="Tick what's right. Uncertain rows start unticked. Approving writes attendance, sign-offs, notes and tasks." />
       {!item || !payload?.success ? <EmptyState title="No board waiting" description="Record the class or type notes on the class page to get one." />
-        : ctx.permissions.has("ai.approve") ? <ActionBoard approvalId={item.id} initial={payload.data} fixture={item.ai_runs?.transport === "fixture"} />
+        : ctx.permissions.has("ai.approve") ? <ActionBoard approvalId={item.id} initial={payload.data} fixture={item.ai_transport === "fixture"} />
           : <p className="text-sm text-fg-muted">A board is waiting; approving it needs the ai.approve permission.</p>}
     </>
   );

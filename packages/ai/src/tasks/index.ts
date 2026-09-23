@@ -7,6 +7,7 @@ import { packingSlip } from "./intake";
 import { lessonBuilder } from "./lessons";
 import { nlReport } from "./nl-report";
 import { ping } from "./ping";
+import { scheduleSuggestion, techniqueFeedback } from "./vision";
 
 /** Every task the product runs (ai:eval and ai:record iterate this). */
 export const TASKS: Record<string, AiTask<never, unknown>> = {
@@ -22,6 +23,8 @@ export const TASKS: Record<string, AiTask<never, unknown>> = {
   billing_recovery: billingRecovery as unknown as AiTask<never, unknown>,
   parent_narrative: parentNarrative as unknown as AiTask<never, unknown>,
   lead_next_action: leadNextAction as unknown as AiTask<never, unknown>,
+  technique_feedback: techniqueFeedback as unknown as AiTask<never, unknown>,
+  schedule_suggestion: scheduleSuggestion as unknown as AiTask<never, unknown>,
 };
 export { ping };
 export * from "./copilot";
@@ -31,3 +34,4 @@ export * from "./lessons";
 export * from "./intake";
 export * from "./nl-report";
 export * from "./growth";
+export * from "./vision";

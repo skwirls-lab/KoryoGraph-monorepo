@@ -1,0 +1,7 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "title": "Add a second {{class}} section on {{day}}",
+    "rationale": "{{class}} at {{time}} has run at {{utilization}} of capacity for four weeks — a second section keeps it welcoming for new students."
+  }
+}

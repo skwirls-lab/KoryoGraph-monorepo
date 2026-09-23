@@ -114,3 +114,12 @@
     font-variant-numeric: tabular-nums;
   }
 }
+
+/* Toasts: a 24 px close target (WCAG 2.5.8) and icon-only status colour (text stays at full contrast). */
+[data-sonner-toaster] [data-sonner-toast][data-styled=true] [data-close-button] {
+  width: 24px;
+  height: 24px;
+}
+[data-sonner-toast][data-type="success"] [data-icon] { color: var(--color-success); }
+[data-sonner-toast][data-type="error"] [data-icon] { color: var(--color-danger); }
+[data-sonner-toast][data-type="warning"] [data-icon] { color: var(--color-warning); }

@@ -23,7 +23,7 @@ export default async function ApprovalsPage({ searchParams }: { searchParams: Pr
   }
   const { kind: k } = await searchParams;
   const kind = k && k in APPROVAL_KINDS ? (k as ApprovalKind) : null;
-  let pendingQ = ctx.supabase.from("approval_items").select("id, kind, title, preview, payload, created_at, person_id, people(first_name, last_name, preferred_name), ai_runs(transport)").eq("status", "pending");
+  let pendingQ = ctx.supabase.from("approval_items").select("id, kind, title, preview, payload, created_at, person_id, people(first_name, last_name, preferred_name), ai_transport").eq("status", "pending");
   if (kind) pendingQ = pendingQ.eq("kind", kind);
   // Counts come from every pending item (not just the page shown), so a big batch of one kind can't hide the others.
   const [{ data: pending }, { data: decided }, { data: allKinds }] = await Promise.all([
@@ -36,7 +36,7 @@ export default async function ApprovalsPage({ searchParams }: { searchParams: Pr
   const total = allKinds?.length ?? 0;
   const items: QueueItem[] = (pending ?? []).map((p) => ({
     id: p.id, kind: p.kind as ApprovalKind, title: p.title, preview: p.preview, payload: p.payload, createdAt: p.created_at,
-    personId: p.person_id, personName: p.people ? displayName(p.people) : null, fixture: p.ai_runs?.transport === "fixture",
+    personId: p.person_id, personName: p.people ? displayName(p.people) : null, fixture: p.ai_transport === "fixture",
   }));
   return (
     <>

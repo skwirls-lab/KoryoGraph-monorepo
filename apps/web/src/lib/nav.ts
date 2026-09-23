@@ -51,6 +51,7 @@ export const MAT_NAV: NavItem[] = [
   { href: "/mat/students", label: "Students", icon: "users", permission: "mat.access" },
   { href: "/mat/schedule", label: "Schedule", icon: "clipboard", permission: "mat.access" },
   { href: "/mat/testing", label: "Testing", icon: "check-square", permission: "testing.manage" },
+  { href: "/mat/reviews", label: "Reviews", icon: "sparkles", permission: "ai.approve", module: "vision" },
 ];
 
 export const HOME_NAV: NavItem[] = [

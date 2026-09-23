@@ -1,0 +1,28 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "scores": [
+      {
+        "criterion": "Technique",
+        "score": 3,
+        "note": "The knee comes up before the kick, but the foot extends a little early — finish the chamber first."
+      },
+      {
+        "criterion": "Power & focus",
+        "score": 4,
+        "note": "Good snap at full extension; eyes stay on the target."
+      },
+      {
+        "criterion": "Balance & control",
+        "score": 3,
+        "note": "The supporting heel lifts at the end; keep it planted and pivot slightly."
+      }
+    ],
+    "summary": "Solid kick with a clear snap. Tidy the chamber and keep the supporting foot planted and it will look sharp.",
+    "tips": [
+      "Practise ten slow chambers holding the knee high for two seconds before extending.",
+      "Keep the supporting heel down through the whole kick; pivot on the ball of the foot.",
+      "Re-chamber before setting the foot down, then return to fighting stance."
+    ]
+  }
+}

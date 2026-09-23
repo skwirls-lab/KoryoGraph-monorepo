@@ -1,0 +1,7 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "title": "Try a new time for {{class}}",
+    "rationale": "{{class}} on {{day}} at {{time}} is averaging {{utilization}} of capacity; ask its regulars which day or time would work better."
+  }
+}

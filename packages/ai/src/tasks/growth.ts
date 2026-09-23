@@ -33,6 +33,7 @@ export const billingRecovery: AiTask<BillingRecoveryInput, BillingRecoveryOutput
   maxCostCents: 3,
   temperature: 0.4,
   fixtureKey: (i) => ({ stage: i.stage, established: i.tenureMonths >= 12 }),
+  examples: [{ school: "Ridgeline Taekwondo", stage: 2, daysOverdue: 4, tenureMonths: 20, previousFailures: 2, cardOnFile: true }],
 };
 
 // ---------------------------------------------------------------- A9 Parent narratives
@@ -63,6 +64,7 @@ export const parentNarrative: AiTask<ParentNarrativeInput, z.infer<typeof parent
   maxCostCents: 2,
   temperature: 0.5,
   fixtureKey: (i) => ({ classes: i.classes === 0 ? "0" : i.classes <= 2 ? "1-2" : "3+", skills: i.skills.length > 0, promoted: Boolean(i.promotion) }),
+  examples: [{ school: "Ridgeline Taekwondo", student: "Maya", classes: 3, skills: ["Front kick", "Taegeuk Il Jang"], promotion: null, instructorNotes: ["Great focus on her stances"] }],
 };
 
 // ---------------------------------------------------------------- A10 Lead scoring + next action
@@ -116,4 +118,5 @@ export const leadNextAction: AiTask<LeadNextActionInput, z.infer<typeof leadNext
   maxCostCents: 1,
   temperature: 0.3,
   fixtureKey: (i) => ({ stage: i.stage, trialBooked: i.trialBooked, trialAttended: i.trialAttended, stale: (i.lastTouchDays ?? 0) > 14 }),
+  examples: [{ school: "Ridgeline Taekwondo", stage: "trial_attended", trialBooked: true, trialAttended: true, hasMessage: true, lastTouchDays: 2, score: 65 }],
 };

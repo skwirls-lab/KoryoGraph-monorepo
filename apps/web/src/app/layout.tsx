@@ -45,7 +45,7 @@ export default async function RootLayout({ children }: Readonly<{ children: Reac
           <ThemeProvider initialTheme={theme} onPersist={ctx ? saveThemePreference : undefined}>
             <TooltipProvider>
               {children}
-              <Toaster richColors closeButton />
+              <Toaster closeButton />
             </TooltipProvider>
           </ThemeProvider>
         </NuqsAdapter>
