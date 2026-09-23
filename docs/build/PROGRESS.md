@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M3.01
+M3.02
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -73,8 +73,8 @@ port 3000          → in use by another container on the host → dev server us
 | M2.10 | done | 97f51b6 |  |
 | M2.11 | done | 9115ee0 |  |
 | M2.12 | done | 0f1b02c | gate green after 3 fixes found by demo data (walk-in household, cardLabel server/client, spec assumptions) |
-| M3.01 | doing |  |  |
-| M3.02 | todo |  |  |
+| M3.01 | done | def8a3d |  |
+| M3.02 | doing |  |  |
 | M3.03 | todo |  |  |
 | M3.04 | todo |  |  |
 | M3.05 | todo |  |  |
