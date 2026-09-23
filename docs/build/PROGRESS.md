@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M5.03 imports
+M5.04 public API + webhooks
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -96,7 +96,7 @@ port 3000          → in use by another container on the host → dev server us
 | M4.12 | done | 98ed320 | Demo seed v4 via real jobs/actions (fixtures); Riley #1; 9/3/1 board; ADR-0037 |
 | M5.01 | done | 2885634 | Public site; prices on modules table; contact inbox (no admin UI yet); ADR-0038 |
 | M5.02 | done | 6ed2db4 | Onboarding wizard; invites via Supabase Auth + /auth/accept; go_live (platform billing HANDOFF); ADR-0039 |
-| M5.03 | todo |  |  |
+| M5.03 | done | 6535b3c | CSV importer; presets are assumptions; attendance history not imported (count only); ADR-0040 |
 | M5.04 | todo |  |  |
 | M5.05 | todo |  |  |
 | M5.06 | todo |  |  |
