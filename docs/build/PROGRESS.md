@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M5.10 Alex demo E2E
+M5.11 final report, tag, push (after gate all)
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -103,7 +103,7 @@ port 3000          → in use by another container on the host → dev server us
 | M5.07 | done | 5279bfb | a11y + perf; ADR-0044 |
 | M5.08 | done | aa8f620 | Security review; F4 DNS rebinding open, F3/F6 HANDOFF; ADR-0045 |
 | M5.09 | done | 196c6cb | Docs + vercel.json + smoke:live; ADR-0046 |
-| M5.10 | todo |  |  |
+| M5.10 | done | 59a3918 | Alex demo E2E: 22 PASS / 4 HANDOFF (Stripe/Twilio); ADR-0047 |
 | M5.11 | todo |  |  |
 
 ## Blocked
