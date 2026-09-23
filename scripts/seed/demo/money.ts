@@ -264,7 +264,9 @@ export async function seedMoney(ctx: SeedContext, rng: Rng, now: Date, people: D
   const stock = new Map<string, number>(variants.map((v) => [v.id, 0]));
   const events: { on: string; variant: string; delta: number; reason: string; ref?: string; note?: string }[] = [];
   let receipt = (await sql<{ value: number }[]>`select coalesce((select value from public.tenant_counters where tenant_id = ${t} and name = 'receipt'), 0)::int as value`)[0]?.value ?? 0;
-  const walkIn = sid(`household:${T}:walk-in`);
+  // The walk-in household may already exist (POS used before seeding): use whichever row is there.
+  await sql`insert into public.households (id, tenant_id, name, external_id, notes) values (${sid(`household:${T}:walk-in`)}, ${t}, 'Walk-in sales', 'pos:walk-in', 'System household for POS sales without a customer.') on conflict do nothing`;
+  const walkIn = (await sql<{ id: string }[]>`select id from public.households where tenant_id = ${t} and external_id = 'pos:walk-in'`)[0]?.id ?? "";
   const salesDays: string[] = [];
   for (let d = start2y; d < today; d = addDaysStr(d, 1)) if (rng.chance(0.42)) salesDays.push(d);
   let posSales = 0;
@@ -382,7 +384,6 @@ export async function seedMoney(ctx: SeedContext, rng: Rng, now: Date, people: D
   })).map((c) => ({ ...c, remaining_cents: c.amount_cents }));
 
   // ------------------------------------------------------------------ write
-  await sql`insert into public.households (id, tenant_id, name, external_id, notes) values (${walkIn}, ${t}, 'Walk-in sales', 'pos:walk-in', 'System household for POS sales without a customer.') on conflict do nothing`;
   for (const r of memRows) if (r.status === "past_due" || r.status === "suspended") await sql`update public.memberships set status = ${r.status as string} where id = ${r.id as string}`;
   await insertChunks(sql, "invoices", invRows);
   await insertChunks(sql, "invoice_lines", lineRows);
