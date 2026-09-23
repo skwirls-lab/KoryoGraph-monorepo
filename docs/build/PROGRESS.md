@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M5.11 final report, tag, push (after gate all)
+none — build complete; see docs/build/FINAL-REPORT.md
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -29,7 +29,7 @@ port 3000          → in use by another container on the host → dev server us
 | M2 | done | GREEN (typecheck, lint, unit 167, billing coverage 100%, db 98, seed demo + invariants 11, e2e m0–m2 54; @stripe/@ai-live/@email = HANDOFF) | m2-complete | 2026-09-23 |
 | M3 | done | GREEN (typecheck, lint, unit 167, billing coverage 100%, db 124, seed demo + invariants 13, e2e m0–m3 63; @stripe/@ai-live/@email = HANDOFF) | m3-complete | 2026-09-23 |
 | M4 | done | GREEN (typecheck, lint, unit 204+76, billing coverage 100%, db 141, seed demo + invariants 14, e2e m0–m4 80; ai:eval HANDOFF (no key); @stripe/@ai-live/@email = HANDOFF) | m4-complete | 2026-09-23 |
-| M5 | in_progress |  |  |  |
+| M5 | done | GREEN at 7e3f6f8 (typecheck, lint, unit 232, billing coverage 76 (100%), db 147, seed demo + invariants 15, e2e m0–m5 109, §6 walkthrough 1, bundle scan, npm audit; @stripe/@ai-live/@email = HANDOFF) | m5-complete, v0.1.0-prototype | 2026-09-23 |
 
 ## Tasks
 | Task | Status (todo/doing/done/blocked) | Commit | Notes |
@@ -104,7 +104,7 @@ port 3000          → in use by another container on the host → dev server us
 | M5.08 | done | aa8f620 | Security review; F4 DNS rebinding open, F3/F6 HANDOFF; ADR-0045 |
 | M5.09 | done | 196c6cb | Docs + vercel.json + smoke:live; ADR-0046 |
 | M5.10 | done | 59a3918 | Alex demo E2E: 22 PASS / 4 HANDOFF (Stripe/Twilio); ADR-0047 |
-| M5.11 | todo |  |  |
+| M5.11 | done | (this commit) | gate all GREEN; FINAL-REPORT.md; tags m5-complete + v0.1.0-prototype |
 
 ## Blocked
 | Task | Diagnosis | Needs |
