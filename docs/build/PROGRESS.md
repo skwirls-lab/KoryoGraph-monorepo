@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M5.08 security review
+M5.09 documentation
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -101,7 +101,7 @@ port 3000          → in use by another container on the host → dev server us
 | M5.05 | done | c2cd8a9 | PWA + notifications; web push HANDOFF (no VAPID keys); ADR-0042 |
 | M5.06 | done | 698bcce | Multi-location RLS + switcher + rollup; ADR-0043 |
 | M5.07 | done | 5279bfb | a11y + perf; ADR-0044 |
-| M5.08 | todo |  |  |
+| M5.08 | done | aa8f620 | Security review; F4 DNS rebinding open, F3/F6 HANDOFF; ADR-0045 |
 | M5.09 | todo |  |  |
 | M5.10 | todo |  |  |
 | M5.11 | todo |  |  |
