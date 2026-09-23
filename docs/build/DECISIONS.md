@@ -354,3 +354,18 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   loads with triggers disabled, so seeding doesn't spray automations.
 - **Broadcasts** queue one message per recipient (guardians for minors, deduplicated) who has consent and an
   address for the channel; the preview counts exactly those, and shows who was excluded and why.
+
+## ADR-0025 — Events: a day row for every event; guest links store only a hash (M3.04)
+- **Decision:** every event gets `event_days` rows (one for a single-day event). Camp families choose days;
+  capacity is counted per day (`register_for_event` locks the event row and counts non-cancelled
+  registrations containing each chosen day), and check-in/out is always per day, so parties, seminars and
+  camps share one check-in screen. Registration is one definer RPC for Desk and Home: the window, capacity,
+  required waiver signatures and an allergy acknowledgement are checked in the database, the chosen option
+  is priced there (`per person | day | week`, week = ceil(days/5)), and an `event` invoice is created;
+  paying it flips the registration to `paid` by trigger (as for testing fees).
+- **Check-out** requires a pickup name and a drawn signature (PNG in `tenant-media/<tenant>/events/…`,
+  readable only with `events.manage`); authorized pickups are household guardians / can-pickup members plus
+  `authorized_pickups`, and a name off that list is flagged to check ID rather than blocked.
+- **Party guest waivers:** `party_guest_link()` generates the token in SQL and stores only its SHA-256, like
+  signing links. The link is shown once; making a new one invalidates the old. Guests sign without an account
+  through anon definer RPCs that only accept a valid, current token; anon can't read any event table.

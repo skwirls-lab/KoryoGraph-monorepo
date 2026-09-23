@@ -30,6 +30,7 @@ export const DESK_NAV: NavItem[] = [
   { href: "/desk/curriculum", label: "Curriculum", icon: "book", permission: "desk.access" },
   { href: "/desk/crm", label: "Pipeline", icon: "trending-up", permission: "crm.manage", module: "grow" },
   { href: "/desk/testing", label: "Testing", icon: "check-square", permission: "testing.manage" },
+  { href: "/desk/events", label: "Events", icon: "party", permission: "events.manage", module: "programs_plus" },
   { href: "/desk/billing", label: "Billing", icon: "credit-card", permission: "billing.read", module: "billing" },
   { href: "/desk/retail", label: "Retail", icon: "shopping-bag", permission: "retail.sell", module: "retail" },
   { href: "/desk/broadcasts", label: "Broadcasts", icon: "megaphone", permission: "comms.send", module: "grow" },
@@ -54,6 +55,7 @@ export const HOME_NAV: NavItem[] = [
   { href: "/home/progress", label: "Progress", icon: "trending-up", permission: "home.access" },
   { href: "/home/billing", label: "Billing", icon: "wallet", permission: "home.access", module: "billing" },
   { href: "/home/messages", label: "Messages", icon: "message", permission: "home.access" },
+  { href: "/home/events", label: "Events", icon: "party", permission: "home.access", module: "programs_plus" },
   { href: "/home/documents", label: "Forms", icon: "clipboard", permission: "home.access" },
 ];
 

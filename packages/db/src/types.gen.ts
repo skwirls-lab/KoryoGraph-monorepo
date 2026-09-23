@@ -253,6 +253,92 @@ export type Database = {
           },
         ]
       }
+      authorized_pickups: {
+        Row: {
+          created_at: string
+          id: string
+          name: string
+          person_id: string
+          phone: string | null
+          photo_path: string | null
+          relationship: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          name: string
+          person_id: string
+          phone?: string | null
+          photo_path?: string | null
+          relationship?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          name?: string
+          person_id?: string
+          phone?: string | null
+          photo_path?: string | null
+          relationship?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "authorized_pickups_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "authorized_pickups_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "authorized_pickups_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "authorized_pickups_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "authorized_pickups_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "authorized_pickups_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "authorized_pickups_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       automation_runs: {
         Row: {
           automation_id: string
@@ -1938,6 +2024,557 @@ export type Database = {
             columns: ["tenant_id", "program_id"]
             isOneToOne: false
             referencedRelation: "programs"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      event_checkins: {
+        Row: {
+          created_at: string
+          event_day_id: string
+          id: string
+          in_at: string
+          in_by: string | null
+          out_at: string | null
+          out_by: string | null
+          person_id: string
+          pickup_person_name: string | null
+          signature_path: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          event_day_id: string
+          id?: string
+          in_at?: string
+          in_by?: string | null
+          out_at?: string | null
+          out_by?: string | null
+          person_id: string
+          pickup_person_name?: string | null
+          signature_path?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          event_day_id?: string
+          id?: string
+          in_at?: string
+          in_by?: string | null
+          out_at?: string | null
+          out_by?: string | null
+          person_id?: string
+          pickup_person_name?: string | null
+          signature_path?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_checkins_tenant_id_event_day_id_fkey"
+            columns: ["tenant_id", "event_day_id"]
+            isOneToOne: false
+            referencedRelation: "event_days"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_checkins_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_checkins_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "event_checkins_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "event_checkins_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_checkins_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "event_checkins_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "event_checkins_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      event_days: {
+        Row: {
+          created_at: string
+          date: string
+          ends_at: string
+          event_id: string
+          id: string
+          starts_at: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          date: string
+          ends_at: string
+          event_id: string
+          id?: string
+          starts_at: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          date?: string
+          ends_at?: string
+          event_id?: string
+          id?: string
+          starts_at?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_days_tenant_id_event_id_fkey"
+            columns: ["tenant_id", "event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_days_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_days_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "event_days_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
+      event_guest_waivers: {
+        Row: {
+          created_at: string
+          event_id: string
+          guardian_name: string
+          guardian_phone: string | null
+          guest_dob: string | null
+          guest_name: string
+          id: string
+          ip: string | null
+          signed_at: string
+          template_id: string | null
+          tenant_id: string
+          typed_signature: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          event_id: string
+          guardian_name: string
+          guardian_phone?: string | null
+          guest_dob?: string | null
+          guest_name: string
+          id?: string
+          ip?: string | null
+          signed_at?: string
+          template_id?: string | null
+          tenant_id: string
+          typed_signature: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          event_id?: string
+          guardian_name?: string
+          guardian_phone?: string | null
+          guest_dob?: string | null
+          guest_name?: string
+          id?: string
+          ip?: string | null
+          signed_at?: string
+          template_id?: string | null
+          tenant_id?: string
+          typed_signature?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_guest_waivers_tenant_id_event_id_fkey"
+            columns: ["tenant_id", "event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_guest_waivers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_guest_waivers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "event_guest_waivers_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "event_guest_waivers_tenant_id_template_id_fkey"
+            columns: ["tenant_id", "template_id"]
+            isOneToOne: false
+            referencedRelation: "document_templates"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_guest_waivers_tenant_id_template_id_fkey"
+            columns: ["tenant_id", "template_id"]
+            isOneToOne: false
+            referencedRelation: "v_required_documents"
+            referencedColumns: ["tenant_id", "template_id"]
+          },
+        ]
+      }
+      event_registrations: {
+        Row: {
+          allergies_ack: boolean
+          created_at: string
+          days: string[] | null
+          event_id: string
+          household_id: string | null
+          id: string
+          invoice_id: string | null
+          notes: string | null
+          option_label: string | null
+          person_id: string
+          registered_by: string | null
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          allergies_ack?: boolean
+          created_at?: string
+          days?: string[] | null
+          event_id: string
+          household_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          option_label?: string | null
+          person_id: string
+          registered_by?: string | null
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          allergies_ack?: boolean
+          created_at?: string
+          days?: string[] | null
+          event_id?: string
+          household_id?: string | null
+          id?: string
+          invoice_id?: string | null
+          notes?: string | null
+          option_label?: string | null
+          person_id?: string
+          registered_by?: string | null
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "event_registrations_tenant_id_event_id_fkey"
+            columns: ["tenant_id", "event_id"]
+            isOneToOne: false
+            referencedRelation: "events"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_ar_aging"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_dunning"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_invoice_id_fkey"
+            columns: ["tenant_id", "invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_revenue_lines"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "event_registrations_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      events: {
+        Row: {
+          capacity: number | null
+          created_at: string
+          created_by: string | null
+          deposit_cents: number | null
+          deposit_invoice_id: string | null
+          description: string
+          ends_at: string
+          guest_link_token_hash: string | null
+          host_household_id: string | null
+          id: string
+          image_path: string | null
+          kind: string
+          location_id: string | null
+          name: string
+          pricing: Json
+          registration_closes_at: string | null
+          registration_opens_at: string | null
+          starts_at: string
+          status: string
+          tenant_id: string
+          updated_at: string
+          waiver_template_ids: string[]
+        }
+        Insert: {
+          capacity?: number | null
+          created_at?: string
+          created_by?: string | null
+          deposit_cents?: number | null
+          deposit_invoice_id?: string | null
+          description?: string
+          ends_at: string
+          guest_link_token_hash?: string | null
+          host_household_id?: string | null
+          id?: string
+          image_path?: string | null
+          kind?: string
+          location_id?: string | null
+          name: string
+          pricing?: Json
+          registration_closes_at?: string | null
+          registration_opens_at?: string | null
+          starts_at: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+          waiver_template_ids?: string[]
+        }
+        Update: {
+          capacity?: number | null
+          created_at?: string
+          created_by?: string | null
+          deposit_cents?: number | null
+          deposit_invoice_id?: string | null
+          description?: string
+          ends_at?: string
+          guest_link_token_hash?: string | null
+          host_household_id?: string | null
+          id?: string
+          image_path?: string | null
+          kind?: string
+          location_id?: string | null
+          name?: string
+          pricing?: Json
+          registration_closes_at?: string | null
+          registration_opens_at?: string | null
+          starts_at?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+          waiver_template_ids?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "events_tenant_id_deposit_invoice_id_fkey"
+            columns: ["tenant_id", "deposit_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "invoices"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_deposit_invoice_id_fkey"
+            columns: ["tenant_id", "deposit_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_ar_aging"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_deposit_invoice_id_fkey"
+            columns: ["tenant_id", "deposit_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_dunning"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_deposit_invoice_id_fkey"
+            columns: ["tenant_id", "deposit_invoice_id"]
+            isOneToOne: false
+            referencedRelation: "v_revenue_lines"
+            referencedColumns: ["tenant_id", "invoice_id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_host_household_id_fkey"
+            columns: ["tenant_id", "host_household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_host_household_id_fkey"
+            columns: ["tenant_id", "host_household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "events_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -9652,6 +10289,7 @@ export type Database = {
         Returns: string
       }
       create_household: { Args: { p: Json }; Returns: string }
+      create_party_deposit: { Args: { p_event_id: string }; Returns: string }
       create_tenant: {
         Args: { p_name: string; p_slug: string; p_timezone: string }
         Returns: string
@@ -9668,12 +10306,23 @@ export type Database = {
         Returns: number
       }
       enroll_membership: { Args: { p: Json }; Returns: Json }
+      event_check: {
+        Args: {
+          p_action: string
+          p_day_id: string
+          p_person_id: string
+          p_pickup_name?: string
+          p_signature_path?: string
+        }
+        Returns: string
+      }
       export_table_names: {
         Args: never
         Returns: {
           table_name: string
         }[]
       }
+      guest_waiver_info: { Args: { p_token: string }; Returns: Json }
       kiosk_check_in: {
         Args: {
           p_household_id: string
@@ -9769,6 +10418,7 @@ export type Database = {
         Args: { p_tenant_id: string }
         Returns: number
       }
+      party_guest_link: { Args: { p_event_id: string }; Returns: string }
       pos_add_tender: {
         Args: {
           p_amount_cents: number
@@ -9847,6 +10497,17 @@ export type Database = {
         }
         Returns: string
       }
+      register_for_event: {
+        Args: {
+          p_allergies_ack?: boolean
+          p_day_ids?: string[]
+          p_event_id: string
+          p_notes?: string
+          p_option_label: string
+          p_person_id: string
+        }
+        Returns: Json
+      }
       register_for_testing: {
         Args: { p_registration_id: string }
         Returns: string
@@ -9897,6 +10558,18 @@ export type Database = {
           p_variant_id: string
         }
         Returns: undefined
+      }
+      sign_guest_waiver: {
+        Args: {
+          p_guardian_name: string
+          p_guardian_phone: string
+          p_guest_dob?: string
+          p_guest_name: string
+          p_ip: string
+          p_token: string
+          p_typed_signature: string
+        }
+        Returns: string
       }
       sign_off_skill: {
         Args: {
