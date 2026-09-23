@@ -14,6 +14,7 @@ const tag = randomUUID().slice(0, 6);
 const className = `Kiosk Class ${tag}`;
 let programId = "";
 let sessionId = "";
+const started = new Date();
 
 test.beforeAll(async () => {
   const [p] = await sql<{ id: string }[]>`insert into public.programs (tenant_id, name, slug) values (${R}, ${`Kiosk Program ${tag}`}, ${`kiosk-${tag}`}) returning id`;
@@ -34,6 +35,9 @@ test.beforeAll(async () => {
 });
 
 test.afterAll(async () => {
+  // The kiosk may also check the kids into another of today's classes they're booked for (e.g. the demo's
+  // "tonight" session); remove every kiosk check-in this spec made so later specs see the seed's state.
+  await sql`delete from public.attendance where source = 'kiosk' and created_at >= ${started} and person_id in (${P("maya-cooper")}, ${P("leo-cooper")}, ${P("riley-adams")})`;
   await sql`delete from public.class_sessions where id = ${sessionId}`;
   await sql`delete from public.programs where id = ${programId}`;
   await sql`update public.kiosk_pins set failed_attempts = 0, locked_until = null where household_id in (${COOPER}, ${ADAMS})`;
