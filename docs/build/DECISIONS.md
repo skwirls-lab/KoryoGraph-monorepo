@@ -624,3 +624,26 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   light) and a logo in the Desk, Mat and Home headers.
 - `audit_events.action` only allows create / update / delete / custom, so these events are `custom` with the
   specific action in `note`.
+
+## ADR-0040 — CSV importer: normalized rows, atomic chunks, rollback by recorded entities
+- **Date / task:** 2026-09-25 · M5.03
+- **Validation in the app:** the app parses the CSV (papaparse), applies the column mapping and validates
+  every row. It reads US and ISO dates and statuses, and resolves program, rank and plan names to ids,
+  accepting short rank names like "Yellow belt" for "Yellow belt (9th gup)". A dry run shows new vs. already
+  here, plus errors and warnings by line; rows with errors are skipped.
+- **Commit:** `import_rows` applies chunks of 50 atomically as the signed-in user (RLS), and the page shows
+  progress.
+  - People are matched by external id, then by name + date of birth, so re-importing a file changes nothing.
+  - Siblings join their guardian's household, matched by guardian email.
+  - Memberships attach only to existing plans, with billing from the next billing day — nothing is
+    back-billed.
+- **Rollback:** every row an import creates is recorded in `import_entities`, and `rollback_import` deletes
+  them. Updates the import made to people who already existed are not undone.
+- **Presets:** Spark / Zen Planner / Kicksite column names are assumptions about those vendors' exports, not
+  verified against their software. The mapping screen always shows the result so the school can fix any
+  column.
+- **AI assist:** the mapping assist sends only header names and value shapes (email / date / number…, fill
+  rate) — never cell values, so no student or family data leaves for the AI provider.
+- **Deviation — attendance:** the spec lists attendance as a target. Individual historical check-ins are not
+  imported, because KoryoGraph attendance needs a real class session. What eligibility needs — "classes since
+  last promotion" — is imported onto the enrollment.

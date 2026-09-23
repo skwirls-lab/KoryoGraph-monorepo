@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { actionBoard, billingRecovery, copilotStep, driftOutreach, homeAssistant, inputHash, leadNextAction, lessonBuilder, nlReport, packingSlip, parentNarrative, scheduleSuggestion, SUGGESTION_KINDS, techniqueFeedback, transcribe } from "@koryo/ai";
+import { actionBoard, billingRecovery, importMapping, copilotStep, driftOutreach, homeAssistant, inputHash, leadNextAction, lessonBuilder, nlReport, packingSlip, parentNarrative, scheduleSuggestion, SUGGESTION_KINDS, techniqueFeedback, transcribe } from "@koryo/ai";
 import { AB, AB_TRANSCRIPT } from "../../tests/fixtures/action-board";
 import { DEMO_CLASS, DEMO_CLASS_TRANSCRIPT } from "../../tests/fixtures/demo-class";
 import { sid } from "../lib/ids";
@@ -272,4 +272,14 @@ for (const combo of COMBOS) {
     injuries: [{ personId: P.greta, note: "Jammed wrist on the speed break, a bit swollen — no breaking next class.", confidence: 0.88 }],
     followUps: [{ title: "Call Louisa's parents about Demo Team tryouts", personId: P.louisa }],
   } });
+}
+
+// Import mapping assist (M5.03): tests/fixtures/import/other-vendor.csv (headers only — the task never sees values).
+{
+  const headers = ["Kid's name", "Surname", "Born", "Mum or Dad email", "Style", "Belt colour", "Joined"];
+  write("import_mapping", importMapping.fixtureKey!({ columns: headers.map((header) => ({ header, shape: "text", filled: 1 })), fields: [] }), { output: { mapping: [
+    { header: "Kid's name", field: "first_name", confidence: 0.9 }, { header: "Surname", field: "last_name", confidence: 0.95 },
+    { header: "Born", field: "dob", confidence: 0.9 }, { header: "Mum or Dad email", field: "guardian_email", confidence: 0.9 },
+    { header: "Style", field: "program", confidence: 0.75 }, { header: "Belt colour", field: "rank", confidence: 0.9 }, { header: "Joined", field: "start_date", confidence: 0.8 },
+  ] } });
 }

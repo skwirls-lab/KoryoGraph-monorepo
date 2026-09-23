@@ -52,9 +52,12 @@ export default async function PeoplePage({ searchParams }: { searchParams: Promi
               </a>
             </Button>
             {canWrite ? (
-              <Button asChild size="sm" className="gap-2">
-                <Link href="/desk/people/new"><UserPlus aria-hidden className="size-4" /> Add family</Link>
-              </Button>
+              <>
+                <Button asChild size="sm" variant="outline"><Link href="/desk/people/import">Import</Link></Button>
+                <Button asChild size="sm" className="gap-2">
+                  <Link href="/desk/people/new"><UserPlus aria-hidden className="size-4" /> Add family</Link>
+                </Button>
+              </>
             ) : null}
           </>
         }

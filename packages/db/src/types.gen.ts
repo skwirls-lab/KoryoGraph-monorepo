@@ -4079,6 +4079,144 @@ export type Database = {
           },
         ]
       }
+      import_entities: {
+        Row: {
+          created_at: string
+          entity_id: string
+          entity_type: string
+          id: string
+          import_id: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          entity_id: string
+          entity_type: string
+          id?: string
+          import_id: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          entity_id?: string
+          entity_type?: string
+          id?: string
+          import_id?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "import_entities_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "import_entities_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "import_entities_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "import_entities_tenant_id_import_id_fkey"
+            columns: ["tenant_id", "import_id"]
+            isOneToOne: false
+            referencedRelation: "imports"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      imports: {
+        Row: {
+          committed_at: string | null
+          created_at: string
+          created_by: string | null
+          error: string | null
+          file_name: string
+          headers: string[]
+          id: string
+          mapping: Json
+          preset: string
+          rolled_back_at: string | null
+          row_count: number
+          stats: Json
+          status: string
+          storage_path: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          committed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          file_name: string
+          headers?: string[]
+          id?: string
+          mapping?: Json
+          preset?: string
+          rolled_back_at?: string | null
+          row_count?: number
+          stats?: Json
+          status?: string
+          storage_path: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          committed_at?: string | null
+          created_at?: string
+          created_by?: string | null
+          error?: string | null
+          file_name?: string
+          headers?: string[]
+          id?: string
+          mapping?: Json
+          preset?: string
+          rolled_back_at?: string | null
+          row_count?: number
+          stats?: Json
+          status?: string
+          storage_path?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "imports_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "imports_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "imports_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       inventory_levels: {
         Row: {
           created_at: string
@@ -12904,11 +13042,19 @@ export type Database = {
           table_name: string
         }[]
       }
+      finish_import: {
+        Args: { p_import_id: string; p_stats: Json }
+        Returns: undefined
+      }
       go_live: {
         Args: { p_cycle?: string; p_modules?: string[]; p_plan: string }
         Returns: string[]
       }
       guest_waiver_info: { Args: { p_token: string }; Returns: Json }
+      import_rows: {
+        Args: { p_import_id: string; p_rows: Json }
+        Returns: Json
+      }
       intake_match: {
         Args: { p_skus: string[]; p_texts: string[] }
         Returns: {
@@ -13193,6 +13339,7 @@ export type Database = {
         }
         Returns: string
       }
+      rollback_import: { Args: { p_import_id: string }; Returns: Json }
       run_nl_report: { Args: { p_sql: string }; Returns: Json }
       save_afterschool_program: { Args: { p: Json }; Returns: string }
       schedule_stats: {

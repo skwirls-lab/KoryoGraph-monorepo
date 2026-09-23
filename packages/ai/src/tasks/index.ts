@@ -3,6 +3,7 @@ import { actionBoard, transcribe } from "./action-board";
 import { copilotStep, homeAssistant } from "./copilot";
 import { driftOutreach } from "./drift";
 import { billingRecovery, leadNextAction, parentNarrative } from "./growth";
+import { importMapping } from "./import";
 import { packingSlip } from "./intake";
 import { lessonBuilder } from "./lessons";
 import { nlReport } from "./nl-report";
@@ -25,6 +26,7 @@ export const TASKS: Record<string, AiTask<never, unknown>> = {
   lead_next_action: leadNextAction as unknown as AiTask<never, unknown>,
   technique_feedback: techniqueFeedback as unknown as AiTask<never, unknown>,
   schedule_suggestion: scheduleSuggestion as unknown as AiTask<never, unknown>,
+  import_mapping: importMapping as unknown as AiTask<never, unknown>,
 };
 export { ping };
 export * from "./copilot";
@@ -35,3 +37,4 @@ export * from "./intake";
 export * from "./nl-report";
 export * from "./growth";
 export * from "./vision";
+export * from "./import";
