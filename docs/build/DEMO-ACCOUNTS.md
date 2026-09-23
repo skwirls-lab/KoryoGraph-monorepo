@@ -25,6 +25,8 @@ All passwords: **`KoryoDemo!2026`**. Fictional people and schools.
 | Instructor | instructor4@ridgelinetkd.demo | Master Omar Haddad (Adult program) |
 
 - Cooper family (Morgan + Maya 8 + Leo 11) kiosk PIN: **4321**. Other families have random PINs (set new ones on the household page).
+- Staff time clock (kiosk → **Staff clock**): every Ridgeline staff member's PIN is **2468** (demo profile). Change it on Desk → Staff → the person.
+- M3 demo data: 9 pipeline leads (2 with trials booked this week), **Saturday Belt Test** next Saturday (Youth Taekwondo; 3 registered and paid, the rest of the eligible roster ready to invite), Fall Break Camp (5 days, 22 registered), Parents' Night Out, Belt Ceremony, one birthday party (deposit paid, 3 guest waivers), After-School Club (18 kids, 3 schools, 2 routes, ~60 days of attendance, weekly billing), 8 automations on with run history, 2 broadcasts sent (Outbox), staff pay rates, time entries and shifts; one staff certification expiring within 30 days.
 - ~220 students in ~130 households, 5 programs, 28 weekly classes, 24 months of attendance with steady / improving /
   decaying / sporadic / new patterns, promotions, stripes and sign-offs derived from attendance, waiver v1 (18 months
   old) and v2 (published last week, so families are prompted to re-sign), 15 conversations and Outbox samples.

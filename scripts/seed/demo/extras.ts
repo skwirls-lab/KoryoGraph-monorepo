@@ -44,10 +44,10 @@ export async function seedExtras(ctx: SeedContext, rng: Rng, now: Date, people: 
   const user = (email: string) => sid(`user:${email}`);
 
   await insertChunks(sql, "staff_certifications", [
-    { id: sid(`cert:${T}:cpr-i2`), tenant_id: tid(), user_id: user("instructor2@ridgelinetkd.demo"), kind: "CPR / First aid", issuer: "Red Cross", issued_at: isoDate(new Date(now.getTime() - 710 * DAY)), expires_at: isoDate(new Date(now.getTime() + 20 * DAY)) },
-    { id: sid(`cert:${T}:cpr-i1`), tenant_id: tid(), user_id: user("instructor@ridgelinetkd.demo"), kind: "CPR / First aid", issuer: "Red Cross", issued_at: isoDate(new Date(now.getTime() - 200 * DAY)), expires_at: isoDate(new Date(now.getTime() + 530 * DAY)) },
-    { id: sid(`cert:${T}:bg-i3`), tenant_id: tid(), user_id: user("instructor3@ridgelinetkd.demo"), kind: "Background check", issuer: "Sterling", issued_at: isoDate(new Date(now.getTime() - 300 * DAY)), expires_at: isoDate(new Date(now.getTime() + 430 * DAY)) },
-    { id: sid(`cert:${T}:dan-owner`), tenant_id: tid(), user_id: user("owner@ridgelinetkd.demo"), kind: "Kukkiwon 6th dan", issuer: "Kukkiwon", issued_at: "2019-05-01", expires_at: null },
+    { id: sid(`cert:${T}:cpr-i2`), tenant_id: tid(), user_id: user("instructor2@ridgelinetkd.demo"), kind: "cpr", name: "CPR / First aid", issuer: "Red Cross", issued_at: isoDate(new Date(now.getTime() - 710 * DAY)), expires_at: isoDate(new Date(now.getTime() + 20 * DAY)) },
+    { id: sid(`cert:${T}:cpr-i1`), tenant_id: tid(), user_id: user("instructor@ridgelinetkd.demo"), kind: "cpr", name: "CPR / First aid", issuer: "Red Cross", issued_at: isoDate(new Date(now.getTime() - 200 * DAY)), expires_at: isoDate(new Date(now.getTime() + 530 * DAY)) },
+    { id: sid(`cert:${T}:bg-i3`), tenant_id: tid(), user_id: user("instructor3@ridgelinetkd.demo"), kind: "background_check", name: "Background check", issuer: "Sterling", issued_at: isoDate(new Date(now.getTime() - 300 * DAY)), expires_at: isoDate(new Date(now.getTime() + 430 * DAY)) },
+    { id: sid(`cert:${T}:dan-owner`), tenant_id: tid(), user_id: user("owner@ridgelinetkd.demo"), kind: "instructor_rank", name: "Kukkiwon 6th dan", issuer: "Kukkiwon", issued_at: "2019-05-01", expires_at: null },
   ]);
 
   // Kiosk device record (a live tablet is paired during the demo; this one shows the list).

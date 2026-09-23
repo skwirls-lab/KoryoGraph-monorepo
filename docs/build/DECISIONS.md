@@ -417,3 +417,16 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   still members through another membership; the reason summary counts only those who actually left.
 - All growth views are `security_invoker`: a reader sees only what their own permissions allow (the tests
   check a parent sees nothing, and sees no one else's money behind member-visible events).
+
+## ADR-0029 — Demo seed v3 choices
+- **Date / task:** 2026-09-24 · M3.08
+- The camp is an upcoming **Fall Break Camp** (Appendix C says "summer camp"): the seed is date-relative and it's
+  autumn, so an upcoming camp demonstrates registration and day check-in; past summer camp history would need
+  fabricated pickup signatures, which the seed doesn't create.
+- The belt test uses Youth Taekwondo, whose eligibility engine output on the demo data is **14 eligible** (as
+  the demo script says) and currently 17 "almost" (Appendix C says ~6). The seed doesn't reshape training
+  history to hit a number; the M5 demo spec reads the counts from the engine.
+- Historical rows that live UI would have produced with a signature image (after-school releases) carry the
+  pickup name and times but no signature path — the seed never invents signature images.
+- Broadcasts and automation messages in the history are `unsent_no_provider` (the Outbox), as they would be on
+  a server without email/SMS keys; nothing claims to have been delivered.

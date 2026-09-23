@@ -141,6 +141,58 @@ describe("demo seed invariants", () => {
     expect(drawers).toHaveLength(0);
   });
 
+  it("M3: pipeline, testing, events, after-school, staff, automations and broadcasts are in place", async () => {
+    const leads = await sql<{ key: string; n: number; utm: number }[]>`select st.key, count(*)::int as n, count(*) filter (where l.utm ? 'campaign')::int as utm
+      from leads l join pipeline_stages st on st.id = l.stage_id where l.tenant_id = ${R} group by st.key`;
+    expect(leads.reduce((a, l) => a + l.n, 0)).toBe(9);
+    expect(leads.length).toBeGreaterThanOrEqual(5);
+    expect(leads.every((l) => l.utm === l.n)).toBe(true);
+    const booked = await sql`select l.id from leads l join pipeline_stages st on st.id = l.stage_id join bookings b on b.id = l.trial_booking_id where l.tenant_id = ${R} and st.key = 'trial_scheduled' and b.status = 'booked'`;
+    expect(booked.length).toBe(2);
+
+    const [test] = await sql<{ id: string; dow: number; days_out: number; paid: number }[]>`
+      select t.id, extract(dow from t.starts_at at time zone 'America/New_York')::int as dow, ((t.starts_at at time zone 'America/New_York')::date - (now() at time zone 'America/New_York')::date)::int as days_out,
+             (select count(*) from testing_registrations r join invoices i on i.id = r.invoice_id where r.testing_event_id = t.id and r.status = 'paid' and i.status = 'paid')::int as paid
+      from testing_events t where t.tenant_id = ${R} and t.name = 'Saturday Belt Test'`;
+    expect(test).toMatchObject({ dow: 6, paid: 3 });
+    expect(test?.days_out).toBeGreaterThanOrEqual(1);
+    expect(test?.days_out).toBeLessThanOrEqual(7);
+
+    const events = await sql<{ kind: string; days: number; regs: number; deposit: string | null }[]>`
+      select e.kind, (select count(*) from event_days d where d.event_id = e.id)::int as days, (select count(*) from event_registrations r where r.event_id = e.id and r.status <> 'cancelled')::int as regs,
+             (select status from invoices where id = e.deposit_invoice_id) as deposit
+      from events e where e.tenant_id = ${R} order by e.kind`;
+    expect(events.find((e) => e.kind === "camp")).toMatchObject({ days: 5, regs: 22 });
+    expect(events.find((e) => e.kind === "event")?.regs).toBeGreaterThan(0);
+    expect(events.find((e) => e.kind === "ceremony")).toBeTruthy();
+    expect(events.find((e) => e.kind === "party")).toMatchObject({ deposit: "paid" });
+    // Registration invoices match the event's pricing (per person / per day).
+    const mispriced = await sql`select r.id from event_registrations r join events e on e.id = r.event_id join invoices i on i.id = r.invoice_id
+      cross join lateral jsonb_array_elements(e.pricing) o where o ->> 'label' = r.option_label
+        and i.total_cents <> case o ->> 'per' when 'day' then (o ->> 'price_cents')::int * cardinality(r.days) else (o ->> 'price_cents')::int end`;
+    expect(mispriced).toHaveLength(0);
+
+    const [as] = await sql<{ kids: number; routes: number; schools: number; days: number; plan_interval: string }[]>`
+      select count(distinct e.person_id)::int as kids, count(distinct e.pickup_route)::int as routes, count(distinct e.school)::int as schools,
+             (select count(distinct a.date) from afterschool_attendance a join afterschool_enrollments x on x.id = a.enrollment_id where x.program_id = p.id)::int as days,
+             (select interval from membership_plans where id = p.plan_id) as plan_interval
+      from afterschool_programs p join afterschool_enrollments e on e.program_id = p.id where p.tenant_id = ${R} group by p.id`;
+    expect(as).toMatchObject({ kids: 18, routes: 2, schools: 3, plan_interval: "week" });
+    expect(as?.days).toBeGreaterThanOrEqual(38); // ~60 calendar days of weekdays
+    const noRelease = await sql`select a.id from afterschool_attendance a where a.tenant_id = ${R} and not a.absent and (a.released_at is null or a.released_to is null or a.arrived_at < a.picked_up_at)`;
+    expect(noRelease).toHaveLength(0);
+
+    const [expiring] = await sql<{ n: number }[]>`select count(*)::int as n from v_staff_compliance where tenant_id = ${R} and state = 'expiring'`;
+    expect(expiring?.n).toBe(1);
+    const [autos] = await sql<{ active: number; with_runs: number }[]>`select count(*) filter (where active)::int as active, count(*) filter (where active and runs > 0)::int as with_runs from automations where tenant_id = ${R}`;
+    expect(autos?.active).toBe(8);
+    expect(autos?.with_runs).toBeGreaterThanOrEqual(3);
+    const campaigns = await sql<{ queued: number; messages: number }[]>`select (c.stats ->> 'queued')::int as queued, (select count(*) from communications m where m.campaign_id = c.id)::int as messages
+      from campaigns c where c.tenant_id = ${R} and c.sent_at is not null`;
+    expect(campaigns).toHaveLength(2);
+    expect(campaigns.every((c) => c.queued === c.messages && c.messages > 0)).toBe(true);
+  });
+
   it("is deterministic: re-running the demo seed creates no new rows", async () => {
     const before = await counts();
     const ctx = createSeedContext();

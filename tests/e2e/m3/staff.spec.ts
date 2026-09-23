@@ -44,9 +44,9 @@ test.describe("@m3 staff ops", () => {
     await cert.getByLabel("Expires").fill(addDaysStr(today, -1));
     await cert.getByRole("button", { name: "Add certification" }).click();
     await expect(desk.getByRole("list", { name: "Certifications", exact: true }).getByRole("listitem", { name: certName })).toContainText("Expired");
-    // Kiosk PIN.
-    await desk.getByLabel("Kiosk PIN").fill("2468");
-    await desk.getByRole("button", { name: "Set PIN" }).click();
+    // Kiosk PIN (the demo seed may already have set one: then the form offers "Change PIN").
+    await desk.getByLabel(/kiosk PIN$/i).fill("2468");
+    await desk.getByRole("button", { name: /^(Set|Change) PIN$/ }).click();
     await expect(desk.getByText("PIN set.")).toBeVisible();
     await expectNoSeriousA11yViolations(desk);
     await desk.goto("/desk");

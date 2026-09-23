@@ -3,6 +3,7 @@ import { recomputeMoney, seedMoney } from "./money";
 import { sid } from "../../lib/ids";
 import type { SeedContext } from "../context";
 import { seedCurriculum } from "./curriculum";
+import { seedGrow } from "./grow";
 import { seedExtras, seedStaff } from "./extras";
 import { seedPeople } from "./people";
 import { Rng } from "./rng";
@@ -19,11 +20,12 @@ export async function seedDemo(ctx: SeedContext): Promise<void> {
   const { sql } = ctx;
   const tables = (await sql<{ tablename: string }[]>`select tablename from pg_tables where schemaname = 'public'`).map((t) => t.tablename);
   await seedStaff(ctx);
+  let people: Awaited<ReturnType<typeof seedPeople>> | undefined;
   for (const t of tables) await sql`alter table ${sql(t)} disable trigger user`;
   try {
     const programs = await seedCurriculum(ctx, rng);
     ctx.log(`curriculum: ${programs.length} programs, ${programs.reduce((n, p) => n + p.ranks.length, 0)} ranks`);
-    const people = await seedPeople(ctx, rng, now);
+    people = await seedPeople(ctx, rng, now);
     ctx.log(`people: ${people.students.length} students, ${people.householdIds.length} households, ${people.guardianIds.length} guardians`);
     const training = await seedTraining(ctx, rng, now, programs, people.students);
     ctx.log(`schedule: ${training.sessions} sessions, ${training.attendance} check-ins, ${training.promotions} promotions`);
@@ -41,6 +43,15 @@ export async function seedDemo(ctx: SeedContext): Promise<void> {
       where a.person_id = e.person_id and e.program_id = any (s.program_ids) and s.starts_at >= coalesce(e.last_promoted_at, e.started_at::timestamptz))
     where e.tenant_id = ${sid("tenant:ridgeline")}`;
   await linkDemoPlanPrograms(ctx);
+  // M3 data (pipeline, testing, events, after-school, staff ops, automations, broadcasts) reads the derived
+  // training state above, so it loads in a second trigger-free pass.
+  for (const t of tables) await sql`alter table ${sql(t)} disable trigger user`;
+  try {
+    const grow = await seedGrow(ctx, rng, now, people);
+    ctx.log(`grow: ${grow.leads} leads, ${grow.events} events (${grow.eventRegistrations} registrations), after-school ${grow.afterschoolKids} kids / ${grow.afterschoolDays} days, ${grow.automationRuns} automation runs, ${grow.broadcastMessages} broadcast messages`);
+  } finally {
+    for (const t of tables) await sql`alter table ${sql(t)} enable trigger user`;
+  }
   await recomputeMoney(ctx);
   await sql`update public.tenants set onboarding = jsonb_set(onboarding, '{steps}', '{"location": true, "programs": true, "schedule": true, "students": true, "payments": false, "staff": true, "branding": true}'::jsonb) where slug = 'ridgeline'`;
 }

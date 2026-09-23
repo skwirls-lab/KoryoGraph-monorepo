@@ -6,6 +6,7 @@ import { expect, test } from "../support/fixtures";
 
 const R = sid("tenant:ridgeline");
 let noConsentGuardian = "";
+let absentWasActive = false;
 
 test.beforeAll(async () => {
   // One Youth Taekwondo family's guardian withdraws email consent: broadcasts must skip them.
@@ -15,12 +16,14 @@ test.beforeAll(async () => {
     join people g on g.id = gm.person_id
     where s.tenant_id = ${R} and s.status = 'active' and g.email is not null and g.email_consent order by g.id limit 1`;
   noConsentGuardian = g?.id ?? "";
+  const [a] = await sql<{ active: boolean }[]>`select active from automations where tenant_id = ${R} and template_key = 'absent_14'`;
+  absentWasActive = a?.active ?? false;
   await sql`update people set email_consent = false where id = ${noConsentGuardian}`;
 });
 
 test.afterAll(async () => {
   await sql`update people set email_consent = true where id = ${noConsentGuardian}`;
-  await sql`update automations set active = false where tenant_id = ${R} and template_key = 'absent_14'`;
+  await sql`update automations set active = ${absentWasActive} where tenant_id = ${R} and template_key = 'absent_14'`;
 });
 
 test.describe("@m3 automations & broadcasts", () => {
@@ -29,8 +32,13 @@ test.describe("@m3 automations & broadcasts", () => {
   test("enabling 'Absent 14 days' and running the evaluator queues messages for exactly the absent students", async ({ page }) => {
     await page.goto("/desk/automations");
     await expectNoSeriousA11yViolations(page);
-    await page.getByRole("listitem", { name: "Absent 14 days" }).getByRole("switch", { name: "Absent 14 days active" }).click();
-    await expect(page.getByText("Absent 14 days is on")).toBeVisible();
+    // The demo seed may already have it on; make sure it is.
+    const toggle = page.getByRole("listitem", { name: "Absent 14 days" }).getByRole("switch", { name: "Absent 14 days active" });
+    if ((await toggle.getAttribute("aria-checked")) !== "true") {
+      await toggle.click();
+      await expect(page.getByText("Absent 14 days is on")).toBeVisible();
+    }
+    await expect(toggle).toHaveAttribute("aria-checked", "true");
 
     const run = await page.request.post(`/api/jobs/automations?tenant=${R}`, { headers: { authorization: `Bearer ${process.env.CRON_SECRET}` } });
     expect(run.ok(), await run.text()).toBe(true);

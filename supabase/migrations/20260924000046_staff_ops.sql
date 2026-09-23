@@ -26,6 +26,12 @@ create policy staff_profiles_own_select on public.staff_profiles for select to a
 
 -- staff_certifications exists since 0023 (read: people.read, write: staff.manage); give it a name and kinds.
 alter table public.staff_certifications add column name text;
+-- Earlier rows stored a free-text kind: keep it as the name and map it onto a kind.
+update public.staff_certifications set name = coalesce(name, kind), kind = case
+    when kind ilike '%cpr%' then 'cpr' when kind ilike '%first aid%' then 'first_aid'
+    when kind ilike '%background%' then 'background_check' when kind ilike '%safesport%' then 'safesport'
+    when kind ilike '%dan%' or kind ilike '%rank%' or kind ilike '%instructor%' then 'instructor_rank' else 'other' end
+  where kind not in ('instructor_rank', 'cpr', 'first_aid', 'background_check', 'safesport', 'other');
 alter table public.staff_certifications add constraint staff_certifications_kind check (kind in ('instructor_rank', 'cpr', 'first_aid', 'background_check', 'safesport', 'other'));
 alter table public.staff_certifications add constraint staff_certifications_dates check (expires_at is null or issued_at is null or expires_at >= issued_at);
 create policy staff_certifications_own_select on public.staff_certifications for select to authenticated
