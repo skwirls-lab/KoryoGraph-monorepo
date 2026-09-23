@@ -18,7 +18,7 @@ export async function OpenTasks({ ctx }: { ctx: Ctx }) {
   const canHold = ctx.permissions.has("billing.charge") && ctx.modules.has("billing");
   return (
     <section className="rounded-xl border border-default bg-surface p-4 sm:p-5" aria-labelledby="tasks-h">
-      <h2 id="tasks-h" className="mb-3 text-base font-semibold">Tasks</h2>
+      <h2 id="tasks-h" className="mb-3 flex items-center justify-between text-base font-semibold">Tasks <Link href="/desk/tasks?view=all" className="text-sm font-normal">All tasks</Link></h2>
       {!tasks?.length ? <p className="text-sm text-fg-muted">Nothing waiting.</p> : (
         <ul className="divide-y divide-default text-sm" aria-label="Open tasks">
           {tasks.map((t) => {

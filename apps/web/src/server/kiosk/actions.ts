@@ -103,3 +103,23 @@ export async function kioskUnsigned(personIds: string[]): Promise<ActionResult<{
   if (error) return ok([]);
   return ok((data ?? []).map((r) => ({ personId: r.person_id, templateName: r.template_name })));
 }
+
+export interface KioskStaff { userId: string; name: string; clockedInAt: string | null }
+
+export async function kioskStaff(): Promise<ActionResult<KioskStaff[]>> {
+  const d = await device();
+  if ("error" in d) return d.error;
+  const { data, error } = await createAnonClient().rpc("kiosk_staff", { p_token: d.token });
+  if (error) return fail("Staff clock isn't available right now.");
+  return ok((data ?? []).map((r) => ({ userId: r.user_id, name: r.display_name, clockedInAt: r.clocked_in_at })));
+}
+
+export async function kioskStaffClock(userId: string, pin: string): Promise<ActionResult<{ ok: boolean; action: "in" | "out" | null; attemptsLeft: number; lockedUntil: string | null }>> {
+  const d = await device();
+  if ("error" in d) return d.error;
+  if (!z.uuid().safeParse(userId).success) return fail("Unknown staff member");
+  const { data, error } = await createAnonClient().rpc("kiosk_staff_clock", { p_token: d.token, p_user_id: userId, p_pin: pin.slice(0, 4) });
+  const r = data?.[0];
+  if (error || !r) return fail(error?.message.includes("no PIN") ? "No PIN is set for you yet — set one in Desk → Staff." : "Couldn't check the PIN.");
+  return ok({ ok: r.ok, action: r.action === "in" || r.action === "out" ? r.action : null, attemptsLeft: r.attempts_left, lockedUntil: r.locked_until });
+}

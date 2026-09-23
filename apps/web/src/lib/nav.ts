@@ -1,7 +1,7 @@
 /** Navigation per surface. Items gate on permission (hidden) and module (shown locked → upgrade). */
 export const ICONS = [
   "dashboard", "rocket", "users", "calendar", "award", "book", "credit-card", "shopping-bag", "megaphone",
-  "party", "inbox", "chart", "settings", "check-square", "home", "message", "trending-up", "wallet", "sparkles", "clipboard", "bus",
+  "party", "inbox", "chart", "settings", "check-square", "home", "message", "trending-up", "wallet", "sparkles", "clipboard", "bus", "id-card", "list-todo",
 ] as const;
 export type IconKey = (typeof ICONS)[number];
 
@@ -37,6 +37,8 @@ export const DESK_NAV: NavItem[] = [
   { href: "/desk/broadcasts", label: "Broadcasts", icon: "megaphone", permission: "comms.send", module: "grow" },
   { href: "/desk/automations", label: "Automations", icon: "sparkles", permission: "automations.manage", module: "grow" },
   { href: "/desk/inbox", label: "Inbox", icon: "inbox", permission: "comms.send" },
+  { href: "/desk/tasks", label: "Tasks", icon: "list-todo", permission: "people.read" },
+  { href: "/desk/staff", label: "Staff", icon: "id-card", permission: "staff.manage" },
   { href: "/desk/reports", label: "Reports", icon: "chart", permission: "reports.read" },
   { href: "/desk/documents", label: "Documents", icon: "clipboard", permission: "people.read" },
   { href: "/desk/onboarding", label: "Get started", icon: "rocket", permission: "settings.manage" },

@@ -1559,6 +1559,73 @@ export type Database = {
           },
         ]
       }
+      commissions: {
+        Row: {
+          amount_cents: number
+          base_cents: number
+          created_at: string
+          id: string
+          paid_at: string | null
+          period: string
+          rate_pct: number
+          ref_id: string
+          ref_type: string
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          amount_cents: number
+          base_cents: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          period: string
+          rate_pct: number
+          ref_id: string
+          ref_type: string
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          amount_cents?: number
+          base_cents?: number
+          created_at?: string
+          id?: string
+          paid_at?: string | null
+          period?: string
+          rate_pct?: number
+          ref_id?: string
+          ref_type?: string
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "commissions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "commissions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "commissions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       communications: {
         Row: {
           approval_item_id: string | null
@@ -4664,6 +4731,7 @@ export type Database = {
           person_id: string
           plan_id: string
           price_override_cents: number | null
+          sold_by: string | null
           starts_at: string
           status: string
           stripe_subscription_id: string | null
@@ -4690,6 +4758,7 @@ export type Database = {
           person_id: string
           plan_id: string
           price_override_cents?: number | null
+          sold_by?: string | null
           starts_at: string
           status?: string
           stripe_subscription_id?: string | null
@@ -4716,6 +4785,7 @@ export type Database = {
           person_id?: string
           plan_id?: string
           price_override_cents?: number | null
+          sold_by?: string | null
           starts_at?: string
           status?: string
           stripe_subscription_id?: string | null
@@ -7333,6 +7403,71 @@ export type Database = {
           },
         ]
       }
+      shifts: {
+        Row: {
+          created_at: string
+          ends_at: string
+          id: string
+          location_id: string | null
+          role_label: string | null
+          starts_at: string
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          ends_at: string
+          id?: string
+          location_id?: string | null
+          role_label?: string | null
+          starts_at: string
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          ends_at?: string
+          id?: string
+          location_id?: string | null
+          role_label?: string | null
+          starts_at?: string
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "shifts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "shifts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "shifts_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "shifts_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       signature_requests: {
         Row: {
           created_at: string
@@ -7788,6 +7923,7 @@ export type Database = {
           issued_at: string | null
           issuer: string | null
           kind: string
+          name: string | null
           number: string | null
           tenant_id: string
           updated_at: string
@@ -7801,6 +7937,7 @@ export type Database = {
           issued_at?: string | null
           issuer?: string | null
           kind: string
+          name?: string | null
           number?: string | null
           tenant_id: string
           updated_at?: string
@@ -7814,6 +7951,7 @@ export type Database = {
           issued_at?: string | null
           issuer?: string | null
           kind?: string
+          name?: string | null
           number?: string | null
           tenant_id?: string
           updated_at?: string
@@ -7917,6 +8055,156 @@ export type Database = {
             columns: ["tenant_id", "role_id"]
             isOneToOne: false
             referencedRelation: "roles"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      staff_pins: {
+        Row: {
+          created_at: string
+          failed_attempts: number
+          id: string
+          locked_until: string | null
+          pin_hash: string
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          created_at?: string
+          failed_attempts?: number
+          id?: string
+          locked_until?: string | null
+          pin_hash: string
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          created_at?: string
+          failed_attempts?: number
+          id?: string
+          locked_until?: string | null
+          pin_hash?: string
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_pins_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "staff_pins_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "staff_pins_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
+      staff_profiles: {
+        Row: {
+          bio: string | null
+          created_at: string
+          hire_date: string | null
+          id: string
+          pay_rates: Json
+          person_id: string | null
+          photo_path: string | null
+          programs: string[]
+          tenant_id: string
+          title: string | null
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string
+          hire_date?: string | null
+          id?: string
+          pay_rates?: Json
+          person_id?: string | null
+          photo_path?: string | null
+          programs?: string[]
+          tenant_id: string
+          title?: string | null
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string
+          hire_date?: string | null
+          id?: string
+          pay_rates?: Json
+          person_id?: string | null
+          photo_path?: string | null
+          programs?: string[]
+          tenant_id?: string
+          title?: string | null
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "staff_profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "staff_profiles_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "staff_profiles_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "staff_profiles_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "staff_profiles_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "staff_profiles_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
             referencedColumns: ["tenant_id", "id"]
           },
         ]
@@ -9122,6 +9410,80 @@ export type Database = {
           },
         ]
       }
+      time_entries: {
+        Row: {
+          approved_at: string | null
+          approved_by: string | null
+          clock_in: string
+          clock_out: string | null
+          created_at: string
+          id: string
+          location_id: string | null
+          notes: string | null
+          source: string
+          tenant_id: string
+          updated_at: string
+          user_id: string
+        }
+        Insert: {
+          approved_at?: string | null
+          approved_by?: string | null
+          clock_in: string
+          clock_out?: string | null
+          created_at?: string
+          id?: string
+          location_id?: string | null
+          notes?: string | null
+          source?: string
+          tenant_id: string
+          updated_at?: string
+          user_id: string
+        }
+        Update: {
+          approved_at?: string | null
+          approved_by?: string | null
+          clock_in?: string
+          clock_out?: string | null
+          created_at?: string
+          id?: string
+          location_id?: string | null
+          notes?: string | null
+          source?: string
+          tenant_id?: string
+          updated_at?: string
+          user_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "time_entries_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "time_entries_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "time_entries_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "time_entries_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       webhook_deliveries: {
         Row: {
           attempts: number
@@ -9900,6 +10262,38 @@ export type Database = {
           },
         ]
       }
+      v_instructor_sessions: {
+        Row: {
+          hours: number | null
+          period: string | null
+          sessions: number | null
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
       v_inventory: {
         Row: {
           available: number | null
@@ -10229,6 +10623,23 @@ export type Database = {
         }
         Relationships: []
       }
+      v_payroll: {
+        Row: {
+          class_pay_cents: number | null
+          commission_cents: number | null
+          hourly_cents: number | null
+          hourly_pay_cents: number | null
+          hours: number | null
+          per_class_cents: number | null
+          period: string | null
+          sessions: number | null
+          staff_name: string | null
+          tenant_id: string | null
+          total_cents: number | null
+          user_id: string | null
+        }
+        Relationships: []
+      }
       v_people_search: {
         Row: {
           allergies: string[] | null
@@ -10450,6 +10861,42 @@ export type Database = {
           },
           {
             foreignKeyName: "class_sessions_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
+      v_staff_compliance: {
+        Row: {
+          days_left: number | null
+          expires_at: string | null
+          id: string | null
+          kind: string | null
+          name: string | null
+          staff_name: string | null
+          state: string | null
+          tenant_id: string | null
+          user_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "staff_certifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "staff_certifications_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "staff_certifications_tenant_id_fkey"
             columns: ["tenant_id"]
             isOneToOne: false
             referencedRelation: "v_owner_dashboard"
@@ -10727,6 +11174,24 @@ export type Database = {
           suggested: boolean
         }[]
       }
+      kiosk_staff: {
+        Args: { p_token: string }
+        Returns: {
+          clocked_in_at: string
+          display_name: string
+          user_id: string
+        }[]
+      }
+      kiosk_staff_clock: {
+        Args: { p_pin: string; p_token: string; p_user_id: string }
+        Returns: {
+          action: string
+          at: string
+          attempts_left: number
+          locked_until: string
+          ok: boolean
+        }[]
+      }
       kiosk_unlock: {
         Args: { p_household_id: string; p_pin: string; p_token: string }
         Returns: {
@@ -10908,6 +11373,10 @@ export type Database = {
           p_reorder_point: number
           p_variant_id: string
         }
+        Returns: undefined
+      }
+      set_staff_pin: {
+        Args: { p_pin: string; p_user_id: string }
         Returns: undefined
       }
       sign_guest_waiver: {

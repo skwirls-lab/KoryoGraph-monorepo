@@ -1,12 +1,12 @@
 "use client";
 
-import { ArrowLeft, CheckCircle2, Search } from "lucide-react";
+import { ArrowLeft, CheckCircle2, Clock, Search } from "lucide-react";
 import { useEffect, useRef, useState, useTransition } from "react";
 import { KioskKeypad } from "@koryo/ui/components/app/kiosk-keypad";
 import { initials } from "@koryo/ui/components/app/person-chip";
 import { Button } from "@koryo/ui/components/ui/button";
 import { cn } from "@koryo/ui/lib/utils";
-import { kioskCheckIn, kioskFamily, kioskSearch, kioskSessions, kioskUnlock, kioskUnsigned, type KioskFamily, type KioskSession } from "@/server/kiosk/actions";
+import { kioskCheckIn, kioskFamily, kioskSearch, kioskSessions, kioskStaff, kioskStaffClock, kioskUnlock, kioskUnsigned, type KioskFamily, type KioskSession, type KioskStaff } from "@/server/kiosk/actions";
 
 type Step =
   | { kind: "search" }
@@ -14,6 +14,9 @@ type Step =
   | { kind: "pin"; family: KioskFamily; selected: string[]; message?: string }
   | { kind: "sessions"; family: KioskFamily; pin: string | null; sessions: KioskSession[]; chosen: Record<string, string>; unsigned: { personId: string; templateName: string }[] }
   | { kind: "done"; names: string[] }
+  | { kind: "staff"; staff: KioskStaff[] }
+  | { kind: "staffPin"; member: KioskStaff; message?: string }
+  | { kind: "staffDone"; name: string; action: "in" | "out"; at: string }
   | { kind: "error"; message: string };
 
 function timeOf(iso: string, tz: string) {
@@ -30,7 +33,7 @@ export function KioskApp({ info }: { info: { tenantName: string; locationName: s
   // Auto-reset after success (3 s) and after inactivity (60 s) so the next family starts clean.
   useEffect(() => {
     if (step.kind === "search") return;
-    const t = window.setTimeout(() => { setStep({ kind: "search" }); setQ(""); setResults([]); }, step.kind === "done" ? 3000 : 60_000);
+    const t = window.setTimeout(() => { setStep({ kind: "search" }); setQ(""); setResults([]); }, step.kind === "done" || step.kind === "staffDone" ? 3000 : 60_000);
     return () => window.clearTimeout(t);
   }, [step]);
 
@@ -55,7 +58,11 @@ export function KioskApp({ info }: { info: { tenantName: string; locationName: s
           <p className="font-display text-2xl font-bold">{info.tenantName}</p>
           <p className="text-sm text-fg-secondary">{info.locationName} · Check-in</p>
         </div>
-        {step.kind !== "search" ? <Button variant="outline" size="lg" className="gap-2" onClick={reset}><ArrowLeft aria-hidden className="size-5" /> Start over</Button> : null}
+        {step.kind !== "search" ? <Button variant="outline" size="lg" className="gap-2" onClick={reset}><ArrowLeft aria-hidden className="size-5" /> Start over</Button>
+          : <Button variant="ghost" size="lg" className="gap-2" disabled={pending} onClick={() => start(async () => {
+              const r = await kioskStaff();
+              setStep(r.ok ? { kind: "staff", staff: r.data } : { kind: "error", message: r.error });
+            })}><Clock aria-hidden className="size-5" /> Staff clock</Button>}
       </header>
 
       {step.kind === "search" ? (
@@ -194,6 +201,46 @@ export function KioskApp({ info }: { info: { tenantName: string; locationName: s
           <CheckCircle2 aria-hidden className="size-24 text-success" />
           <h1 className="text-4xl font-bold">You&apos;re checked in!</h1>
           <p className="text-xl text-fg-secondary">{step.names.join(" & ")} — have a great class.</p>
+        </section>
+      ) : null}
+
+      {step.kind === "staff" ? (
+        <section className="space-y-4" aria-label="Staff clock">
+          <h1 className="text-3xl font-bold">Staff clock</h1>
+          {!step.staff.length ? <p className="text-fg-secondary">No staff have a kiosk PIN yet. Set one in Desk → Staff.</p> : null}
+          <ul className="grid gap-3 sm:grid-cols-2">
+            {step.staff.map((m) => (
+              <li key={m.userId}>
+                <button type="button" onClick={() => setStep({ kind: "staffPin", member: m })}
+                  className="flex min-h-20 w-full items-center justify-between gap-3 rounded-2xl border border-default bg-surface px-4 text-left text-xl hover:border-strong">
+                  <span className="font-semibold">{m.name}</span>
+                  <span className="text-sm text-fg-secondary">{m.clockedInAt ? `In since ${timeOf(m.clockedInAt, info.timeZone)}` : "Clocked out"}</span>
+                </button>
+              </li>
+            ))}
+          </ul>
+        </section>
+      ) : null}
+
+      {step.kind === "staffPin" ? (
+        <section className="space-y-6 text-center" aria-label="Enter your staff PIN">
+          <h1 className="text-3xl font-bold">{step.member.name}: {step.member.clockedInAt ? "clock out" : "clock in"}</h1>
+          {step.message ? <p role="alert" className="text-danger">{step.message}</p> : null}
+          <KioskKeypad label="Staff PIN" disabled={pending} onComplete={(pin) => start(async () => {
+            const r = await kioskStaffClock(step.member.userId, pin);
+            if (!r.ok) return setStep({ kind: "error", message: r.error });
+            if (r.data.lockedUntil) return setStep({ ...step, message: `Too many attempts. Try again after ${timeOf(r.data.lockedUntil, info.timeZone)}.` });
+            if (!r.data.ok || !r.data.action) return setStep({ ...step, message: `That PIN didn't match. ${r.data.attemptsLeft} ${r.data.attemptsLeft === 1 ? "try" : "tries"} left.` });
+            setStep({ kind: "staffDone", name: step.member.name, action: r.data.action, at: new Date().toISOString() });
+          })} />
+        </section>
+      ) : null}
+
+      {step.kind === "staffDone" ? (
+        <section className="flex flex-1 flex-col items-center justify-center gap-4 text-center" role="status" aria-label="Clocked">
+          <CheckCircle2 aria-hidden className="size-24 text-success" />
+          <h1 className="text-4xl font-bold">{step.action === "in" ? "Clocked in" : "Clocked out"}</h1>
+          <p className="text-xl text-fg-secondary">{step.name} · {timeOf(step.at, info.timeZone)}</p>
         </section>
       ) : null}
 

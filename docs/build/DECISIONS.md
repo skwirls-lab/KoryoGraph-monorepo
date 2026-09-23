@@ -384,3 +384,21 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   the outbox job renders and delivers it with consent and quiet hours, or shows it in the Outbox with no key.
 - **Manifest** is computed per date from enrollments (weekday, start/end) grouped by route then school,
   printable (Desk chrome hides in print). Release requires a name and a drawn signature, like camp check-out.
+
+## ADR-0027 — Staff ops: kiosk PINs per staff member, commissions by trigger, payroll as a view
+- **Date / task:** 2026-09-24 · M3.06
+- **Decision:** staff clock in/out on the paired kiosk ("Staff clock" → name → 4-digit PIN) through
+  device-token RPCs (`kiosk_staff`, `kiosk_staff_clock`), same model as family check-in: bcrypt hash in
+  `staff_pins` (the hash column isn't selectable through the API), 5 wrong PINs lock that person 15 min,
+  one open time entry per person (unique partial index). Managers add/approve manual entries and can clock
+  someone out from Desk.
+- **Commissions** are written by triggers, so no sale path can forget them: a POS sale reaching `completed`
+  pays its cashier's `commission_pct` on the pre-tax amount (a completed return reverses it for the original
+  cashier); a new membership pays its seller (`memberships.sold_by`, defaulting to the signed-in user) on one
+  period's price. Imports/jobs have no seller and earn nothing.
+- **Payroll** = `v_payroll` per school-local month: clocked hours × hourly rate + sessions taught
+  (`v_instructor_sessions`: past, not cancelled; substitutes teach instead of the scheduled instructors) ×
+  per-class rate + commissions. The Desk table and the CSV export read the same view.
+- **Tasks** get a Desk queue (`/desk/tasks`: mine / unassigned / all / done); assignees without
+  `people.write` can complete their own (RLS policy), others need `people.write`.
+- Staff invitations (F2.4) remain in M5.02 (onboarding), per the plan.
