@@ -1,5 +1,5 @@
 import { createClient, type SupabaseClient } from "@supabase/supabase-js";
-import { publicEnv } from "./env";
+import { publicEnv } from "./public-env";
 import type { Database } from "./types";
 
 /**

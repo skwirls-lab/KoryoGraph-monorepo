@@ -716,3 +716,17 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   - revenue 7 ms; MRR 7 ms; attendance 9 ms; retention 22 ms; roster 4 ms.
   Budgets are about 5–10× these numbers. None needed fixing, and no production server timing exists yet
   (HANDOFF: check again against a hosted database, where latency dominates).
+
+## ADR-0045 — Security review: nonce CSP, headers, reviewed API routes, client-bundle scan
+- **Date / task:** 2026-09-25 · M5.08
+- **CSP:** built per request in the proxy with a fresh nonce and `'strict-dynamic'`, so Next's own scripts
+  carry the nonce and no inline script is allowed. Supabase and Stripe are allowed explicitly; only
+  `/s/*` (the embeddable trial form) may be framed. The other headers are in `next.config.ts`, with HSTS in
+  production only.
+- **Build-dir split:** `distDir` honours `NEXT_DIST_DIR`, so the M5 gate can make a production build in
+  `.next-audit` while `npm run dev` keeps using `.next`. The gate then scans every client chunk for server
+  secret values and secret-shaped strings, and runs `npm audit --omit=dev --audit-level=high`.
+- **Env split:** the review found the shared env module shipping the *name* of the service-role variable to
+  the browser. Public and service env are now separate modules, and the service one is `server-only`.
+- The full checklist, results and open items (DNS rebinding for outbound webhooks, MFA, production auth rate
+  limits) are in `docs/SECURITY-REVIEW.md`.

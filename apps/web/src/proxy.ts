@@ -1,5 +1,6 @@
 import { NextResponse, type NextRequest } from "next/server";
 import { createServerClient, type CookieToSet } from "@koryo/db/server";
+import { contentSecurityPolicy } from "@/lib/csp";
 import { isProtectedPath, isSharedPath, surfaceForHost } from "@/lib/surfaces";
 
 /**
@@ -8,6 +9,7 @@ import { isProtectedPath, isSharedPath, surfaceForHost } from "@/lib/surfaces";
  *  2. request id on every request,
  *  3. Supabase session refresh (cookies rewritten on both the forwarded request and the response),
  *  4. unauthenticated /desk|/mat|/home → /login?next=…
+ *  5. Content-Security-Policy with a per-request nonce (lib/csp.ts).
  * Authorisation per surface (desk.access …) is enforced in each surface layout (403 page).
  */
 export async function proxy(request: NextRequest) {
@@ -21,16 +23,22 @@ export async function proxy(request: NextRequest) {
     targetPath = url.pathname === "/" ? prefix : `${prefix}${url.pathname}`;
   }
   const rewrite = targetPath !== url.pathname;
+  const nonce = Buffer.from(crypto.randomUUID()).toString("base64");
+  const csp = contentSecurityPolicy(nonce, url.pathname, { supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL ?? "", dev: process.env.NODE_ENV !== "production" });
 
   const build = (): NextResponse => {
     const forwarded = new Headers(request.headers);
     forwarded.set("x-request-id", requestId);
     forwarded.set("x-kg-path", targetPath);
+    // Next reads the nonce from the request's CSP header and applies it to its scripts.
+    forwarded.set("x-nonce", nonce);
+    forwarded.set("content-security-policy", csp);
     const init = { request: { headers: forwarded } };
     const res = rewrite
       ? NextResponse.rewrite(new URL(`${targetPath}${url.search}`, request.url), init)
       : NextResponse.next(init);
     res.headers.set("x-request-id", requestId);
+    res.headers.set("content-security-policy", csp);
     return res;
   };
 

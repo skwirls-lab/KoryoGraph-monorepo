@@ -24,7 +24,7 @@ export const nextConfig = [
   },
   ...honesty,
   {
-    ignores: [".next/**", "out/**", "build/**", "next-env.d.ts", "**/*.gen.ts"],
+    ignores: [".next/**", ".next-audit/**", "out/**", "build/**", "next-env.d.ts", "**/*.gen.ts"],
   },
 ];
 

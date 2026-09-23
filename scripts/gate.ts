@@ -69,6 +69,14 @@ steps.push({
   cmd: `npx playwright test ${e2eDirs.join(" ")}${grepInvert}`,
   env: level >= MILESTONES.indexOf("m4") ? { AI_TRANSPORT: "fixture" } : undefined,
 });
+if (level >= MILESTONES.indexOf("m5")) {
+  steps.push({
+    name: "production build: client bundle has no secrets",
+    cmd: "npm run build -w @koryo/web && npx vitest run --project bundle",
+    env: { NEXT_DIST_DIR: ".next-audit" },
+  });
+  steps.push({ name: "dependency audit (npm audit --omit=dev, high+)", cmd: "npm audit --omit=dev --audit-level=high" });
+}
 if (level >= MILESTONES.indexOf("m4") && process.env.OPENROUTER_API_KEY) steps.push({ name: "ai:eval (live)", cmd: "npm run ai:eval" });
 
 interface Result {

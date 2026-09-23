@@ -48,6 +48,15 @@ export default defineConfig({
       {
         extends: true,
         test: {
+          // Run by the M5 gate after a production build into apps/web/.next-audit (NEXT_DIST_DIR).
+          name: "bundle",
+          environment: "node",
+          include: ["tests/security/**/*.test.ts"],
+        },
+      },
+      {
+        extends: true,
+        test: {
           name: "seed",
           environment: "node",
           include: ["tests/seed/**/*.test.ts"],
