@@ -4,6 +4,7 @@ const TABS = [
   { href: "/desk/pos", label: "Point of sale" },
   { href: "/desk/retail/products", label: "Products" },
   { href: "/desk/retail/inventory", label: "Inventory" },
+  { href: "/desk/retail/receive", label: "Receive" },
   { href: "/desk/retail/suppliers", label: "Suppliers" },
   { href: "/desk/retail/fulfilment", label: "Fulfilment" },
 ];

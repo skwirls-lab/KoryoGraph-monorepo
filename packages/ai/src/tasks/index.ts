@@ -2,6 +2,7 @@ import type { AiTask } from "../types";
 import { actionBoard, transcribe } from "./action-board";
 import { copilotStep, homeAssistant } from "./copilot";
 import { driftOutreach } from "./drift";
+import { packingSlip } from "./intake";
 import { lessonBuilder } from "./lessons";
 import { ping } from "./ping";
 
@@ -14,9 +15,11 @@ export const TASKS: Record<string, AiTask<never, unknown>> = {
   transcribe: transcribe as unknown as AiTask<never, unknown>,
   action_board: actionBoard as unknown as AiTask<never, unknown>,
   lesson_builder: lessonBuilder as unknown as AiTask<never, unknown>,
+  packing_slip: packingSlip as unknown as AiTask<never, unknown>,
 };
 export { ping };
 export * from "./copilot";
 export * from "./drift";
 export * from "./action-board";
 export * from "./lessons";
+export * from "./intake";

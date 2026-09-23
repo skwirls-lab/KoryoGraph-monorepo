@@ -2,7 +2,7 @@
 import { createHash } from "node:crypto";
 import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { actionBoard, copilotStep, driftOutreach, homeAssistant, inputHash, lessonBuilder, transcribe } from "@koryo/ai";
+import { actionBoard, copilotStep, driftOutreach, homeAssistant, inputHash, lessonBuilder, packingSlip, transcribe } from "@koryo/ai";
 import { AB, AB_TRANSCRIPT } from "../../tests/fixtures/action-board";
 import { sid } from "../lib/ids";
 
@@ -135,5 +135,23 @@ for (const combo of COMBOS) {
       { title: "Games & cool-down", minutes: 12, skillIds: [], notes: "Tag-the-belt game, stretch, bow out." },
     ] }],
     suggestedSkills: [],
+  } });
+}
+
+// Document intake (M4.08): what a vision model reads from tests/fixtures/docs/century-packing-slip.png.
+{
+  const png = readFileSync(join(process.cwd(), "tests/fixtures/docs/century-packing-slip.png"));
+  const sha256 = createHash("sha256").update(png).digest("hex");
+  write("packing_slip", packingSlip.fixtureKey!({ mime: "image/png", base64: "", sha256, fileName: "" }), { output: {
+    supplier: "Dojo Supply Co.", reference: "DS-48812",
+    lines: [
+      { description: "Student uniform, white, size 2", skuText: "DOBOK-2", quantity: 10, unitCostCents: 2200 },
+      { description: "Student uniform, white, size 3", skuText: "DOBOK-3", quantity: 8, unitCostCents: 2200 },
+      { description: "Sparring gear set, medium", skuText: "SPARRING-SET-M", quantity: 4, unitCostCents: 4100 },
+      { description: "Mouthguard, youth", skuText: "MOUTHGUARD-YOUTH", quantity: 20, unitCostCents: 150 },
+      { description: "White belt, size 2", skuText: "WHITE-BELT-2", quantity: 12, unitCostCents: 210 },
+      { description: "Focus mitts pair", skuText: "FM-PR", quantity: 6, unitCostCents: 1800 },
+      { description: "Rebreakable board, black (hard)", skuText: "RB-BLK", quantity: 2, unitCostCents: 2400 },
+    ],
   } });
 }

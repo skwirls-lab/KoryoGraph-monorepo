@@ -1,0 +1,51 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "supplier": "Dojo Supply Co.",
+    "reference": "DS-48812",
+    "lines": [
+      {
+        "description": "Student uniform, white, size 2",
+        "skuText": "DOBOK-2",
+        "quantity": 10,
+        "unitCostCents": 2200
+      },
+      {
+        "description": "Student uniform, white, size 3",
+        "skuText": "DOBOK-3",
+        "quantity": 8,
+        "unitCostCents": 2200
+      },
+      {
+        "description": "Sparring gear set, medium",
+        "skuText": "SPARRING-SET-M",
+        "quantity": 4,
+        "unitCostCents": 4100
+      },
+      {
+        "description": "Mouthguard, youth",
+        "skuText": "MOUTHGUARD-YOUTH",
+        "quantity": 20,
+        "unitCostCents": 150
+      },
+      {
+        "description": "White belt, size 2",
+        "skuText": "WHITE-BELT-2",
+        "quantity": 12,
+        "unitCostCents": 210
+      },
+      {
+        "description": "Focus mitts pair",
+        "skuText": "FM-PR",
+        "quantity": 6,
+        "unitCostCents": 1800
+      },
+      {
+        "description": "Rebreakable board, black (hard)",
+        "skuText": "RB-BLK",
+        "quantity": 2,
+        "unitCostCents": 2400
+      }
+    ]
+  }
+}

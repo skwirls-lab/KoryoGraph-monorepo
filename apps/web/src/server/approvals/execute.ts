@@ -2,6 +2,7 @@ import "server-only";
 import { textToHtml } from "@koryo/comms";
 import type { Json } from "@koryo/db/types";
 import { messagePayloadSchema, type ApprovalKind } from "@/lib/approvals";
+import { intakePayloadSchema } from "@/lib/intake";
 import { executeBoard } from "../action-board";
 import type { Ctx } from "../context";
 
@@ -46,6 +47,13 @@ const EXECUTORS: Partial<Record<ApprovalKind, Executor>> = {
   billing_recovery: sendMessages,
   copilot_write: sendMessages,
   action_board: (ctx, item) => executeBoard(ctx.supabase, item.id, item.payload),
+  doc_intake: async (ctx, item) => {
+    if (!intakePayloadSchema.safeParse(item.payload).success) return { ok: false, error: "The intake changed shape; open it again." };
+    const { data, error } = await ctx.supabase.rpc("receive_intake", { p_id: item.id });
+    if (error) return { ok: false, error: error.code === "42501" ? "Receiving stock needs inventory and approval permissions." : error.message.charAt(0).toUpperCase() + error.message.slice(1) + "." };
+    const r = data as { summary: string; detail: Record<string, unknown> };
+    return { ok: true, summary: r.summary, detail: r.detail };
+  },
 };
 
 export function registerExecutor(kind: ApprovalKind, fn: Executor): void {

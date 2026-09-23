@@ -12455,6 +12455,16 @@ export type Database = {
         }[]
       }
       guest_waiver_info: { Args: { p_token: string }; Returns: Json }
+      intake_match: {
+        Args: { p_skus: string[]; p_texts: string[] }
+        Returns: {
+          confidence: number
+          idx: number
+          label: string
+          sku: string
+          variant_id: string
+        }[]
+      }
       kb_search: {
         Args: {
           p_embedding?: string
@@ -12629,6 +12639,7 @@ export type Database = {
         }
         Returns: string
       }
+      receive_intake: { Args: { p_id: string }; Returns: Json }
       record_approval_execution: {
         Args: { p_id: string; p_result: Json }
         Returns: undefined
