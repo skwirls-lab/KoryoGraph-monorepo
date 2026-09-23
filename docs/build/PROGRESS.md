@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M2.12
+M3.01
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -26,7 +26,7 @@ port 3000          → in use by another container on the host → dev server us
 |---|---|---|---|---|
 | M0 | done | GREEN (typecheck, lint, unit 16, db 22, e2e 14) | m0-complete | 2026-09-22 |
 | M1 | done | GREEN (typecheck, lint, unit, db, seed demo + invariants, e2e m0–m1) | m1-complete | 2026-09-23 |
-| M2 | in_progress |  |  |  |
+| M2 | done | GREEN (typecheck, lint, unit 167, billing coverage 100%, db 98, seed demo + invariants 11, e2e m0–m2 54; @stripe/@ai-live/@email = HANDOFF) | m2-complete | 2026-09-23 |
 | M3 | todo |  |  |  |
 | M4 | todo |  |  |  |
 | M5 | todo |  |  |  |
@@ -72,8 +72,8 @@ port 3000          → in use by another container on the host → dev server us
 | M2.09 | done | 1c76520 | Terminal + card-on-file tenders need Stripe keys (HANDOFF) |
 | M2.10 | done | 97f51b6 |  |
 | M2.11 | done | 9115ee0 |  |
-| M2.12 | doing |  |  |
-| M3.01 | todo |  |  |
+| M2.12 | done | 0f1b02c | gate green after 3 fixes found by demo data (walk-in household, cardLabel server/client, spec assumptions) |
+| M3.01 | doing |  |  |
 | M3.02 | todo |  |  |
 | M3.03 | todo |  |  |
 | M3.04 | todo |  |  |
