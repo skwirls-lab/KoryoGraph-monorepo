@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M5.05 Home PWA & notifications
+M5.06 multi-location
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -98,7 +98,7 @@ port 3000          → in use by another container on the host → dev server us
 | M5.02 | done | 6ed2db4 | Onboarding wizard; invites via Supabase Auth + /auth/accept; go_live (platform billing HANDOFF); ADR-0039 |
 | M5.03 | done | 6535b3c | CSV importer; presets are assumptions; attendance history not imported (count only); ADR-0040 |
 | M5.04 | done | 8268a43 | Public API v1 + signed webhooks; DNS-rebinding not handled (noted); ADR-0041 |
-| M5.05 | todo |  |  |
+| M5.05 | done | c2cd8a9 | PWA + notifications; web push HANDOFF (no VAPID keys); ADR-0042 |
 | M5.06 | todo |  |  |
 | M5.07 | todo |  |  |
 | M5.08 | todo |  |  |
