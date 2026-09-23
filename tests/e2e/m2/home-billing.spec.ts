@@ -1,3 +1,4 @@
+import { randomUUID } from "node:crypto";
 import { addDaysStr } from "@koryo/billing";
 import { sid } from "../../../scripts/lib/ids";
 import { sql } from "../../db/harness";
@@ -9,13 +10,15 @@ import { connectRidgeline, disconnectRidgeline, stripeLive } from "../support/st
 const R = sid("tenant:ridgeline");
 const COOPER = sid("household:ridgeline:cooper");
 const LEO = sid("person:ridgeline:leo-cooper");
-const PLAN = sid("plan:ridgeline:monthly-unlimited");
+const PLAN = randomUUID();
+const PLAN_NAME = `Spec Home Plan ${PLAN.slice(0, 6)}`;
 const today = new Intl.DateTimeFormat("en-CA", { timeZone: "America/New_York" }).format(new Date());
 let membership = "";
 let invoice = "";
 let paidInvoice = "";
 
 test.beforeAll(async () => {
+  await sql`insert into public.membership_plans (id, tenant_id, name, kind, interval, price_cents, active) values (${PLAN}, ${R}, ${PLAN_NAME}, 'recurring', 'month', 16900, false)`;
   membership = (await sql<{ id: string }[]>`insert into public.memberships (tenant_id, household_id, person_id, plan_id, status, starts_at, billing_day, next_bill_at, notes)
     values (${R}, ${COOPER}, ${LEO}, ${PLAN}, 'active', ${today}, 1, ${addDaysStr(today, 30)}, 'home-billing spec') returning id`)[0]?.id ?? "";
   const mkInvoice = async (total: number) => {
@@ -36,6 +39,7 @@ test.afterAll(async () => {
   await sql`delete from public.payments where invoice_id in (select id from public.invoices where membership_id = ${membership})`;
   await sql`delete from public.invoices where membership_id = ${membership}`;
   await sql`delete from public.memberships where id = ${membership}`;
+  await sql`delete from public.membership_plans where id = ${PLAN}`;
 });
 
 test.describe("@m2 Home billing", () => {
@@ -46,9 +50,12 @@ test.describe("@m2 Home billing", () => {
     const toPay = parent.getByRole("list", { name: "Invoices to pay" });
     await expect(toPay.getByRole("listitem").filter({ hasText: "$45.00" })).toBeVisible();
     if (!stripeLive) await expect(parent.getByText("Online card payments aren't available yet — you can pay at the front desk.")).toBeVisible();
-    const leo = parent.getByRole("listitem", { name: /Monthly Unlimited for Leo Cooper/ });
+    const leo = parent.getByRole("listitem", { name: new RegExp(`${PLAN_NAME} for Leo Cooper`) });
     await expect(leo).toContainText("active");
-    await expect(leo.getByRole("switch", { name: /Autopay/ })).toBeDisabled(); // no card yet
+    // Autopay needs a saved card: the switch is enabled exactly when the household has one.
+    const [cards] = await sql<{ n: number }[]>`select count(*)::int as n from public.payment_methods where household_id = ${COOPER} and status = 'active'`;
+    if (cards?.n) await expect(leo.getByRole("switch", { name: /Autopay/ })).toBeEnabled();
+    else await expect(leo.getByRole("switch", { name: /Autopay/ })).toBeDisabled();
     await expectNoSeriousA11yViolations(parent);
 
     await parent.getByRole("list", { name: "Payments" }).getByRole("link", { name: "Receipt" }).first().click();
@@ -74,7 +81,7 @@ test.describe("@m2 Home billing", () => {
     const [m] = await sql<{ hold_from: string; hold_until: string }[]>`select hold_from::text, hold_until::text from public.memberships where id = ${membership}`;
     expect(m).toEqual({ hold_from: addDaysStr(today, 3), hold_until: addDaysStr(today, 17) });
     await parent.reload();
-    await expect(parent.getByRole("listitem", { name: /Monthly Unlimited for Leo Cooper/ })).toContainText(`on hold ${addDaysStr(today, 3)}`);
+    await expect(parent.getByRole("listitem", { name: new RegExp(`${PLAN_NAME} for Leo Cooper`) })).toContainText(`on hold ${addDaysStr(today, 3)}`);
   });
 
   test("@stripe parent pays an open invoice with a test card → Desk shows paid", async ({ browser }) => {
