@@ -214,6 +214,15 @@ export const SYSTEM_TEMPLATES: Record<string, SystemTemplate> = {
       email: { subject: "Congratulations again — would you leave us a review?", body: "Hi {{first_name}},\n\nCongratulations again on {{student_name}}'s promotion! If you've enjoyed training with us, a short review helps other families find {{school_name}}. Thank you!\n\n— {{school_name}}" },
     },
   },
+  afterschool_absent: {
+    key: "afterschool_absent",
+    description: "After-school: an expected child wasn't at school pickup",
+    variables: ["first_name", "student_name", "program_name", "school", "date", "reason", "school_name"],
+    channels: {
+      email: { subject: "{{student_name}} wasn't at after-school pickup today", body: "Hi {{first_name}},\n\n{{student_name}} was expected at {{school}} pickup for {{program_name}} today ({{date}}) but wasn't there{{reason_suffix}}. If you already know they're absent, there's nothing to do. Otherwise please call us right away.\n\n— {{school_name}}" },
+      sms: { body: "{{school_name}}: {{student_name}} wasn't at {{school}} after-school pickup today{{reason_suffix}}. If this is unexpected please call us now." },
+    },
+  },
   thread_message: {
     key: "thread_message",
     description: "New message in a conversation",

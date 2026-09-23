@@ -1,3 +1,4 @@
+import { afterschoolCutoff } from "./afterschool-cutoff";
 import { automations } from "./automations";
 import { billingRun } from "./billing-run";
 import { dataExport } from "./data-export";
@@ -9,6 +10,7 @@ import type { Job } from "./types";
 
 /** Every job the platform runs. Names match rows in public.jobs (seed.sql). */
 export const JOBS: Record<string, Job> = {
+  afterschool_cutoff: afterschoolCutoff,
   automations,
   billing_run: billingRun,
   data_export: dataExport,

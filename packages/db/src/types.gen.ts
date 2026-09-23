@@ -9,6 +9,326 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      afterschool_attendance: {
+        Row: {
+          absence_reason: string | null
+          absent: boolean
+          alerted_at: string | null
+          arrived_at: string | null
+          created_at: string
+          date: string
+          enrollment_id: string
+          id: string
+          marked_by: string | null
+          picked_up_at: string | null
+          released_at: string | null
+          released_to: string | null
+          signature_path: string | null
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          absence_reason?: string | null
+          absent?: boolean
+          alerted_at?: string | null
+          arrived_at?: string | null
+          created_at?: string
+          date: string
+          enrollment_id: string
+          id?: string
+          marked_by?: string | null
+          picked_up_at?: string | null
+          released_at?: string | null
+          released_to?: string | null
+          signature_path?: string | null
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          absence_reason?: string | null
+          absent?: boolean
+          alerted_at?: string | null
+          arrived_at?: string | null
+          created_at?: string
+          date?: string
+          enrollment_id?: string
+          id?: string
+          marked_by?: string | null
+          picked_up_at?: string | null
+          released_at?: string | null
+          released_to?: string | null
+          signature_path?: string | null
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "afterschool_attendance_tenant_id_enrollment_id_fkey"
+            columns: ["tenant_id", "enrollment_id"]
+            isOneToOne: false
+            referencedRelation: "afterschool_enrollments"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "afterschool_attendance_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "afterschool_attendance_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "afterschool_attendance_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+        ]
+      }
+      afterschool_enrollments: {
+        Row: {
+          created_at: string
+          days_of_week: number[]
+          ends_on: string | null
+          household_id: string | null
+          id: string
+          membership_id: string | null
+          notes: string | null
+          person_id: string
+          pickup_route: string | null
+          program_id: string
+          school: string
+          starts_on: string
+          status: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          created_at?: string
+          days_of_week: number[]
+          ends_on?: string | null
+          household_id?: string | null
+          id?: string
+          membership_id?: string | null
+          notes?: string | null
+          person_id: string
+          pickup_route?: string | null
+          program_id: string
+          school: string
+          starts_on: string
+          status?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          created_at?: string
+          days_of_week?: number[]
+          ends_on?: string | null
+          household_id?: string | null
+          id?: string
+          membership_id?: string | null
+          notes?: string | null
+          person_id?: string
+          pickup_route?: string | null
+          program_id?: string
+          school?: string
+          starts_on?: string
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_deferred_revenue"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_membership_mrr"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "afterschool_enrollments_tenant_id_program_id_fkey"
+            columns: ["tenant_id", "program_id"]
+            isOneToOne: false
+            referencedRelation: "afterschool_programs"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      afterschool_programs: {
+        Row: {
+          active: boolean
+          created_at: string
+          days_of_week: number[]
+          id: string
+          location_id: string | null
+          name: string
+          pickup_cutoff: string
+          plan_id: string | null
+          routes: string[]
+          schools: string[]
+          tenant_id: string
+          updated_at: string
+          weekly_price_cents: number
+        }
+        Insert: {
+          active?: boolean
+          created_at?: string
+          days_of_week?: number[]
+          id?: string
+          location_id?: string | null
+          name: string
+          pickup_cutoff?: string
+          plan_id?: string | null
+          routes?: string[]
+          schools?: string[]
+          tenant_id: string
+          updated_at?: string
+          weekly_price_cents?: number
+        }
+        Update: {
+          active?: boolean
+          created_at?: string
+          days_of_week?: number[]
+          id?: string
+          location_id?: string | null
+          name?: string
+          pickup_cutoff?: string
+          plan_id?: string | null
+          routes?: string[]
+          schools?: string[]
+          tenant_id?: string
+          updated_at?: string
+          weekly_price_cents?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "afterschool_programs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "afterschool_programs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "afterschool_programs_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "afterschool_programs_tenant_id_location_id_fkey"
+            columns: ["tenant_id", "location_id"]
+            isOneToOne: false
+            referencedRelation: "locations"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "afterschool_programs_tenant_id_plan_id_fkey"
+            columns: ["tenant_id", "plan_id"]
+            isOneToOne: false
+            referencedRelation: "membership_plans"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       api_keys: {
         Row: {
           created_at: string
@@ -10212,6 +10532,36 @@ export type Database = {
         }
         Returns: string
       }
+      afterschool_cutoff: {
+        Args: { p_now: string; p_tenant_id: string }
+        Returns: number
+      }
+      afterschool_end: {
+        Args: { p_ends_on: string; p_enrollment_id: string }
+        Returns: undefined
+      }
+      afterschool_enroll: {
+        Args: {
+          p_days: number[]
+          p_person_id: string
+          p_program_id: string
+          p_route: string
+          p_school: string
+          p_starts_on: string
+        }
+        Returns: string
+      }
+      afterschool_mark: {
+        Args: {
+          p_action: string
+          p_date: string
+          p_enrollment_id: string
+          p_reason?: string
+          p_released_to?: string
+          p_signature_path?: string
+        }
+        Returns: string
+      }
       apply_credit: {
         Args: { p_amount_cents?: number; p_invoice_id: string }
         Returns: string
@@ -10525,6 +10875,7 @@ export type Database = {
         }
         Returns: string
       }
+      save_afterschool_program: { Args: { p: Json }; Returns: string }
       segment_preview: {
         Args: { p_channel: string; p_definition: Json }
         Returns: Json

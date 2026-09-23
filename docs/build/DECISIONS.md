@@ -370,3 +370,17 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
 - **Party guest waivers:** `party_guest_link()` generates the token in SQL and stores only its SHA-256, like
   signing links. The link is shown once; making a new one invalidates the old. Guests sign without an account
   through anon definer RPCs that only accept a valid, current token; anon can't read any event table.
+
+## ADR-0026 — After-school bills through a weekly membership; absences alert from SQL
+- **Date / task:** 2026-09-24 · M3.05
+- **Decision:** each after-school program owns a `recurring` / `week` membership plan (created and re-priced
+  by `save_afterschool_program` when Billing is on); enrolling a child creates an active membership on it
+  (`next_bill_at` = start date), so the existing daily billing run produces the weekly invoices with the same
+  idempotency, family discount, autopay and dunning as every other membership. Ending the enrollment sets
+  the membership's `cancel_at`.
+- **Absences:** marking a child absent (staff) or the `afterschool_cutoff` job (every 10 min: expected
+  children with no school pickup after the program's cutoff, school-local) queues an `afterschool_absent`
+  message to the guardians in the same transaction (`app.afterschool_alert`, once per child per day);
+  the outbox job renders and delivers it with consent and quiet hours, or shows it in the Outbox with no key.
+- **Manifest** is computed per date from enrollments (weekday, start/end) grouped by route then school,
+  printable (Desk chrome hides in print). Release requires a name and a drawn signature, like camp check-out.

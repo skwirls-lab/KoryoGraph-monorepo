@@ -82,13 +82,13 @@ export function DeskShell({ nav, tenant, tenants, user, children }: DeskShellPro
   );
 
   return (
-    <div className="min-h-dvh lg:grid lg:grid-cols-[240px_1fr]">
-      <aside className="hidden border-r border-default bg-panel p-4 lg:flex lg:flex-col lg:gap-6">
+    <div className="min-h-dvh lg:grid lg:grid-cols-[240px_1fr] print:block">
+      <aside className="hidden border-r border-default bg-panel p-4 lg:flex lg:flex-col lg:gap-6 print:!hidden">
         <div className="px-2 pt-1">{brand}</div>
         <NavList nav={nav} pathname={pathname} />
       </aside>
       <div className="flex min-w-0 flex-col">
-        <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-default bg-background/90 px-3 backdrop-blur sm:px-4">
+        <header className="sticky top-0 z-30 flex h-14 items-center gap-2 border-b border-default bg-background/90 px-3 backdrop-blur sm:px-4 print:hidden">
           <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon" className="lg:hidden" aria-label="Open navigation">
