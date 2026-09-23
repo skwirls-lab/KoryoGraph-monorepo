@@ -33,7 +33,9 @@ test.describe("@m4 document intake", () => {
     const before = await onHand();
     await page.goto("/desk/retail/receive");
     await page.locator('input[type="file"]').setInputFiles(path.join(process.cwd(), "tests/fixtures/docs/century-packing-slip.png"));
-    const draft = page.getByRole("region", { name: /Receive stock from Dojo Supply Co\. · DS-48812/ });
+    // The demo seed has the same slip pending; drafts are listed newest first, and the checks below confirm the
+    // PO came from this upload.
+    const draft = page.getByRole("region", { name: /Receive stock from Dojo Supply Co\. · DS-48812/ }).first();
     await expect(draft).toBeVisible({ timeout: 30_000 });
     await expect(draft.getByLabel(/^Supplier/)).toHaveValue(sid("supplier:ridgeline:century"));
     await expect(draft.getByRole("checkbox", { name: "Receive Focus mitts pair" })).toBeChecked();
