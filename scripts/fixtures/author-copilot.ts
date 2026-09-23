@@ -1,7 +1,7 @@
 // Hand-authors the copilot and Home assistant fixtures (no OpenRouter key available). `npx tsx scripts/fixtures/author-copilot.ts`
 import { mkdirSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
-import { copilotStep, homeAssistant, inputHash } from "@koryo/ai";
+import { copilotStep, driftOutreach, homeAssistant, inputHash } from "@koryo/ai";
 import { sid } from "../lib/ids";
 
 const dir = join(process.cwd(), "tests/fixtures/ai");
@@ -55,3 +55,29 @@ cp("Draft a friendly text to Maya Cooper's family about coming back to class", [
 const home = (q: string, out: unknown) => write("home_assistant", homeAssistant.fixtureKey!({ question: q, school: "", studentNames: [], householdFacts: "", kb: [] }), { output: out });
 home("Can I get a refund for a testing fee?", { answer: "Yes — testing fees are refundable up to 48 hours before the test. After that they aren't refundable, but if your student doesn't pass they can retest at the next test at no extra charge.", citations: [sid(`kb_chunk:${REFUND_DOC}:0`), sid(`kb_chunk:${TESTING_DOC}:0`)], escalate: false });
 home("How is Riley Adams doing in class?", { answer: "I can only help with your own family, so I can't share anything about other students. If you'd like, I can pass your question to the front desk.", citations: [], escalate: true });
+
+// Drift outreach drafts, keyed by the combination of signals (and whether we're writing to a parent).
+const COMBOS: string[][] = [["absent", "attendance_drop"], ["absent", "attendance_drop", "past_due"], ["absent", "past_due"], ["absent"], ["attendance_drop", "past_due"],
+  ["absent", "attendance_drop", "concern_notes"], ["absent", "concern_notes"], ["absent", "attendance_drop", "new_member"], ["absent", "new_member", "past_due"]];
+const EXPLAIN: Record<string, string> = {
+  attendance_drop: "attendance has dropped well below their usual pace", absent: "they haven't been to class for a while", past_due: "the family has a past-due balance",
+  concern_notes: "there are recent injury, behaviour or billing notes", new_member: "they're still in their first 90 days, when habits are fragile",
+};
+for (const combo of COMBOS) {
+  for (const minor of [true, false]) {
+    const reasons = combo.map((f) => ({ factor: f, detail: f }));
+    const key = driftOutreach.fixtureKey!({ school: "", studentFirstName: "", minor, level: "high", reasons });
+    const explanation = `Flagged because ${combo.map((f) => EXPLAIN[f]).join(", and ")}. A personal check-in now is more likely to bring them back than a reminder later.`;
+    write("drift_outreach", key, { output: minor ? {
+      explanation,
+      sms: "Hi {{first_name}}, it's Ridgeline! We've missed {{student}} on the mat lately — hope all is well. If a different class time would make things easier, just reply and we'll sort it out.",
+      emailSubject: "We miss {{student}} at Ridgeline",
+      emailBody: "Hi {{first_name}},\n\nWe've noticed {{student}} hasn't been in class as much lately and wanted to check in — no pressure at all. Kids' schedules change, and we're happy to help find a class time that fits, or to chat about how {{student}} is feeling about training.\n\nJust reply to this email or stop by the front desk. We'd love to see {{student}} back soon.\n\nWarmly,\nRidgeline Taekwondo",
+    } : {
+      explanation,
+      sms: "Hi {{first_name}}, it's Ridgeline! We've missed you in class lately — hope all is well. If another class time would suit you better, reply and we'll help.",
+      emailSubject: "We've missed you at Ridgeline",
+      emailBody: "Hi {{first_name}},\n\nWe've noticed you haven't made it to class as often lately and just wanted to check in. If your schedule has changed, we're happy to help you find a class time that works, or to put your membership on hold for a few weeks.\n\nReply any time — we'd love to see you back on the mat.\n\nRidgeline Taekwondo",
+    } });
+  }
+}

@@ -19,6 +19,9 @@ function delta(now: number, before: number, fullLastWeek: number): { text: strin
 export default async function DeskDashboard() {
   const ctx = await requireSurfacePage("desk");
   const { data: d } = await ctx.supabase.from("v_owner_dashboard").select("*").eq("tenant_id", ctx.tenantId).maybeSingle();
+  const atRisk = ctx.modules.has("intelligence") && ctx.permissions.has("people.read")
+    ? (await ctx.supabase.from("v_risk_latest").select("person_id", { count: "exact", head: true }).eq("level", "high")).count ?? 0
+    : null;
   const att = delta(d?.attendance_this_week ?? 0, d?.attendance_last_week_to_date ?? 0, d?.attendance_last_week ?? 0);
   return (
     <>
@@ -27,6 +30,7 @@ export default async function DeskDashboard() {
         <StatCard label="Active students" value={d?.active_students ?? 0} href="/desk/people?status=active&type=student" />
         <StatCard label="Trials" value={d?.trials ?? 0} hint={`${d?.leads ?? 0} leads`} href="/desk/people?status=trial" />
         <StatCard label="Attendance this week" value={d?.attendance_this_week ?? 0} delta={att.text} tone={att.tone} href="/desk/reports/attendance" />
+        {atRisk !== null ? <StatCard label="At risk" value={atRisk} tone={atRisk > 0 ? "warning" : "neutral"} delta={atRisk > 0 ? "Drift Detector · nightly" : undefined} href="/desk/people?risk=high" /> : null}
         <StatCard label="Classes today" value={d?.classes_today ?? 0} href="/desk/schedule" />
         <StatCard label="Unsigned documents" value={d?.unsigned_documents ?? 0} tone={(d?.unsigned_documents ?? 0) > 0 ? "warning" : "neutral"} delta={(d?.unsigned_documents ?? 0) > 0 ? "Needs attention" : undefined} href="/desk/compliance" />
         <StatCard label="Unread conversations" value={d?.unread_threads ?? 0} href="/desk/inbox" />

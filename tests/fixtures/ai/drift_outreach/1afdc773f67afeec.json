@@ -1,0 +1,9 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "explanation": "Flagged because they haven't been to class for a while, and attendance has dropped well below their usual pace, and they're still in their first 90 days, when habits are fragile. A personal check-in now is more likely to bring them back than a reminder later.",
+    "sms": "Hi {{first_name}}, it's Ridgeline! We've missed you in class lately — hope all is well. If another class time would suit you better, reply and we'll help.",
+    "emailSubject": "We've missed you at Ridgeline",
+    "emailBody": "Hi {{first_name}},\n\nWe've noticed you haven't made it to class as often lately and just wanted to check in. If your schedule has changed, we're happy to help you find a class time that works, or to put your membership on hold for a few weeks.\n\nReply any time — we'd love to see you back on the mat.\n\nRidgeline Taekwondo"
+  }
+}

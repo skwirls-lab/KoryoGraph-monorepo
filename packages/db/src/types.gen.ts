@@ -7745,6 +7745,118 @@ export type Database = {
           },
         ]
       }
+      risk_scores: {
+        Row: {
+          ai_run_id: string | null
+          approval_item_id: string | null
+          computed_on: string
+          created_at: string
+          explanation: string | null
+          features: Json
+          id: string
+          level: string
+          person_id: string
+          reasons: Json
+          score: number
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          ai_run_id?: string | null
+          approval_item_id?: string | null
+          computed_on: string
+          created_at?: string
+          explanation?: string | null
+          features?: Json
+          id?: string
+          level: string
+          person_id: string
+          reasons?: Json
+          score: number
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          ai_run_id?: string | null
+          approval_item_id?: string | null
+          computed_on?: string
+          created_at?: string
+          explanation?: string | null
+          features?: Json
+          id?: string
+          level?: string
+          person_id?: string
+          reasons?: Json
+          score?: number
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_scores_ai_run_id_fkey"
+            columns: ["ai_run_id"]
+            isOneToOne: false
+            referencedRelation: "ai_runs"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_scores_approval_item_id_fkey"
+            columns: ["approval_item_id"]
+            isOneToOne: false
+            referencedRelation: "approval_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       role_permissions: {
         Row: {
           created_at: string
@@ -11739,6 +11851,77 @@ export type Database = {
           },
         ]
       }
+      v_risk_latest: {
+        Row: {
+          approval_item_id: string | null
+          computed_on: string | null
+          explanation: string | null
+          level: string | null
+          person_id: string | null
+          person_name: string | null
+          reasons: Json | null
+          score: number | null
+          tenant_id: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "risk_scores_approval_item_id_fkey"
+            columns: ["approval_item_id"]
+            isOneToOne: false
+            referencedRelation: "approval_items"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr_monthly"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "risk_scores_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       v_session_stats: {
         Row: {
           attended: number | null
@@ -12125,6 +12308,21 @@ export type Database = {
           isOneToOne: true
           isSetofReturn: false
         }
+      }
+      drift_features: {
+        Args: { p_tenant: string; p_today: string }
+        Returns: {
+          concern_notes_30d: number
+          days_since_last: number
+          first_name: string
+          household_id: string
+          minor: boolean
+          past_due_cents: number
+          person_id: string
+          prior8w: number
+          recent4w: number
+          tenure_days: number
+        }[]
       }
       dunning_notify: {
         Args: {

@@ -6,6 +6,7 @@ import { Button } from "@koryo/ui/components/ui/button";
 import { Pagination } from "@/components/common/pagination";
 import { PeopleTable, type PeopleTableRow } from "@/components/people/people-table";
 import { PeopleToolbar } from "@/components/people/people-toolbar";
+import { RiskList } from "@/components/risk/risk-list";
 import { todayIn } from "@/lib/people";
 import { requireSurfacePage } from "@/server/context";
 import { listPeople, parsePeopleFilters, tenantTags } from "@/server/queries/people";
@@ -21,7 +22,7 @@ export default async function PeoplePage({ searchParams }: { searchParams: Promi
   const [{ rows, total }, tags] = await Promise.all([listPeople(ctx, filters), tenantTags(ctx)]);
   const canWrite = ctx.permissions.has("people.write");
   const params: Record<string, string | undefined> = {
-    q: filters.q, status: filters.status?.join(","), type: filters.type, tag: filters.tag,
+    q: filters.q, status: filters.status?.join(","), type: filters.type, tag: filters.tag, risk: filters.risk,
   };
   const exportQs = new URLSearchParams(Object.entries(params).filter((e): e is [string, string] => Boolean(e[1]))).toString();
 
@@ -59,8 +60,9 @@ export default async function PeoplePage({ searchParams }: { searchParams: Promi
         }
       />
       <div className="space-y-4">
+        {filters.risk ? <RiskList ctx={ctx} level={filters.risk} /> : null}
         <PeopleToolbar tags={tags} />
-        {total === 0 && !filters.q && !filters.status && !filters.type && !filters.tag ? (
+        {total === 0 && !filters.q && !filters.status && !filters.type && !filters.tag && !filters.risk ? (
           <EmptyState
             title="No people yet"
             description="Add your first family, or import from your previous system (import arrives in M5)."

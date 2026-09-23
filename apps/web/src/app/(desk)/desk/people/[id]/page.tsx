@@ -16,6 +16,7 @@ import { ageOn, displayName, isMinor, todayIn, type ConsentKind } from "@/lib/pe
 import { requireSurfacePage } from "@/server/context";
 import { getPerson } from "@/server/queries/people";
 import { getPersonProgress, programsForEnrollment } from "@/server/queries/progress";
+import { RiskInsight } from "@/components/risk/risk-list";
 
 export const metadata = { title: "Person" };
 
@@ -155,6 +156,7 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
           />
         ) : null}
       />
+      <div className="mb-4 empty:hidden"><RiskInsight ctx={ctx} personId={p.id} /></div>
       <UrlTabs
         defaultValue="overview"
         tabs={[

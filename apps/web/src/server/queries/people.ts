@@ -10,6 +10,8 @@ export interface PeopleFilters {
   status?: PersonStatus[];
   tag?: string;
   type?: "student" | "guardian" | "lead" | "staff";
+  /** Latest drift risk level (Intelligence): "high", or "medium" (= medium or high). */
+  risk?: "high" | "medium";
   page?: number;
   pageSize?: number;
 }
@@ -25,6 +27,7 @@ export function parsePeopleFilters(sp: Record<string, string | string[] | undefi
     status: statuses.length ? statuses : undefined,
     tag: one("tag")?.trim() || undefined,
     type: type === "student" || type === "guardian" || type === "lead" || type === "staff" ? type : undefined,
+    risk: one("risk") === "high" || one("risk") === "medium" ? (one("risk") as "high" | "medium") : undefined,
     page: Math.max(1, Number(one("page") ?? 1) || 1),
     pageSize: Math.min(200, Math.max(10, Number(one("size") ?? 50) || 50)),
   };
@@ -41,6 +44,10 @@ export async function listPeople(ctx: Ctx, f: PeopleFilters, all = false): Promi
   if (f.status) query = query.in("status", f.status);
   if (f.tag) query = query.contains("tags", [f.tag]);
   if (f.type) query = query.contains("type_flags", [f.type]);
+  if (f.risk) {
+    const { data: risky } = await ctx.supabase.from("v_risk_latest").select("person_id").in("level", f.risk === "high" ? ["high"] : ["high", "medium"]).limit(2000);
+    query = query.in("id", (risky ?? []).map((r) => r.person_id ?? "").filter(Boolean).concat("00000000-0000-0000-0000-000000000000"));
+  }
   query = query.order("last_name").order("first_name").order("id");
   if (!all) {
     const size = f.pageSize ?? 50;

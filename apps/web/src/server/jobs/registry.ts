@@ -3,6 +3,7 @@ import { aiModelsSync } from "./ai-models-sync";
 import { automations } from "./automations";
 import { billingRun } from "./billing-run";
 import { dataExport } from "./data-export";
+import { driftScore } from "./drift-score";
 import { dunning } from "./dunning";
 import { kbScheduleDigest } from "./kb-schedule-digest";
 import { materializeSessions } from "./materialize-sessions";
@@ -17,6 +18,7 @@ export const JOBS: Record<string, Job> = {
   automations,
   billing_run: billingRun,
   data_export: dataExport,
+  drift_score: driftScore,
   dunning,
   kb_schedule_digest: kbScheduleDigest,
   materialize_sessions: materializeSessions,
