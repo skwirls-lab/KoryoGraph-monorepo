@@ -2,7 +2,7 @@
 Branch: claude/koryograph-build · Started: 2026-09-22 · Spec: KORYOGRAPH-BUILD.md v1.0
 
 ## Current task
-M4.11 technique feedback + schedule suggestions
+M4.12 demo seed v4 + fixtures, then GATE M4
 
 ## Preflight
 Run 2026-09-22 on the build host (linux aarch64, 20 cores, 121 GB RAM).
@@ -92,7 +92,7 @@ port 3000          → in use by another container on the host → dev server us
 | M4.08 | done | 3d04605 | packing-slip intake; import mapping assist built with the importer in M5.03 |
 | M4.09 | done | 2eac560 | NL reports; two-layer guard |
 | M4.10 | done | 5e25f2d | Billing recovery (off/approve/auto, template fallback), weekly parent narratives → Home after approval, rule-based lead score + AI next step; ADR-0035 |
-| M4.11 | todo |  |  |
+| M4.11 | done | 77f5a5a | Technique feedback (consent, ffmpeg keyframes, vision rubric, Mat release, gold clips) + schedule suggestions card; ai_transport on reviewed rows; ADR-0036 |
 | M4.12 | todo |  |  |
 | M5.01 | todo |  |  |
 | M5.02 | todo |  |  |
