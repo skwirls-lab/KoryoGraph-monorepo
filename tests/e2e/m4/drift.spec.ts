@@ -47,9 +47,11 @@ test.describe("@m4 drift detector", () => {
     await expect(list.getByRole("listitem").first()).toContainText(top?.person_name ?? "");
     await expectNoSeriousA11yViolations(page);
 
-    // The seeded decaying student shows up among those worth a check-in.
-    await page.goto("/desk/people?risk=medium");
-    await expect(page.getByRole("list", { name: "Students at risk" }).getByRole("listitem", { name: "Riley Adams" })).toBeVisible();
+    // The seeded decaying student (§6 step 12) is #1, with the reasons.
+    const riley = list.getByRole("listitem").first();
+    await expect(riley).toContainText("Riley Adams");
+    await expect(riley).toContainText(/Attendance fell from/);
+    await expect(riley).toContainText(/No class in \d+ days/);
 
     // Drafted outreach waits in Approvals; approving queues it.
     const drafts = await sql<{ id: string; title: string }[]>`select id, title from approval_items where tenant_id = ${R} and kind = 'drift_outreach' and status = 'pending' order by created_at`;

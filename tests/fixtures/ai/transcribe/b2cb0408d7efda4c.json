@@ -1,0 +1,6 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "transcript": "Okay, good work tonight, everybody. Tonight we had Berry, Beulah, Edmond, Greta, Houston, Jody, Louisa, Sabina and Thelma. I think Joesph came in late at the back but I didn't see him check in.\nBerry's double roundhouse is there now — both kicks at head height and he landed balanced. Sign that one off.\nSabina did Taegeuk Oh Jang start to finish with sharp stances; that's a pass.\nEdmond, one-step number five, clean and controlled. Sign it off.\nGreta jammed her wrist on the speed break, it looked a bit swollen, so let's keep her off breaking next class.\nAnd someone please call Louisa's parents — she asked about trying out for the Demo Team."
+  }
+}

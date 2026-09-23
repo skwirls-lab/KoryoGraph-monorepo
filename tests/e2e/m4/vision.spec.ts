@@ -92,7 +92,7 @@ test.describe("@m4 technique feedback & schedule suggestions", () => {
     // Instructor on the Mat: frames, rubric, edit a tip, release.
     const mat = await (await browser.newContext({ storageState: authState("ridgeline", "instructor"), viewport: { width: 820, height: 1180 } })).newPage();
     await mat.goto("/mat/reviews");
-    const card = mat.getByRole("article").filter({ hasText: skillName }).first();
+    const card = mat.getByRole("article").filter({ hasText: "Working on my chamber" });
     await expect(card.getByRole("list", { name: "Keyframes" }).getByRole("img")).toHaveCount(6);
     await expect(card).toContainText("Working on my chamber");
     await expect(card.getByText("dev fixture")).toBeVisible();
@@ -103,7 +103,7 @@ test.describe("@m4 technique feedback & schedule suggestions", () => {
     await expectNoSeriousA11yViolations(mat);
     await card.getByRole("button", { name: "Release to student" }).click();
     await expect(mat.getByText("Released to Maya Cooper")).toBeVisible();
-    await expect(mat.getByText("No clips waiting for review.")).toBeVisible();
+    await expect(mat.getByRole("article").filter({ hasText: skillName }).filter({ hasText: "Working on my chamber" })).toHaveCount(0);
 
     await home.reload();
     const released = clips.getByRole("listitem").first();

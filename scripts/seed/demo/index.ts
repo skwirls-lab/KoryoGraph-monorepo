@@ -1,5 +1,8 @@
+import { spawnSync } from "node:child_process";
+import { join } from "node:path";
 import { linkDemoPlanPrograms } from "../billing";
 import { recomputeMoney, seedMoney } from "./money";
+import { repoRoot } from "../../lib/env";
 import { sid } from "../../lib/ids";
 import type { SeedContext } from "../context";
 import { seedCurriculum } from "./curriculum";
@@ -29,6 +32,13 @@ export async function seedDemo(ctx: SeedContext): Promise<void> {
     ctx.log(`people: ${people.students.length} students, ${people.householdIds.length} households, ${people.guardianIds.length} guardians`);
     const training = await seedTraining(ctx, rng, now, programs, people.students);
     ctx.log(`schedule: ${training.sessions} sessions, ${training.attendance} check-ins, ${training.promotions} promotions`);
+    // The Drift Detector story (§6 step 12): Riley hurt a knee sparring about four weeks ago and hasn't been
+    // back since — after two months of already coming less often (the "decaying" profile).
+    const riley = sid("person:ridgeline:riley-adams");
+    await sql`delete from public.attendance where person_id = ${riley} and checked_in_at > ${new Date(now.getTime() - 26 * 86_400_000)}`;
+    await sql`insert into public.notes (id, tenant_id, person_id, kind, body, source, by_user_id, created_at)
+      values (${sid("note:riley-adams:knee")}, ${sid("tenant:ridgeline")}, ${riley}, 'injury', 'Sore left knee after sparring; sat out the last drills. Check in with the family before the next class.', 'manual',
+              ${sid("user:instructor@ridgelinetkd.demo")}, ${new Date(now.getTime() - 27 * 86_400_000)}) on conflict (id) do nothing`;
     await seedExtras(ctx, rng, now, people);
     ctx.log("documents, PINs, conversations, outbox, certifications");
     const money = await seedMoney(ctx, rng, now, people);
@@ -54,4 +64,9 @@ export async function seedDemo(ctx: SeedContext): Promise<void> {
   }
   await recomputeMoney(ctx);
   await sql`update public.tenants set onboarding = jsonb_set(onboarding, '{steps}', '{"location": true, "programs": true, "schedule": true, "students": true, "payments": false, "staff": true, "branding": true}'::jsonb) where slug = 'ridgeline'`;
+  // M4 data (risk scores, approvals of each kind, a recorded class, technique feedback, family updates) comes
+  // from the product's own jobs and actions, run as the demo users — in a child process, since those are
+  // server-only modules (react-server condition).
+  const r = spawnSync("npx", ["tsx", "--conditions=react-server", join(repoRoot, "scripts/seed/demo/intelligence.ts")], { cwd: repoRoot, stdio: "inherit", env: process.env });
+  if (r.status !== 0) throw new Error(`demo seed intelligence pass failed (exit ${r.status})`);
 }

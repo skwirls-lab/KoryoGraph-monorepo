@@ -4,6 +4,7 @@ import { mkdirSync, readFileSync, writeFileSync } from "node:fs";
 import { join } from "node:path";
 import { actionBoard, billingRecovery, copilotStep, driftOutreach, homeAssistant, inputHash, leadNextAction, lessonBuilder, nlReport, packingSlip, parentNarrative, scheduleSuggestion, SUGGESTION_KINDS, techniqueFeedback, transcribe } from "@koryo/ai";
 import { AB, AB_TRANSCRIPT } from "../../tests/fixtures/action-board";
+import { DEMO_CLASS, DEMO_CLASS_TRANSCRIPT } from "../../tests/fixtures/demo-class";
 import { sid } from "../lib/ids";
 
 const dir = join(process.cwd(), "tests/fixtures/ai");
@@ -252,4 +253,23 @@ for (const combo of COMBOS) {
   for (const kind of SUGGESTION_KINDS) {
     write("schedule_suggestion", scheduleSuggestion.fixtureKey!({ school: "", kind, className: "", weekday: "", time: "", utilization: 0, waitlistPerSession: 0, noShowRate: 0, otherClass: null }), { output: words[kind] });
   }
+}
+
+// The demo seed's recorded class (M4.12): tone WAV → transcript → a 9 / 3 / 1 board about real seeded students.
+{
+  const wav = readFileSync(join(process.cwd(), "tests/fixtures/audio/demo-class.wav"));
+  const sha256 = createHash("sha256").update(wav).digest("hex");
+  write("transcribe", transcribe.fixtureKey!({ audioBase64: "", format: "mp3", sha256 }), { output: { transcript: DEMO_CLASS_TRANSCRIPT } });
+  const P = DEMO_CLASS.present;
+  write("action_board", actionBoard.fixtureKey!({ className: "", transcript: DEMO_CLASS_TRANSCRIPT, roster: [], skills: [] }), { output: {
+    attendance: [...Object.values(P).map((personId) => ({ personId, evidence: "named in tonight's list", confidence: 0.95 })),
+      { personId: DEMO_CLASS.unsure.joesph, evidence: "“I think Joesph came in late at the back but I didn't see him check in”", confidence: 0.4 }],
+    skillNotes: [
+      { personId: P.berry, skillId: DEMO_CLASS.skills.doubleRoundhouse, note: "Both kicks at head height, landed balanced.", signOff: true, confidence: 0.92 },
+      { personId: P.sabina, skillId: DEMO_CLASS.skills.taegeukOh, note: "Start to finish with sharp stances.", signOff: true, confidence: 0.93 },
+      { personId: P.edmond, skillId: DEMO_CLASS.skills.oneStep5, note: "Clean and controlled.", signOff: true, confidence: 0.9 },
+    ],
+    injuries: [{ personId: P.greta, note: "Jammed wrist on the speed break, a bit swollen — no breaking next class.", confidence: 0.88 }],
+    followUps: [{ title: "Call Louisa's parents about Demo Team tryouts", personId: P.louisa }],
+  } });
 }

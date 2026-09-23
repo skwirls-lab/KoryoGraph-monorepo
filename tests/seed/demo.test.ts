@@ -193,6 +193,39 @@ describe("demo seed invariants", () => {
     expect(campaigns.every((c) => c.queued === c.messages && c.messages > 0)).toBe(true);
   });
 
+  it("has the M4 intelligence story (§6 steps 12–15, Appendix C)", async () => {
+    // Drift: the seeded decaying student is #1, with an at-risk list of about seven.
+    const risk = await sql<{ person_name: string; level: string }[]>`select person_name, level from v_risk_latest where tenant_id = ${R} order by score desc`;
+    expect(risk[0]).toEqual({ person_name: "Riley Adams", level: "high" });
+    expect(risk.filter((r) => r.level === "high").length).toBeGreaterThanOrEqual(5);
+    // Pending approvals of each kind, all AI drafts from recorded fixtures (labelled as such).
+    const pending = Object.fromEntries((await sql<{ kind: string; n: number }[]>`select kind, count(*)::int as n from approval_items where tenant_id = ${R} and status = 'pending' group by kind`).map((r) => [r.kind, r.n]));
+    expect(pending.action_board).toBe(1);
+    expect(pending.doc_intake).toBe(1);
+    expect(pending.vision_feedback).toBe(1);
+    expect(pending.drift_outreach).toBeGreaterThanOrEqual(3);
+    expect(pending.parent_narrative).toBeGreaterThanOrEqual(4);
+    const [transports] = await sql<{ fixture: number; other: number }[]>`select count(*) filter (where ai_transport = 'fixture')::int as fixture, count(*) filter (where ai_transport is distinct from 'fixture')::int as other from approval_items where tenant_id = ${R} and ai_run_id is not null`;
+    expect(transports).toEqual({ fixture: expect.any(Number), other: 0 });
+    // One recorded class with its transcript and a 9 / 3 / 1 board over the real roster.
+    const [rec] = await sql<{ status: string; transcript: string; preview: string }[]>`
+      select r.status, r.transcript, a.preview from class_recordings r join approval_items a on a.id = r.approval_item_id where r.tenant_id = ${R}`;
+    expect(rec?.status).toBe("ready");
+    expect(rec?.transcript).toContain("Berry's double roundhouse");
+    expect(rec?.preview).toBe("10 attendance · 3 skill notes · 1 injuries · 1 follow-ups");
+    // Knowledge base incl. the schedule digest; family updates and released technique feedback on Home.
+    const [kb] = await sql<{ n: number }[]>`select count(*)::int as n from kb_documents where tenant_id = ${R}`;
+    expect(kb?.n).toBeGreaterThanOrEqual(5);
+    const [home] = await sql<{ n: number }[]>`select count(*)::int as n from home_updates where person_id in (${sid("person:ridgeline:maya-cooper")}, ${sid("person:ridgeline:leo-cooper")})`;
+    expect(home?.n).toBe(2);
+    const [maya] = await sql<{ status: string; tips: number }[]>`select status, jsonb_array_length(feedback -> 'tips')::int as tips from technique_submissions where person_id = ${sid("person:ridgeline:maya-cooper")}`;
+    expect(maya).toEqual({ status: "released", tips: 3 });
+    // AI usage history: every run logged (fixtures cost nothing).
+    const [runs] = await sql<{ n: number; live: number }[]>`select count(*)::int as n, count(*) filter (where transport = 'live')::int as live from ai_runs where tenant_id = ${R}`;
+    expect(runs?.n).toBeGreaterThan(20);
+    expect(runs?.live).toBe(0);
+  });
+
   it("is deterministic: re-running the demo seed creates no new rows", async () => {
     const before = await counts();
     const ctx = createSeedContext();

@@ -31,6 +31,18 @@ All passwords: **`KoryoDemo!2026`**. Fictional people and schools.
   decaying / sporadic / new patterns, promotions, stripes and sign-offs derived from attendance, waiver v1 (18 months
   old) and v2 (published last week, so families are prompted to re-sign), 15 conversations and Outbox samples.
 - The next Youth Taekwondo — Beginners session has 20 booked and 2 waitlisted.
+- M4 (AI) demo data — produced by the real jobs and actions with the recorded dev fixtures (no paid calls;
+  every AI result shows a "dev fixture" badge until a key is added and the jobs re-run):
+  - **Drift Detector**: risk scores for every active student; Riley Adams is #1 (knee injury note, no class in
+    ~4 weeks) among ~7 high-risk students, each with a drafted outreach in Approvals.
+  - **Action board**: the most recent Youth Taekwondo — Advanced session has a recorded class (a placeholder tone
+    whose transcript is a fixture) and a pending board: 9 check-ins + 1 unsure, 3 sign-offs, 1 injury, 1 follow-up.
+  - **Doc intake**: a Century packing slip read into a pending receiving draft (Retail → Receive).
+  - **Technique feedback**: Maya's practice clip has instructor-released feedback on Home; Leo's waits in Mat → Reviews.
+  - **Family updates**: this week's narratives drafted for every active minor who trained; Maya's and Leo's are
+    approved and show under "This week" on Home, the rest wait in Approvals (batch-approve them).
+  - Knowledge base (4 policies + the schedule digest), lead scores with suggested next steps, schedule
+    suggestions on the dashboard, AI budget $50/month (usage shows what was actually spent: $0 for fixtures).
 
 ## Harbor BJJ (`harbor`, Core plan only, America/Los_Angeles) — second tenant for isolation tests
 

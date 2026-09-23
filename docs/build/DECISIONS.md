@@ -567,3 +567,27 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   person; its feedback fixture is hand-authored and always labelled "dev fixture".
 - Toasts lost Sonner's `richColors` (their text failed WCAG contrast) and got a 24 px close target;
   status colour is carried by the icon.
+
+## ADR-0037 — Demo seed v4: AI data from the product's own code paths, pinned to fixtures
+- **Date / task:** 2026-09-25 · M4.12
+- The M4 demo data is not inserted as rows: the seed runs the real jobs (`kb_schedule_digest`, `drift_score`,
+  `lead_scoring`, `schedule_suggestions`, `parent_narratives`, `transcribe`, `technique_feedback`) and the real
+  intake drafter and approval executor, signed in as the demo instructor / owner / parent under RLS. It runs in a
+  child process with the `react-server` condition because those modules are `server-only`. AI is pinned to
+  `AI_TRANSPORT=fixture` in that process so the demo is deterministic and never makes a paid call; everything
+  it produces carries the "dev fixture" label.
+- **Differences from Appendix C**, all because the data comes from real behaviour rather than being typed in:
+  - **Drift drafts:** 7 pending instead of 3, one per high-risk student.
+  - **Narratives:** ~120 pending instead of 4. The weekly job drafts one for every active minor who trained;
+    Maya's and Leo's are approved.
+  - **AI usage:** $0.00 used instead of $8.40. Fixtures cost nothing, and inventing spend would break the
+    honesty rules.
+- The recorded class uses the most recent Youth Taekwondo — Advanced session, whose rank-banded roster
+  holds the ten students named in the fixture transcript (`tests/fixtures/demo-class.ts`). The three minors on
+  that roster without AI-processing consent get paper consents recorded by the owner, because the database
+  refuses the recording otherwise. The audio is a synthetic tone, like the M4.06 spec's.
+- Riley's drift story is shaped explicitly: attendance in the last 26 days is removed and an injury note is
+  added 27 days ago. This happens after the bulk load, so the rest of the random school is unchanged.
+- Seed invariants now cover this state: Riley #1, one pending board reading 9 / 3 / 1, pending approvals of
+  each kind, all fixture-labelled, Maya's released feedback with 3 tips, and Home updates for the Cooper
+  family.

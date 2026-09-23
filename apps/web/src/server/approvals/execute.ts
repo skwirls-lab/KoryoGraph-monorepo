@@ -9,7 +9,9 @@ import type { Ctx } from "../context";
 
 export interface ApprovedItem { id: string; kind: string; payload: unknown; person_id: string | null }
 export type ExecutionResult = { ok: true; summary: string; detail?: Record<string, unknown> } | { ok: false; error: string };
-type Executor = (ctx: Ctx, item: ApprovedItem) => Promise<ExecutionResult>;
+/** What carrying out an approval needs: the approver's own (RLS-scoped) client and tenant. */
+export type ExecCtx = Pick<Ctx, "supabase" | "tenantId">;
+type Executor = (ctx: ExecCtx, item: ApprovedItem) => Promise<ExecutionResult>;
 
 /**
  * Message kinds: queue the (possibly edited) text to the student's guardians — or the adult themselves —
@@ -75,7 +77,7 @@ export function registerExecutor(kind: ApprovalKind, fn: Executor): void {
   EXECUTORS[kind] = fn;
 }
 
-export async function executeApproval(ctx: Ctx, item: ApprovedItem): Promise<ExecutionResult> {
+export async function executeApproval(ctx: ExecCtx, item: ApprovedItem): Promise<ExecutionResult> {
   const fn = EXECUTORS[item.kind as ApprovalKind];
   if (!fn) return { ok: false, error: `Nothing knows how to carry out a "${item.kind}" item yet.` };
   try {

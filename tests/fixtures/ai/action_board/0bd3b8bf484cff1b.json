@@ -1,0 +1,93 @@
+{
+  "note": "Hand-authored to the task schema (no OpenRouter key in the build environment). Numbers come from {{obs…}} placeholders filled with live tool results. Re-record with `npm run ai:record` when a key is available.",
+  "output": {
+    "attendance": [
+      {
+        "personId": "2c2d0549-4d91-59a5-8821-53c60a144077",
+        "evidence": "named in tonight's list",
+        "confidence": 0.95
+      },
+      {
+        "personId": "0702680d-996c-5bf0-9a47-48d11d9b6f6c",
+        "evidence": "named in tonight's list",
+        "confidence": 0.95
+      },
+      {
+        "personId": "314e1917-0675-504c-a0d5-b07ea7f3bac7",
+        "evidence": "named in tonight's list",
+        "confidence": 0.95
+      },
+      {
+        "personId": "a08a4c88-115a-5ca1-b7c1-dca73012ea34",
+        "evidence": "named in tonight's list",
+        "confidence": 0.95
+      },
+      {
+        "personId": "fd7b653c-a7bc-51c1-b6e3-1084ca46bb6c",
+        "evidence": "named in tonight's list",
+        "confidence": 0.95
+      },
+      {
+        "personId": "e54cb796-6f5a-5eaf-9e43-6ad518754875",
+        "evidence": "named in tonight's list",
+        "confidence": 0.95
+      },
+      {
+        "personId": "d5266064-7016-504e-bb64-36779714c605",
+        "evidence": "named in tonight's list",
+        "confidence": 0.95
+      },
+      {
+        "personId": "0f2f84c9-8f05-51e2-aa17-aa48d62bf796",
+        "evidence": "named in tonight's list",
+        "confidence": 0.95
+      },
+      {
+        "personId": "6f805833-7093-5fa9-81a7-0f2f0a515f91",
+        "evidence": "named in tonight's list",
+        "confidence": 0.95
+      },
+      {
+        "personId": "515038ce-9ddd-5a5a-be75-4c545c13d6db",
+        "evidence": "“I think Joesph came in late at the back but I didn't see him check in”",
+        "confidence": 0.4
+      }
+    ],
+    "skillNotes": [
+      {
+        "personId": "2c2d0549-4d91-59a5-8821-53c60a144077",
+        "skillId": "7cd7c08d-b479-5c13-838a-efac8eff1ee9",
+        "note": "Both kicks at head height, landed balanced.",
+        "signOff": true,
+        "confidence": 0.92
+      },
+      {
+        "personId": "0f2f84c9-8f05-51e2-aa17-aa48d62bf796",
+        "skillId": "aa2a9575-6a1a-534b-a310-d905fa66981d",
+        "note": "Start to finish with sharp stances.",
+        "signOff": true,
+        "confidence": 0.93
+      },
+      {
+        "personId": "314e1917-0675-504c-a0d5-b07ea7f3bac7",
+        "skillId": "6467702e-466e-5c3f-a966-061595add3ed",
+        "note": "Clean and controlled.",
+        "signOff": true,
+        "confidence": 0.9
+      }
+    ],
+    "injuries": [
+      {
+        "personId": "a08a4c88-115a-5ca1-b7c1-dca73012ea34",
+        "note": "Jammed wrist on the speed break, a bit swollen — no breaking next class.",
+        "confidence": 0.88
+      }
+    ],
+    "followUps": [
+      {
+        "title": "Call Louisa's parents about Demo Team tryouts",
+        "personId": "d5266064-7016-504e-bb64-36779714c605"
+      }
+    ]
+  }
+}
