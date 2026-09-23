@@ -256,3 +256,18 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   unprocessed so Stripe's retry re-runs them). Unit tests run against a digest-pinned stripe-mock;
   the live `stripe.spec` needs real test keys plus a pre-onboarded connected account and is a HANDOFF
   until those exist.
+
+## ADR-0019 — Enrollment: engine quotes, one atomic RPC; §4.7 gear tables brought forward
+- **Date / task:** 2026-09-23 · M2.04
+- **Decision:** The enrollment wizard previews and the server re-computes the first invoice with
+  `packages/billing` (`firstInvoiceLines` → family discount via `familyDiscountPct` ranked against the
+  household's live memberships → coupons → tax by class). `public.enroll_membership(p jsonb)` (billing.charge)
+  then persists everything in one transaction: membership, invoice + lines (lines must sum to the total),
+  coupon uses, program enrollments at each program's first rank, person status, gear fulfilment and any
+  cash/check payment with its allocation. Card payments run after the transaction through the M2.03 charge
+  path, so a decline leaves an honest open invoice rather than a half-created membership.
+- **Gear:** `products`, `product_variants` and `gear_fulfilments` (§4.7) are created now because plans'
+  enrollment kits need them; the rest of retail (inventory, suppliers, POS) stays in M2.08. Kits are
+  included in the plan (no separate charge); sizes pre-fill from the student's uniform/belt sizes.
+- **Contracts:** when a school has an active `contract` document, contract plans require a desk e-signature
+  at enrollment (stored as a normal `signatures` row + PDF).

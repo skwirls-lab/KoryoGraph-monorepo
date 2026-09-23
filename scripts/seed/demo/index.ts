@@ -1,3 +1,4 @@
+import { linkDemoPlanPrograms } from "../billing";
 import { sid } from "../../lib/ids";
 import type { SeedContext } from "../context";
 import { seedCurriculum } from "./curriculum";
@@ -36,5 +37,6 @@ export async function seedDemo(ctx: SeedContext): Promise<void> {
       select count(*) from public.attendance a join public.class_sessions s on s.id = a.session_id
       where a.person_id = e.person_id and e.program_id = any (s.program_ids) and s.starts_at >= coalesce(e.last_promoted_at, e.started_at::timestamptz))
     where e.tenant_id = ${sid("tenant:ridgeline")}`;
+  await linkDemoPlanPrograms(ctx);
   await sql`update public.tenants set onboarding = jsonb_set(onboarding, '{steps}', '{"location": true, "programs": true, "schedule": true, "students": true, "payments": false, "staff": true, "branding": true}'::jsonb) where slug = 'ridgeline'`;
 }

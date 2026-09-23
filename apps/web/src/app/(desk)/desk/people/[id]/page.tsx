@@ -4,6 +4,7 @@ import { forbidden, notFound } from "next/navigation";
 import { DateText } from "@koryo/ui/components/app/date-text";
 import { EmptyState } from "@koryo/ui/components/app/empty-state";
 import { PageHeader } from "@koryo/ui/components/app/page-header";
+import { PersonBilling } from "@/components/billing/person-billing";
 import { UrlTabs } from "@/components/common/url-tabs";
 import { PersonDocuments } from "@/components/documents/person-documents";
 import { PersonAttendance, PersonMessages } from "@/components/people/person-activity";
@@ -164,7 +165,7 @@ export default async function PersonPage({ params }: { params: Promise<{ id: str
             <ProgressPanel personId={p.id} progress={progress} timeZone={ctx.tz} programs={programs}
               canPromote={ctx.permissions.has("ranks.promote")} canEnroll={canWrite} />
           ) },
-          { value: "billing", label: "Billing", content: <EmptyState title="No memberships" description="The Billing module lands in M2." /> },
+          { value: "billing", label: "Billing", content: <PersonBilling ctx={ctx} personId={p.id} /> },
           { value: "documents", label: "Documents", content: <PersonDocuments ctx={ctx} personId={p.id} /> },
           { value: "messages", label: "Messages", content: <PersonMessages ctx={ctx} personId={p.id} /> },
           { value: "notes", label: "Notes", content: notesTab },

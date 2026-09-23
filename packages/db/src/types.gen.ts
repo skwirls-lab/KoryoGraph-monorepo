@@ -1535,6 +1535,125 @@ export type Database = {
           },
         ]
       }
+      gear_fulfilments: {
+        Row: {
+          created_at: string
+          delivered_at: string | null
+          delivered_by: string | null
+          household_id: string
+          id: string
+          membership_id: string | null
+          notes: string | null
+          person_id: string
+          sizes: Json
+          status: string
+          tenant_id: string
+          updated_at: string
+          variant_ids: string[]
+        }
+        Insert: {
+          created_at?: string
+          delivered_at?: string | null
+          delivered_by?: string | null
+          household_id: string
+          id?: string
+          membership_id?: string | null
+          notes?: string | null
+          person_id: string
+          sizes?: Json
+          status?: string
+          tenant_id: string
+          updated_at?: string
+          variant_ids?: string[]
+        }
+        Update: {
+          created_at?: string
+          delivered_at?: string | null
+          delivered_by?: string | null
+          household_id?: string
+          id?: string
+          membership_id?: string | null
+          notes?: string | null
+          person_id?: string
+          sizes?: Json
+          status?: string
+          tenant_id?: string
+          updated_at?: string
+          variant_ids?: string[]
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       holidays: {
         Row: {
           created_at: string
@@ -3645,6 +3764,127 @@ export type Database = {
             isOneToOne: false
             referencedRelation: "locations"
             referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      product_variants: {
+        Row: {
+          active: boolean
+          barcode: string | null
+          cost_cents: number
+          created_at: string
+          id: string
+          options: Json
+          price_cents: number
+          product_id: string
+          sku: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          barcode?: string | null
+          cost_cents?: number
+          created_at?: string
+          id?: string
+          options?: Json
+          price_cents: number
+          product_id: string
+          sku: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          barcode?: string | null
+          cost_cents?: number
+          created_at?: string
+          id?: string
+          options?: Json
+          price_cents?: number
+          product_id?: string
+          sku?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "product_variants_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "product_variants_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "product_variants_tenant_id_product_id_fkey"
+            columns: ["tenant_id", "product_id"]
+            isOneToOne: false
+            referencedRelation: "products"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
+      products: {
+        Row: {
+          active: boolean
+          category: string
+          created_at: string
+          description: string
+          id: string
+          images: string[]
+          name: string
+          sort: number
+          tax_class: string
+          tenant_id: string
+          updated_at: string
+        }
+        Insert: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          images?: string[]
+          name: string
+          sort?: number
+          tax_class?: string
+          tenant_id: string
+          updated_at?: string
+        }
+        Update: {
+          active?: boolean
+          category?: string
+          created_at?: string
+          description?: string
+          id?: string
+          images?: string[]
+          name?: string
+          sort?: number
+          tax_class?: string
+          tenant_id?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "products_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "products_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
           },
         ]
       }
@@ -5894,6 +6134,96 @@ export type Database = {
           },
         ]
       }
+      v_gear_fulfilments: {
+        Row: {
+          created_at: string | null
+          delivered_at: string | null
+          household_id: string | null
+          household_name: string | null
+          id: string | null
+          membership_id: string | null
+          notes: string | null
+          person_id: string | null
+          person_name: string | null
+          plan_name: string | null
+          sizes: Json | null
+          status: string | null
+          tenant_id: string | null
+          variant_ids: string[] | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "tenants"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_fkey"
+            columns: ["tenant_id"]
+            isOneToOne: false
+            referencedRelation: "v_owner_dashboard"
+            referencedColumns: ["tenant_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "households"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_household_id_fkey"
+            columns: ["tenant_id", "household_id"]
+            isOneToOne: false
+            referencedRelation: "v_household_balance"
+            referencedColumns: ["tenant_id", "household_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "memberships"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_membership_id_fkey"
+            columns: ["tenant_id", "membership_id"]
+            isOneToOne: false
+            referencedRelation: "v_mrr"
+            referencedColumns: ["tenant_id", "membership_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "people"
+            referencedColumns: ["tenant_id", "id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_attendance_velocity"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_member_roster"
+            referencedColumns: ["tenant_id", "person_id"]
+          },
+          {
+            foreignKeyName: "gear_fulfilments_tenant_id_person_id_fkey"
+            columns: ["tenant_id", "person_id"]
+            isOneToOne: false
+            referencedRelation: "v_people_search"
+            referencedColumns: ["tenant_id", "id"]
+          },
+        ]
+      }
       v_household_balance: {
         Row: {
           credit_cents: number | null
@@ -6310,6 +6640,7 @@ export type Database = {
         Args: { p_name: string; p_slug: string; p_timezone: string }
         Returns: string
       }
+      enroll_membership: { Args: { p: Json }; Returns: Json }
       export_table_names: {
         Args: never
         Returns: {

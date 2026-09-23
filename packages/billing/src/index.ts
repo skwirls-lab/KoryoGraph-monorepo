@@ -89,6 +89,18 @@ export function familyDiscounts(items: readonly { id: string; priceCents: number
   return out;
 }
 
+/**
+ * The family-discount percentage one item gets among the household's items (same ranking as
+ * `familyDiscounts`: most expensive first, ties by id). Useful when the item's charged amount differs from
+ * the price it ranks by (e.g. a prorated first month).
+ */
+export function familyDiscountPct(items: readonly { id: string; priceCents: number }[], id: string, rule: FamilyRule): number {
+  const sorted = [...items].sort((a, b) => b.priceCents - a.priceCents || a.id.localeCompare(b.id));
+  const i = sorted.findIndex((it) => it.id === id);
+  if (i <= 0) return 0;
+  return Math.min(100, Math.max(0, i === 1 ? rule.secondPct : rule.thirdPlusPct));
+}
+
 export interface Coupon {
   kind: "pct" | "amount";
   value: number;

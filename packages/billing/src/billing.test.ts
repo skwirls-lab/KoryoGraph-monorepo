@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import {
   DEFAULT_DUNNING, addDaysStr, addMonthsStr, advancePeriod, allocatePayment, applyCoupons, computeInvoice, daysBetween, deferredRevenue,
-  dueDunningSteps, familyDiscounts, firstBillingDate, firstInvoiceLines, freezeProration, prorate, recognitionSchedule, upgradeProration,
+  dueDunningSteps, familyDiscountPct, familyDiscounts, firstBillingDate, firstInvoiceLines, freezeProration, prorate, recognitionSchedule, upgradeProration,
 } from "./index";
 
 describe("dates", () => {
@@ -77,6 +77,14 @@ describe("family discounts", () => {
   ])("%s", (_n, items, want) => expect(familyDiscounts(items, rule)).toEqual(want));
   it("clamps percentages to 0–100", () => {
     expect(familyDiscounts([{ id: "a", priceCents: 1_000 }, { id: "b", priceCents: 1_000 }, { id: "c", priceCents: 1_000 }], { secondPct: -5, thirdPlusPct: 150 })).toEqual({ a: 0, b: 0, c: 1_000 });
+  });
+  it("gives one item's percentage by the same ranking", () => {
+    const items = [{ id: "a", priceCents: 14_900 }, { id: "b", priceCents: 14_900 }, { id: "zzz-new", priceCents: 14_900 }];
+    expect(familyDiscountPct(items, "a", rule)).toBe(0);
+    expect(familyDiscountPct(items, "b", rule)).toBe(10);
+    expect(familyDiscountPct(items, "zzz-new", rule)).toBe(100);
+    expect(familyDiscountPct(items, "missing", rule)).toBe(0);
+    expect(familyDiscountPct(items.slice(0, 2), "b", { secondPct: 150, thirdPlusPct: 0 })).toBe(100);
   });
 });
 
