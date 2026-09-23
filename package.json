@@ -22,7 +22,8 @@
     "ai:record": "tsx scripts/ai-record.ts",
     "ai:eval": "tsx scripts/ai-eval.ts",
     "smoke:live": "tsx scripts/smoke-live.ts",
-    "format": "prettier --write \"**/*.{ts,tsx,md}\""
+    "format": "prettier --write \"**/*.{ts,tsx,md}\"",
+    "test:billing": "vitest run --project unit packages/billing --coverage --coverage.include='packages/billing/src/**' --coverage.exclude='**/*.test.ts' --coverage.thresholds.branches=100 --coverage.thresholds.lines=100 --coverage.thresholds.functions=100"
   },
   "devDependencies": {
     "@axe-core/playwright": "4.13.0",
@@ -33,6 +34,7 @@
     "@supabase/supabase-js": "2.117.0",
     "@types/node": "22.20.4",
     "@types/seedrandom": "3.0.8",
+    "@vitest/coverage-v8": "5.0.1",
     "eslint": "9.39.5",
     "postgres": "3.4.9",
     "prettier": "3.7.4",

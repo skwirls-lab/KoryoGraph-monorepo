@@ -53,6 +53,7 @@ const steps: Step[] = [
   { name: "typecheck", cmd: "npm run typecheck" },
   { name: "lint", cmd: "npm run lint" },
   { name: "unit", cmd: "npx vitest run --project unit" },
+  ...(level >= 2 ? [{ name: "billing engine coverage (100% branches)", cmd: "npm run test:billing" }] : []),
   {
     name: "db",
     cmd: "npx supabase db reset && npx tsx scripts/seed/index.ts --profile minimal && npx vitest run --project db",
