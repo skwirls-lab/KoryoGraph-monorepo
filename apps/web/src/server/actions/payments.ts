@@ -287,6 +287,8 @@ export async function registerCardReader(input: z.input<typeof readerSchema>): P
       await ctx.supabase.from("tenants").update({ settings: settings as Json }).eq("id", ctx.tenantId as string);
     }
     const reader = await registerReader(ready.stripe, ready.account, { registrationCode: parsed.data.registrationCode, label: parsed.data.label, locationId });
+    const { data: defaultLoc } = await ctx.supabase.from("locations").select("id").eq("is_default", true).maybeSingle();
+    await ctx.supabase.from("terminal_readers").upsert({ tenant_id: ctx.tenantId as string, stripe_reader_id: reader.id, label: parsed.data.label, location_id: defaultLoc?.id ?? null }, { onConflict: "tenant_id,stripe_reader_id" });
     revalidatePath("/desk/settings/payments");
     return ok({ readerId: reader.id });
   } catch (err) {

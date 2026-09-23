@@ -7806,6 +7806,28 @@ export type Database = {
         Args: { p_tenant_id: string }
         Returns: number
       }
+      pos_add_tender: {
+        Args: {
+          p_amount_cents: number
+          p_method: string
+          p_payment_id?: string
+          p_sale_id: string
+          p_tendered_cents?: number
+        }
+        Returns: Json
+      }
+      pos_cancel_sale: { Args: { p_sale_id: string }; Returns: undefined }
+      pos_close_drawer: {
+        Args: { p_counted_cents: number; p_drawer_id: string }
+        Returns: Json
+      }
+      pos_drawer_expected: { Args: { p_drawer_id: string }; Returns: number }
+      pos_open_drawer: {
+        Args: { p_location_id: string; p_opening_cents: number }
+        Returns: string
+      }
+      pos_open_sale: { Args: { p: Json }; Returns: Json }
+      pos_return: { Args: { p: Json }; Returns: Json }
       promote: {
         Args: {
           p_enrollment_id: string

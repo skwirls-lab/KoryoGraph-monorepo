@@ -16,6 +16,7 @@ test.describe("@m2 membership plans admin", () => {
 
   test("create a contract plan with family discount and kit, edit it, archive it", async ({ page }) => {
     await page.goto("/desk/billing");
+    await page.getByRole("link", { name: "Plans", exact: true }).click();
     await expect(page).toHaveURL(/\/desk\/billing\/plans$/);
     await expectNoSeriousA11yViolations(page);
     await page.getByRole("button", { name: "New plan" }).click();

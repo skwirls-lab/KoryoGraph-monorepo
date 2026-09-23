@@ -9,6 +9,8 @@ type Db = SupabaseClient<Database>;
 export interface InvoiceChargeResult {
   status: "succeeded" | "pending" | "failed" | "no_card";
   error?: string;
+  /** The ledger payment recorded for this attempt (succeeded or failed). */
+  paymentId?: string | null;
 }
 
 /**
@@ -21,7 +23,7 @@ export async function chargeInvoiceWithCard(
   stripe: Stripe,
   t: { tenantId: string; account: string; currency: string },
   invoiceId: string,
-  opts: { attemptKey: string; paymentMethodId?: string | null; as: "service" | "staff"; description?: string },
+  opts: { attemptKey: string; paymentMethodId?: string | null; as: "service" | "staff"; description?: string; amountCents?: number },
 ): Promise<InvoiceChargeResult> {
   const { data: inv } = await db.from("invoices").select("id, household_id, balance_cents, number, memberships(payment_method_id), households(stripe_customer_id)").eq("id", invoiceId).maybeSingle();
   if (!inv || inv.balance_cents <= 0) return { status: "failed", error: "Nothing is due on this invoice." };
@@ -31,15 +33,17 @@ export async function chargeInvoiceWithCard(
   const { data: pm } = await pmQuery.limit(1).maybeSingle();
   const customer = inv.households?.stripe_customer_id;
   if (!pm || !customer) return { status: "no_card", error: "No usable card on file." };
-  if (inv.balance_cents < 50) return { status: "failed", error: "The balance is below the card minimum." };
+  const amount = Math.min(opts.amountCents ?? inv.balance_cents, inv.balance_cents);
+  if (amount < 50) return { status: "failed", error: "Card charges must be at least $0.50." };
   const pi = await chargeCard(stripe, t.account, {
-    tenantId: t.tenantId, householdId: inv.household_id, customerId: customer, amountCents: inv.balance_cents, currency: t.currency,
+    tenantId: t.tenantId, householdId: inv.household_id, customerId: customer, amountCents: amount, currency: t.currency,
     paymentMethodId: pm.stripe_payment_method_id, offSession: true, invoiceId: inv.id, attemptKey: opts.attemptKey,
     description: opts.description ?? `Invoice #${inv.number}`, feeBps: feeBpsFromEnv(),
   });
-  if (opts.as === "service") await rpc(db, "record_payment_intent_for", { p_tenant_id: t.tenantId, p_pi: pi as unknown as Json });
-  else await rpc(db, "record_payment_intent", { p_pi: pi as unknown as Json });
-  if (pi.status === "succeeded") return { status: "succeeded" };
-  if (pi.status === "processing") return { status: "pending" };
-  return { status: "failed", error: pi.last_payment_error?.message ?? "The card was declined." };
+  const paymentId = opts.as === "service"
+    ? await rpc(db, "record_payment_intent_for", { p_tenant_id: t.tenantId, p_pi: pi as unknown as Json })
+    : await rpc(db, "record_payment_intent", { p_pi: pi as unknown as Json });
+  if (pi.status === "succeeded") return { status: "succeeded", paymentId };
+  if (pi.status === "processing") return { status: "pending", paymentId };
+  return { status: "failed", error: pi.last_payment_error?.message ?? "The card was declined.", paymentId };
 }

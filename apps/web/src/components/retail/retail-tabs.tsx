@@ -1,6 +1,7 @@
 import Link from "next/link";
 
 const TABS = [
+  { href: "/desk/pos", label: "Point of sale" },
   { href: "/desk/retail/products", label: "Products" },
   { href: "/desk/retail/inventory", label: "Inventory" },
   { href: "/desk/retail/suppliers", label: "Suppliers" },

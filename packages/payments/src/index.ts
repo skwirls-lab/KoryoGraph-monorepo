@@ -140,7 +140,8 @@ export async function retrieveSetupIntent(stripe: Stripe, account: string, id: s
 export interface ChargeInput {
   tenantId: string;
   householdId: string;
-  customerId: string;
+  /** The household's Customer; optional for card-present (Terminal) charges. */
+  customerId?: string;
   amountCents: number;
   currency: string;
   /** Saved card to charge; omit for an on-session charge confirmed in the browser. */
@@ -171,7 +172,7 @@ export async function chargeCard(stripe: Stripe, account: string, input: ChargeI
   const params: Stripe.PaymentIntentCreateParams = {
     amount: input.amountCents,
     currency: input.currency.toLowerCase(),
-    customer: input.customerId,
+    ...(input.customerId ? { customer: input.customerId } : {}),
     description: input.description,
     metadata,
     ...(fee > 0 ? { application_fee_amount: fee } : {}),
@@ -240,6 +241,23 @@ export async function registerReader(stripe: Stripe, account: string, input: { r
 export async function listReaders(stripe: Stripe, account: string, locationId?: string): Promise<Stripe.Terminal.Reader[]> {
   const res = await stripe.terminal.readers.list({ limit: 50, ...(locationId ? { location: locationId } : {}) }, { stripeAccount: account });
   return res.data;
+}
+
+/**
+ * Sends a card_present PaymentIntent to a reader. In test mode `simulate` presents Stripe's test card on
+ * the simulated reader; then waits (briefly) for the intent to settle and returns it.
+ */
+export async function collectOnReader(stripe: Stripe, account: string, input: { readerId: string; paymentIntentId: string; simulate: boolean; timeoutMs?: number }): Promise<Stripe.PaymentIntent> {
+  await stripe.terminal.readers.processPaymentIntent(input.readerId, { payment_intent: input.paymentIntentId }, { stripeAccount: account });
+  if (input.simulate) await stripe.testHelpers.terminal.readers.presentPaymentMethod(input.readerId, {}, { stripeAccount: account });
+  const deadline = Date.now() + (input.timeoutMs ?? 20_000);
+  for (;;) {
+    const pi = await stripe.paymentIntents.retrieve(input.paymentIntentId, {}, { stripeAccount: account });
+    if (pi.status === "requires_capture") return stripe.paymentIntents.capture(pi.id, {}, { stripeAccount: account });
+    if (pi.status !== "requires_payment_method" && pi.status !== "processing") return pi;
+    if (pi.last_payment_error || Date.now() > deadline) return pi;
+    await new Promise((r) => setTimeout(r, 1000));
+  }
 }
 
 // ---------------------------------------------------------------------------------------------

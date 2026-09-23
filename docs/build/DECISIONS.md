@@ -305,3 +305,20 @@ Append-only. Each entry: date, task, what the spec said, what was done, why.
   `data`), shown on the Desk dashboard with "Apply hold"; staff can also hold/cancel/resume from the
   person's Billing tab. `/home/wallet?invoice=` (the dunning link) redirects to Billing with the invoice
   highlighted.
+
+## ADR-0022 — POS: a sale is an open invoice until its tenders pay it
+- **Date / task:** 2026-09-23 · M2.09
+- **Decision:** The cart is priced on the server with the billing engine from catalogue prices (line
+  discounts, tax by product class at the sale's location); `pos_open_sale` re-checks every unit price and
+  that lines sum to the total, then creates an open `pos` invoice + sale. Each tender records a real
+  payment against that invoice — cash (with change; needs an open drawer), check, other, account credit,
+  card on file (Stripe, off-session) or Stripe Terminal (card_present; the simulated reader in test mode) —
+  so split tenders and card declines never leave a half-paid sale unaccounted for. The tender that brings
+  the balance to zero completes the sale: receipt number, stock out (`sale` movements), drawer link.
+  Walk-in sales bill to one system household per tenant.
+- **Returns** reference the original sale line (never more than sold), restock (`return` movements), take
+  the returned amount off the original invoice first and then refund through `apply_refund` (numbered
+  credit notes): cash back from the open drawer, account credit, or — for card payments — a Stripe refund
+  made by the server and then recorded. Exchanges are a return plus a new sale.
+- **Drawer:** expected = opening float + cash taken − change − cash refunds; closing records counted cash
+  and variance. A fully refunded invoice now reads `refunded` even when its total became zero.

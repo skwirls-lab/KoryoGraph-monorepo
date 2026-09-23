@@ -3,6 +3,7 @@ import {
   accountStatus,
   chargeCard,
   chargeIdempotencyKey,
+  collectOnReader,
   createAccountLink,
   createConnectAccount,
   createConnectionToken,
@@ -112,6 +113,11 @@ describe("Terminal (stripe-mock)", () => {
     const reader = await registerReader(stripe, ACCOUNT, { registrationCode: "simulated-wpe", label: "Front desk", locationId: loc });
     expect(reader.id).toMatch(/^tmr_/);
     expect(Array.isArray(await listReaders(stripe, ACCOUNT))).toBe(true);
+  });
+
+  it("sends a card_present intent to a reader and returns the settled intent", async () => {
+    const pi = await collectOnReader(stripe, ACCOUNT, { readerId: "tmr_123", paymentIntentId: "pi_123", simulate: true, timeoutMs: 0 });
+    expect(pi.id).toMatch(/^pi_/);
   });
 });
 
